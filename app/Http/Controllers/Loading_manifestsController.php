@@ -11,6 +11,7 @@ use App\Loading_manifest;
 
 use DB;
 use Auth;
+use App\Station;
 
 class Loading_manifestsController extends Controller
 {
@@ -28,9 +29,9 @@ class Loading_manifestsController extends Controller
 
 	public function create(Request $request)
 	{
-	    return view('loading_manifests.add', [
-	        []
-	    ]);
+		$stations = Station::select('id','office_name')->where('status',ACTIVE)->get();
+
+	    return view('loading_manifests.add', compact('stations'));
 	}
 
 	public function edit(Request $request, $id)
@@ -52,11 +53,11 @@ class Loading_manifestsController extends Controller
 		$len = $_GET['length'];
 		$start = $_GET['start'];
 
-		$select = "SELECT a.id,cs.office_code,cs2.office_code AS destination,u.name AS uname,loaded,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1,2 ";
+		$select = "SELECT a.id,CONCAT(CONCAT(CONCAT(cs.office_code,'-',cs2.office_code),'-','MANIFEST'),':',a.id) AS loading_manifest,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,cs.office_name AS origin,cs2.office_name AS destination,u.name AS uname,loaded,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1,2";
 		$presql = " FROM loading_manifests a ";
 		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
-		$presql .= " LEFT JOIN collection_stations cs ON a.updated_by = cs.id ";
-		$presql .= " LEFT JOIN collection_stations cs2 ON a.updated_by = cs2.id ";
+		$presql .= " LEFT JOIN stations cs ON a.origin = cs.id ";
+		$presql .= " LEFT JOIN stations cs2 ON a.destination = cs2.id ";
 
 		if($_GET['search']['value']) {	
 			$presql .= " WHERE origin LIKE '%".$_GET['search']['value']."%' ";

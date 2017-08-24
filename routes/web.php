@@ -27,3 +27,5 @@ Route::get('/clients/grid', 'ClientsController@grid');
 Route::resource('/clients', 'ClientsController');
 Route::get('/loading_manifests/grid', 'Loading_manifestsController@grid');
 Route::resource('/loading_manifests', 'Loading_manifestsController');
+Route::get('/stations/grid', 'StationsController@grid');
+Route::resource('/stations', 'StationsController');

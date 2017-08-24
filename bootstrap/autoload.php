@@ -1,6 +1,8 @@
 <?php
 
 define('LARAVEL_START', microtime(true));
+define('ACTIVE', 1);
+define('INACTIVE', 0);
 
 /*
 |--------------------------------------------------------------------------
