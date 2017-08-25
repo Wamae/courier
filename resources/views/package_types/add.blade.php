@@ -37,12 +37,12 @@
                     <input type="text" name="description" id="description" class="form-control" value="{{$model['description'] or ''}}">
                 </div>
             </div>
-                                                                        <div class="form-group">
+            <div class="form-group">
                 <label for="status" class="col-sm-3 control-label">Status</label>
                 <div class="col-sm-2">
                     <select name="status" class="form-control">
-                        <option value="{{$model['status'] or '0'}}">INACTIVE</option>
                         <option value="{{$model['status'] or '1'}}">ACTIVE</option>
+                        <option value="{{$model['status'] or '0'}}">INACTIVE</option>                        
                     </select>
                 </div>
             </div>
