@@ -2,9 +2,6 @@
 
 @section('content')
 
-
-<h2 class="page-header">{{ ucfirst('waybills') }}</h2>
-
 <div class="panel panel-default">
     <div class="panel-heading">
         List of {{ ucfirst('waybills') }}
