@@ -1,18 +1,18 @@
 <?php
 
-namespace [[appns]]Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use [[appns]]Http\Requests;
-use [[appns]]Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
-use [[appns]][[model_uc]];
+use App\Test_table;
 
 use DB;
 use Auth;
 
-class [[controller_name]]Controller extends Controller
+class Test_tablesController extends Controller
 {
     //
     public function __construct()
@@ -23,28 +23,26 @@ class [[controller_name]]Controller extends Controller
 
     public function index(Request $request)
 	{
-	    return view('[[view_folder]].index', compact(''));
+	    return view('test_tables.index', compact(''));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('[[view_folder]].add', compact(''));
+	    return view('test_tables.add', compact(''));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$[[model_singular]] = [[model_uc]]::findOrFail($id);
-	    return view('[[view_folder]].add', [
-	        'model' => $[[model_singular]]
-	    ]);
+		$test_table = Test_table::findOrFail($id);
+	    return view('test_tables.add', [
+	        'model' => $test_table	    ]);
 	}
 
 	public function show(Request $request, $id)
 	{
-		$[[model_singular]] = [[model_uc]]::findOrFail($id);
-	    return view('[[view_folder]].show', [
-	        'model' => $[[model_singular]]
-	    ]);
+		$test_table = Test_table::findOrFail($id);
+	    return view('test_tables.show', [
+	        'model' => $test_table	    ]);
 	}
 
 	public function grid(Request $request)
@@ -53,9 +51,9 @@ class [[controller_name]]Controller extends Controller
 		$start = $_GET['start'];
 
 		$select = "SELECT *,1,2 ";
-		$presql = " FROM [[prefix]][[tablename]] a ";
+		$presql = " FROM test_tables a ";
 		if($_GET['search']['value']) {	
-			$presql .= " WHERE [[first_column_nonid]] LIKE '%".$_GET['search']['value']."%' ";
+			$presql .= " WHERE name LIKE '%".$_GET['search']['value']."%' ";
 		}
 		
 		$presql .= "  ";
@@ -94,34 +92,41 @@ class [[controller_name]]Controller extends Controller
 	    /*$this->validate($request, [
 	        'name' => 'required|max:255',
 	    ]);*/
-		$[[model_singular]] = null;
+		$test_table = null;
                 $user_id = Auth::user()->id;
                 
 		if($request->id > 0) { 
-                    $[[model_singular]] = [[model_uc]]::findOrFail($request->id);
-                    $[[model_singular]]->updated_by = $user_id;
+                    $test_table = Test_table::findOrFail($request->id);
+                    $test_table->updated_by = $user_id;
                     
                 }else { 
-			$[[model_singular]] = new [[model_uc]];
-                        $[[model_singular]]->created_by = $user_id;
+			$test_table = new Test_table;
+                        $test_table->created_by = $user_id;
 		}
 	    
 
-	    [[foreach:columns]]
-		
-		[[if:i.name=='id']]
-	    $[[model_singular]]->[[i.name]] = $request->[[i.name]]?:0;
-		[[endif]]
-            
-		[[if:i.name!='id']]
-	    $[[model_singular]]->[[i.name]] = $request->[[i.name]];
-		[[endif]]
+	    		
+			    $test_table->id = $request->id?:0;
+		            
+			    		
+		            
+			    $test_table->name = $request->name;
+			    		
+		            
+			    $test_table->created_by = $request->created_by;
+			    		
+		            
+			    $test_table->created_at = $request->created_at;
+			    		
+		            
+			    $test_table->updated_by = $request->updated_by;
+			    		
+		            
+			    $test_table->updated_at = $request->updated_at;
+			    	    //$test_table->user_id = $request->user()->id;
+	    $test_table->save();
 
-	    [[endforeach]]
-	    //$[[model_singular]]->user_id = $request->user()->id;
-	    $[[model_singular]]->save();
-
-	    return redirect('/[[route_path]]');
+	    return redirect('/test_tables');
 
 	}
 
@@ -132,9 +137,9 @@ class [[controller_name]]Controller extends Controller
 
 	public function destroy(Request $request, $id) {
 		
-		$[[model_singular]] = [[model_uc]]::findOrFail($id);
+		$test_table = Test_table::findOrFail($id);
 
-		$[[model_singular]]->delete();
+		$test_table->delete();
 		return "OK";
 	    
 	}

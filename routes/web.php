@@ -33,3 +33,5 @@ Route::get('/payment_modes/grid', 'Payment_modesController@grid');
 Route::resource('/payment_modes', 'Payment_modesController');
 Route::get('/waybills/grid', 'WaybillsController@grid');
 Route::resource('/waybills', 'WaybillsController');
+Route::get('/test_tables/grid', 'Test_tablesController@grid');
+Route::resource('/test_tables', 'Test_tablesController');
