@@ -26,7 +26,10 @@ class WaybillsController extends Controller
 
     public function index(Request $request)
 	{
-	    return view('waybills.index', []);
+            $package_types = Package_type::select('id','package_type')->where('status',ACTIVE);
+            $stations = Station::select('id','office_name')->where('status',ACTIVE)->get();
+            
+	    return view('waybills.index', compact('package_types','stations'));
 	}
 
 	public function create(Request $request)
