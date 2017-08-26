@@ -14,30 +14,32 @@ use Auth;
 
 class Payment_modesController extends Controller
 {
-    //
+    public $title;
+    
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
+        $this->title = ucfirst(str_replace('_',' ','Payment_modes'));
     }
 
 
     public function index(Request $request)
 	{
-	    return view('payment_modes.index', []);
+            $title = $this->title;
+	    return view('payment_modes.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('payment_modes.add', [
-	        []
-	    ]);
+            $title = $this->title;
+	    return view('payment_modes.add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$payment_mode = Payment_mode::findOrFail($id);
-	    return view('payment_modes.add', [
-	        'model' => $payment_mode	    ]);
+            $model = Payment_mode::findOrFail($id);
+            $title = $this->title;
+	    return view('payment_modes.add', compact('model','title'));
 	}
 
 	public function show(Request $request, $id)
@@ -56,7 +58,7 @@ class Payment_modesController extends Controller
 		$presql = " FROM payment_modes a ";
 		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
 		$presql .= " LEFT JOIN users u2 ON a.updated_by = u2.id ";
-
+                
 		if($_GET['search']['value']) {	
 			$presql .= " WHERE payment_mode LIKE '%".$_GET['search']['value']."%' ";
 		}
@@ -98,25 +100,29 @@ class Payment_modesController extends Controller
 	        'name' => 'required|max:255',
 	    ]);*/
 		$payment_mode = null;
-		$user_id = Auth::user()->id;
-
+                $user_id = Auth::user()->id;
+                
 		if($request->id > 0) { 
-			$payment_mode = Payment_mode::findOrFail($request->id); 
-			$payment_mode->updated_by = $user_id;
-		}else { 
+                    $payment_mode = Payment_mode::findOrFail($request->id);
+                    $payment_mode->updated_by = $user_id;
+                    
+                }else { 
 			$payment_mode = new Payment_mode;
-			$payment_mode->created_by = $user_id;
+                        $payment_mode->created_by = $user_id;
 		}
 	    
 
 	    		
 			    $payment_mode->id = $request->id?:0;
-				
-	    		
-					    $payment_mode->payment_mode = $request->payment_mode;
+		            
 		
 	    		
-					    $payment_mode->status = $request->status;
+		            
+			    $payment_mode->payment_mode = $request->payment_mode;
+		
+	    		
+		            
+			    $payment_mode->status = $request->status;
 		
 	    	    //$payment_mode->user_id = $request->user()->id;
 	    $payment_mode->save();

@@ -10,33 +10,40 @@ use App\Http\Controllers\Controller;
 use App\Station;
 
 use DB;
+use Auth;
+use App\Main_office;
 
 class StationsController extends Controller
 {
-    //
+    public $title;
+    
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
+        $this->title = ucfirst(str_replace('_',' ','Stations'));
     }
 
 
     public function index(Request $request)
 	{
-	    return view('stations.index', []);
+            $title = $this->title;
+	    return view('stations.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('stations.add', [
-	        []
-	    ]);
+            $title = $this->title;
+            $main_offices = Main_office::select('id','main_office')->where('status',ACTIVE)->get();
+	    return view('stations.add', compact('title','main_offices'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$station = Station::findOrFail($id);
-	    return view('stations.add', [
-	        'model' => $station	    ]);
+            $model = Station::findOrFail($id);
+            $title = $this->title;
+            $main_offices = Main_office::select('id','main_office')->where('status',ACTIVE)->get();
+            
+	    return view('stations.add', compact('model','title','main_offices'));
 	}
 
 	public function show(Request $request, $id)
@@ -54,7 +61,7 @@ class StationsController extends Controller
 		$select = "SELECT *,1,2 ";
 		$presql = " FROM stations a ";
 		if($_GET['search']['value']) {	
-			$presql .= " WHERE office_name LIKE '%".$_GET['search']['value']."%' ";
+			$presql .= " WHERE main_office LIKE '%".$_GET['search']['value']."%' ";
 		}
 		
 		$presql .= "  ";
@@ -94,44 +101,61 @@ class StationsController extends Controller
 	        'name' => 'required|max:255',
 	    ]);*/
 		$station = null;
-		if($request->id > 0) { $station = Station::findOrFail($request->id); }
-		else { 
+                $user_id = Auth::user()->id;
+                
+		if($request->id > 0) { 
+                    $station = Station::findOrFail($request->id);
+                    $station->updated_by = $user_id;
+                    
+                }else { 
 			$station = new Station;
+                        $station->created_by = $user_id;
 		}
 	    
 
 	    		
 			    $station->id = $request->id?:0;
-				
-	    		
-					    $station->office_name = $request->office_name;
+		            
 		
 	    		
-					    $station->office_code = $request->office_code;
+		            
+			    $station->main_office = $request->main_office;
 		
 	    		
-					    $station->telephone_number = $request->telephone_number;
+		            
+			    $station->office_code = $request->office_code;
 		
 	    		
-					    $station->currency = $request->currency;
+		            
+			    $station->telephone_number = $request->telephone_number;
 		
 	    		
-					    $station->main_office = $request->main_office;
+		            
+			    $station->currency = $request->currency;
 		
 	    		
-					    $station->status = $request->status;
+		            
+			    $station->main_office = $request->main_office;
 		
 	    		
-					    $station->created_at = $request->created_at;
+		            
+			    $station->status = $request->status;
 		
 	    		
-					    $station->created_by = $request->created_by;
+		            
+			    $station->created_at = $request->created_at;
 		
 	    		
-					    $station->updated_at = $request->updated_at;
+		            
+			    $station->created_by = $request->created_by;
 		
 	    		
-					    $station->updated_by = $request->updated_by;
+		            
+			    $station->updated_at = $request->updated_at;
+		
+	    		
+		            
+			    $station->updated_by = $request->updated_by;
 		
 	    	    //$station->user_id = $request->user()->id;
 	    $station->save();

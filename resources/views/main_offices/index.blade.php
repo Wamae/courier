@@ -1,20 +1,17 @@
-@extends('crudgenerator::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
-
-<h2 class="page-header">{{ ucfirst('main offices') }}</h2>
-
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('main offices') }}
+        List of {{ $title }}
     </div>
 
     <div class="panel-body">
         <div class="">
-            <table class="table table-striped" id="thegrid">
+            <table class="table table-condensed table-striped info-print" id="thegrid">
               <thead>
-                <tr>
+                  <tr class="holder_header">  
                                         <th>Id</th>
                                         <th>Main Office</th>
                                         <th>Status</th>
@@ -30,7 +27,8 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('main_offices/create')}}" class="btn btn-primary" role="button">Add main office</a>
+        
+        <a href="{{url('main_offices/create')}}" class="btn btn-small btn-default add-new-form" role="button"><i class="icon-plus-sign"></i> Add {{$title}}</a>
     </div>
 </div>
 

@@ -14,29 +14,32 @@ use Auth;
 
 class [[controller_name]]Controller extends Controller
 {
-    //
+    public $title;
+    
     public function __construct()
     {
         $this->middleware('auth');
+        $this->title = ucfirst(str_replace('_',' ','[[controller_name]]'));
     }
 
 
     public function index(Request $request)
 	{
-	    return view('[[view_folder]].index', compact(''));
+            $title = $this->title;
+	    return view('[[view_folder]].index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('[[view_folder]].add', compact(''));
+            $title = $this->title;
+	    return view('[[view_folder]].add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$[[model_singular]] = [[model_uc]]::findOrFail($id);
-	    return view('[[view_folder]].add', [
-	        'model' => $[[model_singular]]
-	    ]);
+            $model = [[model_uc]]::findOrFail($id);
+            $title = $this->title;
+	    return view('[[view_folder]].add', compact('model','title'));
 	}
 
 	public function show(Request $request, $id)

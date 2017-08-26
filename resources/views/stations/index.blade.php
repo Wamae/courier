@@ -1,20 +1,17 @@
-@extends('crudgenerator::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
-
-<h2 class="page-header">{{ ucfirst('stations') }}</h2>
-
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('stations') }}
+        List of {{ $title }}
     </div>
 
     <div class="panel-body">
         <div class="">
-            <table class="table table-striped" id="thegrid">
+            <table class="table table-condensed table-striped info-print" id="thegrid">
               <thead>
-                <tr>
+                  <tr class="holder_header">  
                                         <th>Id</th>
                                         <th>Office Name</th>
                                         <th>Office Code</th>
@@ -34,7 +31,8 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('stations/create')}}" class="btn btn-primary" role="button">Add station</a>
+        
+        <a href="{{url('stations/create')}}" class="btn btn-small btn-default add-new-form" role="button"><i class="icon-plus-sign"></i> Add {{$title}}</a>
     </div>
 </div>
 
@@ -69,7 +67,8 @@
                         "targets": 11                    },
                     {
                         "render": function ( data, type, row ) {
-                            return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
+                            //return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
+                            return '';
                         },
                         "targets": 11+1
                     },

@@ -1,21 +1,18 @@
-@extends('crudgenerator::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
-
-<h2 class="page-header">{{ ucfirst('package types') }}</h2>
-
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('package types') }}
+        List of {{ $title }}
     </div>
 
     <div class="panel-body">
         <div class="">
-            <table class="table table-striped" id="thegrid">
+            <table class="table table-condensed table-striped info-print" id="thegrid">
               <thead>
-                <tr>
-                                        <th>Id</th>
+                  <tr class="holder_header">
+                    <th width="10" class="non-print"><input type="checkbox" id="check-all-a"></th>
                                         <th>Package Type</th>
                                         <th>Description</th>
                                         <th>Status</th>
@@ -31,7 +28,8 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('package_types/create')}}" class="btn btn-primary" role="button">Add package type</a>
+        
+        <a href="{{url('package_types/create')}}" class="btn btn-small btn-default add-new-form" role="button"><i class="icon-plus-sign"></i> Add {{$title}}</a>
     </div>
 </div>
 

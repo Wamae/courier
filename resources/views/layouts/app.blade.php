@@ -1,21 +1,47 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
 
-        <!-- CSRF Token -->
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Test</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-        <!-- Styles -->
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    </head>
-    <body>
-        <div id="app">
-            <nav class="navbar navbar-default navbar-static-top">
+    <!-- 
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css">
+     -->
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.0/css/responsive.dataTables.min.css">
+    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    
+
+    <!-- Custom styles for this template 
+    <link href="css/dashboard.css" rel="stylesheet">
+    -->
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    
+  </head>
+
+  <body>
+
+     <nav class="navbar navbar-default navbar-static-top">
                 <div class="container">
                     <div class="navbar-header">
 
@@ -46,7 +72,7 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                             @else
-                            
+
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     REPORTS <span class="caret"></span>
@@ -58,7 +84,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            
+
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     ADMIN MENU <span class="caret"></span>
@@ -70,7 +96,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            
+
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -95,16 +121,34 @@
                     </div>
                 </div>
             </nav>
-            <div class="container">
+
+    <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         @yield('content')
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Scripts -->
-        <script src="{{ asset('js/app.js') }}"></script>
-    </body>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.0.0/js/dataTables.responsive.min.js"></script>
+
+    <script>
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+    </script>    
+
+    @yield('scripts')
+
+  </body>
 </html>

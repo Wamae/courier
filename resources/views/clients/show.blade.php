@@ -50,6 +50,14 @@
         
                 
         <div class="form-group">
+            <label for="status" class="col-sm-3 control-label">Status</label>
+            <div class="col-sm-6">
+                <input type="text" name="status" id="status" class="form-control" value="{{$model['status'] or ''}}" readonly="readonly">
+            </div>
+        </div>
+        
+                
+        <div class="form-group">
             <label for="created_by" class="col-sm-3 control-label">Created By</label>
             <div class="col-sm-6">
                 <input type="text" name="created_by" id="created_by" class="form-control" value="{{$model['created_by'] or ''}}" readonly="readonly">

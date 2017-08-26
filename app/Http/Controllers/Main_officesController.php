@@ -14,30 +14,32 @@ use Auth;
 
 class Main_officesController extends Controller
 {
-    //
+    public $title;
+    
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
+        $this->title = ucfirst(str_replace('_',' ','Main_offices'));
     }
 
 
     public function index(Request $request)
 	{
-	    return view('main_offices.index', []);
+            $title = $this->title;
+	    return view('main_offices.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('main_offices.add', [
-	        []
-	    ]);
+            $title = $this->title;
+	    return view('main_offices.add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$main_office = Main_office::findOrFail($id);
-	    return view('main_offices.add', [
-	        'model' => $main_office	    ]);
+            $model = Main_office::findOrFail($id);
+            $title = $this->title;
+	    return view('main_offices.add', compact('model','title'));
 	}
 
 	public function show(Request $request, $id)
@@ -56,6 +58,7 @@ class Main_officesController extends Controller
 		$presql = " FROM main_offices a ";
 		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
 		$presql .= " LEFT JOIN users u2 ON a.updated_by = u2.id ";
+                
 		if($_GET['search']['value']) {	
 			$presql .= " WHERE main_office LIKE '%".$_GET['search']['value']."%' ";
 		}
@@ -66,7 +69,7 @@ class Main_officesController extends Controller
 
 
 		$qcount = DB::select("SELECT COUNT(a.id) c".$presql);
-
+		//print_r($qcount);
 		$count = $qcount[0]->c;
 
 		$results = DB::select($sql);
@@ -92,31 +95,34 @@ class Main_officesController extends Controller
 
 
 	public function update(Request $request) {
-	    
-	    // $this->validate($request, [
-	    //     'name' => 'required|max:255',
-	    // ]);
+	    //
+	    /*$this->validate($request, [
+	        'name' => 'required|max:255',
+	    ]);*/
 		$main_office = null;
-		$user_id = Auth::user()->id;
-
+                $user_id = Auth::user()->id;
+                
 		if($request->id > 0) { 
-			$main_office = Main_office::findOrFail($request->id); 
-			$main_office->updated_by = $user_id;
-		}else { 
+                    $main_office = Main_office::findOrFail($request->id);
+                    $main_office->updated_by = $user_id;
+                    
+                }else { 
 			$main_office = new Main_office;
-			$main_office->created_by = $user_id;
+                        $main_office->created_by = $user_id;
 		}
 	    
 
 	    		
 			    $main_office->id = $request->id?:0;
-				
-	    		
-				$main_office->main_office = $request->main_office;
+		            
 		
 	    		
-				$main_office->status = $request->status;
-	
+		            
+			    $main_office->main_office = $request->main_office;
+		
+	    		
+		            
+			    $main_office->status = $request->status;
 		
 	    	    //$main_office->user_id = $request->user()->id;
 	    $main_office->save();

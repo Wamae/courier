@@ -14,30 +14,32 @@ use Auth;
 
 class ClientsController extends Controller
 {
-    //
+    public $title;
+    
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
+        $this->title = ucfirst(str_replace('_',' ','Clients'));
     }
 
 
     public function index(Request $request)
 	{
-	    return view('clients.index', []);
+            $title = $this->title;
+	    return view('clients.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('clients.add', [
-	        []
-	    ]);
+            $title = $this->title;
+	    return view('clients.add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$client = Client::findOrFail($id);
-	    return view('clients.add', [
-	        'model' => $client	    ]);
+            $model = Client::findOrFail($id);
+            $title = $this->title;
+	    return view('clients.add', compact('model','title'));
 	}
 
 	public function show(Request $request, $id)
@@ -56,6 +58,7 @@ class ClientsController extends Controller
 		$presql = " FROM clients a ";
 		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
 		$presql .= " LEFT JOIN users u2 ON a.updated_by = u2.id ";
+                
 		if($_GET['search']['value']) {	
 			$presql .= " WHERE client_name LIKE '%".$_GET['search']['value']."%' ";
 		}
@@ -97,30 +100,37 @@ class ClientsController extends Controller
 	        'name' => 'required|max:255',
 	    ]);*/
 		$client = null;
-		$user_id = Auth::user()->id;
-
+                $user_id = Auth::user()->id;
+                
 		if($request->id > 0) { 
-			$client = Client::findOrFail($request->id); 
-			$client->updated_by = $user_id;
-		}else { 
+                    $client = Client::findOrFail($request->id);
+                    $client->updated_by = $user_id;
+                    
+                }else { 
 			$client = new Client;
-			$client->created_by = $user_id;
+                        $client->created_by = $user_id;
 		}
 	    
 
 	    		
 			    $client->id = $request->id?:0;
-				
-	    		
-					    $client->client_name = $request->client_name;
+		            
 		
 	    		
-					    $client->client_telephone = $request->client_telephone;
+		            
+			    $client->client_name = $request->client_name;
 		
 	    		
-					    $client->billing_address = $request->billing_address;
-
-					    $client->status = $request->status;
+		            
+			    $client->client_telephone = $request->client_telephone;
+		
+	    		
+		            
+			    $client->billing_address = $request->billing_address;
+		
+	    		
+		            
+			    $client->status = $request->status;
 		
 	    	    //$client->user_id = $request->user()->id;
 	    $client->save();

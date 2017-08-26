@@ -14,21 +14,25 @@ use Auth;
 
 class Test_tablesController extends Controller
 {
-    //
+    public $title;
+    
     public function __construct()
     {
         $this->middleware('auth');
+        $this->title = ucfirst(str_replace('_',' ','Test_tables'));
     }
 
 
     public function index(Request $request)
 	{
-	    return view('test_tables.index', compact(''));
+            $title = $this->title;
+	    return view('test_tables.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
-	    return view('test_tables.add', compact(''));
+            $title = $this->title;
+	    return view('test_tables.add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
@@ -108,22 +112,28 @@ class Test_tablesController extends Controller
 	    		
 			    $test_table->id = $request->id?:0;
 		            
-			    		
+		
+	    		
 		            
 			    $test_table->name = $request->name;
-			    		
+		
+	    		
 		            
 			    $test_table->created_by = $request->created_by;
-			    		
+		
+	    		
 		            
 			    $test_table->created_at = $request->created_at;
-			    		
+		
+	    		
 		            
 			    $test_table->updated_by = $request->updated_by;
-			    		
+		
+	    		
 		            
 			    $test_table->updated_at = $request->updated_at;
-			    	    //$test_table->user_id = $request->user()->id;
+		
+	    	    //$test_table->user_id = $request->user()->id;
 	    $test_table->save();
 
 	    return redirect('/test_tables');

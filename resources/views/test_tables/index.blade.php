@@ -1,20 +1,18 @@
-@extends('crudgenerator::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
-
-<h2 class="page-header">{{ ucfirst('test_tables') }}</h2>
-
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('test_tables') }}
+        List of {{ $title }}
     </div>
 
     <div class="panel-body">
         <div class="">
-            <table class="table table-striped" id="thegrid">
+            <table class="table table-condensed table-striped info-print" id="thegrid">
               <thead>
-                <tr>
+                  <tr class="holder_header">
+                    <th width="10" class="non-print"><input type="checkbox" id="check-all-a"></th>    
                                         <th>Id</th>
                                         <th>Name</th>
                                         <th>Created By</th>
@@ -29,7 +27,8 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('test_tables/create')}}" class="btn btn-primary" role="button">Add test_table</a>
+        
+        <a href="{{url('test_tables/create')}}" class="btn btn-small btn-default add-new-form" role="button"><i class="icon-plus-sign"></i> Add {{$title}}</a>
     </div>
 </div>
 
@@ -64,7 +63,8 @@
                         "targets": 6                    },
                     {
                         "render": function ( data, type, row ) {
-                            return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
+                            //return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
+                            return '';
                         },
                         "targets": 6+1
                     },

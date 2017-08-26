@@ -1,20 +1,17 @@
-@extends('[[custom_master]]')
+@extends('layouts.app')
 
 @section('content')
 
-
-<h2 class="page-header">{{ ucfirst('[[model_plural]]') }}</h2>
-
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('[[model_plural]]') }}
+        List of {{ $title }}
     </div>
 
     <div class="panel-body">
         <div class="">
-            <table class="table table-striped" id="thegrid">
+            <table class="table table-condensed table-striped info-print" id="thegrid">
               <thead>
-                <tr>
+                  <tr class="holder_header">  
                     [[foreach:columns]]
                     <th>[[i.display]]</th>
                     [[endforeach]]
@@ -26,7 +23,8 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('[[route_path]]/create')}}" class="btn btn-primary" role="button">Add [[model_singular]]</a>
+        
+        <a href="{{url('[[route_path]]/create')}}" class="btn btn-small btn-default add-new-form" role="button"><i class="icon-plus-sign"></i> Add {{$title}}</a>
     </div>
 </div>
 
@@ -62,7 +60,8 @@
                     },
                     {
                         "render": function ( data, type, row ) {
-                            return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
+                            //return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
+                            return '';
                         },
                         "targets": [[num_columns]]+1
                     },
