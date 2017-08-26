@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2ada1decb42284407d153c714b97e1e",
+    "content-hash": "997c2971070917e009cb7fd4c7d494f6",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1921,6 +1921,49 @@
                 "environment"
             ],
             "time": "2016-09-01T10:05:43+00:00"
+        },
+        {
+            "name": "yaroslavmolchan/rbac",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/YaroslavMolchan/rbac.git",
+                "reference": "180a2cfee3b9586eb56783e6372a2df73aa57b33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/YaroslavMolchan/rbac/zipball/180a2cfee3b9586eb56783e6372a2df73aa57b33",
+                "reference": "180a2cfee3b9586eb56783e6372a2df73aa57b33",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.3",
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "YaroslavMolchan\\Rbac\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yaroslav Molchan",
+                    "email": "yaroslav.molchan@gmail.com",
+                    "homepage": "https://molchan.me"
+                }
+            ],
+            "description": "Simple RBAC/ACL for Laravel 5.3 and more with caching and permission groups.",
+            "keywords": [
+                "acl",
+                "laravel",
+                "rbac"
+            ],
+            "time": "2017-04-21T11:06:58+00:00"
         }
     ],
     "packages-dev": [
