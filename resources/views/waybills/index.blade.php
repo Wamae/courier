@@ -23,7 +23,7 @@
                             <br>
                             <br>
                             <div class="control-group form-group">
-<!--                                //TODO: Create a waybill status table-->
+                                <!--                                //TODO: Create a waybill status table-->
                                 <label class="col-lg-4 control-label" for="status">Waybill Status:</label>
                                 <div class="controls col-lg-6">
                                     <select name="status_search" id="status_search" class="form-control">
@@ -69,7 +69,7 @@
                                 <div class="controls col-lg-6">
                                     <select name="search_destination" id="search_destination" data-live-search="true" class="form-control">
                                         <option value="0" selected="selected">ALL STATIONS</option>
-                                         @foreach($stations as $station)
+                                        @foreach($stations as $station)
                                         <option {{(isset($model))?($model['destination'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
                                         @endforeach
                                     </select>
@@ -130,6 +130,7 @@
     $(document).ready(function(){
     theGrid = $('#thegrid').DataTable({
     "processing": true,
+            "dom": "t",
             "serverSide": true,
             "ordering": true,
             "responsive": true,
