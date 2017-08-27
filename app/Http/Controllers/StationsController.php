@@ -122,7 +122,8 @@ class StationsController extends Controller
 			    $station->main_office = $request->main_office;
 		
 	    		
-		            
+		             $station->office_name = $request->office_name;
+                             
 			    $station->office_code = $request->office_code;
 		
 	    		
@@ -140,22 +141,6 @@ class StationsController extends Controller
 	    		
 		            
 			    $station->status = $request->status;
-		
-	    		
-		            
-			    $station->created_at = $request->created_at;
-		
-	    		
-		            
-			    $station->created_by = $request->created_by;
-		
-	    		
-		            
-			    $station->updated_at = $request->updated_at;
-		
-	    		
-		            
-			    $station->updated_by = $request->updated_by;
 		
 	    	    //$station->user_id = $request->user()->id;
 	    $station->save();
