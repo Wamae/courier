@@ -26,10 +26,10 @@
                                 <label class="col-lg-4 control-label" for="status_search">Waybill Status:</label>
                                 <div class="controls col-lg-6">
                                     <select name="status_search" id="status_search" class="form-control">
-                                        <option value="0">Cancelled</option>
-                                        <option value="1" selected="selected">Active</option>
-                                        <option value="2">Dispatched/Loaded</option>
-                                        <option value="3">Delivered</option>
+                                         <option value="0" selected="selected">ALL TYPES</option>
+                                        @foreach($waybill_statuses as $waybill_status)
+                                        <option {{(isset($model))?($model['waybill_status'] == $waybill_status->id)?'selected':'':''}} value="{{$waybill_status->id}}">{{$waybill_status->waybill_status}}</option>   
+                                        @endforeach
                                     </select>	</div>
                             </div>
                             <br>
