@@ -20,13 +20,13 @@ class WaybillsController extends Controller
     //
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
 
     public function index(Request $request)
 	{
-            $package_types = Package_type::select('id','package_type')->where('status',ACTIVE);
+            $package_types = Package_type::select('id','package_type')->where('status',ACTIVE)->get();
             $stations = Station::select('id','office_name')->where('status',ACTIVE)->get();
             
 	    return view('waybills.index', compact('package_types','stations'));
@@ -64,22 +64,42 @@ class WaybillsController extends Controller
 		$len = $_GET['length'];
 		$start = $_GET['start'];
 
-		$select = "SELECT a.id,CONCAT(CONCAT(CONCAT(cs.office_code,'-',cs2.office_code),'-',DATE_FORMAT(a.created_at,'%a')),'-',a.id) AS waybill,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,pt.package_type,quantity,cs.office_name as origin,cs2.office_name AS destination,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1,2";
+		$select = "SELECT a.id,CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',DATE_FORMAT(a.created_at,'%a')),'-',a.id) AS waybill,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1,2";
 		$presql = " FROM waybills a ";
 		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
-		$presql .= " LEFT JOIN stations cs ON a.origin = cs.id ";
-		$presql .= " LEFT JOIN stations cs2 ON a.destination = cs2.id ";
-		$presql .= " LEFT JOIN package_types pt ON a.package_type = pt.package_type ";
+		$presql .= " LEFT JOIN stations ON a.origin = stations.id ";
+		$presql .= " LEFT JOIN stations AS stations2 ON a.destination = stations2.id ";
+		$presql .= " LEFT JOIN package_types ON a.package_type = package_types.id ";
+                
+                $presql .= "  ";
+                
+                if($_GET["columns"]){
+                    $first = true;
+                    for($i = 0; $i < count($_GET["columns"]);$i++){
+                        $name = $_GET["columns"][$i]["name"];
+                        $search_value = $_GET["columns"][$i]["search"]["value"];
+                        if($search_value && $name){                            
+                            if($first){
+                                $presql .= " WHERE {$name} = '".$search_value."' ";
+                                $first = false;
+                            }else{
+                                $presql .= " AND {$name} = '".$search_value."' ";
+                            }
+                        }
+                    }
+                }
 
 		if($_GET['search']['value']) {	
-			$presql .= " WHERE consignor LIKE '%".$_GET['search']['value']."%' ";
+                    $presql .= " WHERE consignor LIKE '%".$_GET['search']['value']."%' "
+//                            . "OR consignee LIKE '%".$_GET['search']['value']."%' "
+//                            . "OR stations.office_name LIKE '%".$_GET['search']['value']."%' "
+//                            . "OR stations2.office_name LIKE '%".$_GET['search']['value']."%' "
+//                            . "OR consignee_tel LIKE '%".$_GET['search']['value']."%' "
+;
 		}
-		
-		$presql .= "  ";
 
 		$sql = $select.$presql." LIMIT ".$start.",".$len;
-
-
+                
 		$qcount = DB::select("SELECT COUNT(a.id) c".$presql);
 		//print_r($qcount);
 		$count = $qcount[0]->c;
@@ -100,7 +120,7 @@ class WaybillsController extends Controller
 
 		$ret['recordsFiltered'] = count($ret);
 		$ret['draw'] = $_GET['draw'];
-
+                //dd($sql);
 		echo json_encode($ret);
 
 	}

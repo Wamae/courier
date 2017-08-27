@@ -23,8 +23,7 @@
                             <br>
                             <br>
                             <div class="control-group form-group">
-                                <!--                                //TODO: Create a waybill status table-->
-                                <label class="col-lg-4 control-label" for="status">Waybill Status:</label>
+                                <label class="col-lg-4 control-label" for="status_search">Waybill Status:</label>
                                 <div class="controls col-lg-6">
                                     <select name="status_search" id="status_search" class="form-control">
                                         <option value="0">Cancelled</option>
@@ -36,7 +35,7 @@
                             <br>
                             <br>
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="package_type">Package Type:</label>
+                                <label class="col-lg-4 control-label" for="package_type_search">Package Type:</label>
                                 <div class="controls col-lg-6">
                                     <select name="package_type_search" id="package_type_search" class="form-control">
                                         <option value="0" selected="selected">ALL TYPES</option>
@@ -54,7 +53,7 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="origin">Origin Station:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="origin_search" id="origin" data-live-search="true" class="form-control selectpicker">
+                                    <select name="origin_search" id="origin_search" data-live-search="true" class="form-control selectpicker">
                                         <option value="0" selected="selected">ALL STATIONS</option>
                                         @foreach($stations as $station)
                                         <option {{(isset($model))?($model['destination'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
@@ -65,9 +64,9 @@
                             <br>
                             <br>
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="search_destination">Destination:</label>
+                                <label class="col-lg-4 control-label" for="destination_search">Destination:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="search_destination" id="search_destination" data-live-search="true" class="form-control">
+                                    <select name="destination_search" id="destination_search" data-live-search="true" class="form-control">
                                         <option value="0" selected="selected">ALL STATIONS</option>
                                         @foreach($stations as $station)
                                         <option {{(isset($model))?($model['destination'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
@@ -77,12 +76,6 @@
                             </div>
                             <br>
                             <br>
-                            <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="keywords">&nbsp;</label>
-                                <div class="controls col-lg-6">
-                                    <span class="btn btn-info btn-block search-btn" id="keywords" name="keywords"><i class="icon-search"></i> SEARCH</span>
-                                </div>
-                            </div>
                             <!-- ========================================================================== -->
                         </td>
                     </tr>
@@ -135,7 +128,12 @@
             "ordering": true,
             "responsive": true,
             "ajax": "{{url('waybills/grid')}}",
+            "sEmptyTable": "Loading data from server",
             "columnDefs": [
+            { "name": "a.package_type", "targets": 5 },
+            { "name": "a.origin", "targets": 7 },
+            { "name": "a.destination", "targets": 8 },
+            { "name": "a.status", "targets": 9 },
             {
             "render": function (data, type, row) {
             return '<a href="{{ url(' / waybills') }}/' + row[0] + '">' + data + '</a>';
@@ -155,6 +153,54 @@
                     "targets": 10 + 1
             },
             ]
+    });
+    
+    $("#keywords").keyup(function(){
+    var keywords = $(this).val().trim(); 
+    if (keywords == "") { 
+    theGrid.search("").draw();
+    } else {
+    console.log("Keywords: ", keywords);
+    theGrid.search(keywords).draw();
+    }
+    });
+    
+    $("#package_type_search").change(function(){
+    var packageType = $(this).val(); 
+    if (packageType == "0") { 
+    theGrid.columns(5).search(packageType).draw();
+    } else {
+    
+    console.log("Packgage type: ", packageType);
+    theGrid.columns(5).search(packageType, false, true, true).draw();
+    }
+    });
+    $("#origin_search").change(function(){
+    var origin = $(this).val(); 
+    if (origin == "0") { 
+    theGrid.columns(7).search(origin).draw();
+    } else {
+    console.log("Origin: ", origin);
+    theGrid.columns(7).search(origin, false, true, true).draw();
+    }
+    });
+    $("#destination_search").change(function(){
+    var destination = $(this).val(); 
+    if (destination == "0") { 
+    theGrid.columns(8).search(destination).draw();
+    } else {
+    console.log("Destination: ", destination);
+    theGrid.columns(8).search(destination, false, true, true).draw();
+    }
+    });
+    $("#status_search").change(function(){
+    var status = $(this).val(); 
+    if (status == "0") { 
+    theGrid.columns(9).search(status).draw();
+    } else {
+    console.log("status: ", status);
+    theGrid.columns(9).search(status, false, true, true).draw();
+    }
     });
     });
     function doDelete(id) {
