@@ -35,3 +35,5 @@ Route::get('/waybills/grid', 'WaybillsController@grid');
 Route::resource('/waybills', 'WaybillsController');
 Route::get('/test_tables/grid', 'Test_tablesController@grid');
 Route::resource('/test_tables', 'Test_tablesController');
+Route::get('/waybill_statuses/grid', 'Waybill_statusesController@grid');
+Route::resource('/waybill_statuses', 'Waybill_statusesController');
