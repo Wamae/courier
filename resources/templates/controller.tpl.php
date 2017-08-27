@@ -55,8 +55,13 @@ class [[controller_name]]Controller extends Controller
 		$len = $_GET['length'];
 		$start = $_GET['start'];
 
-		$select = "SELECT *,1,2 ";
+		$select = "SELECT a.id,manifest,waybill,users.name AS created_by,"
+                        . "DATE_FORMAT(a.created_at,'%d-%m-%Y') AS created_at,"
+                        . "IF(users2.name IS NULL,'N/A',users2.name) AS updated_by,"
+                        . "DATE_FORMAT(a.updated_at,'%d-%m-%Y') AS updated_at,1,2 ";
 		$presql = " FROM [[prefix]][[tablename]] a ";
+                $presql .= " LEFT JOIN users ON a.created_by = users.id ";
+                $presql .= " LEFT JOIN users users2 ON a.updated_by = users2.id ";
 		if($_GET['search']['value']) {	
 			$presql .= " WHERE [[first_column_nonid]] LIKE '%".$_GET['search']['value']."%' ";
 		}
