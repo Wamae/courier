@@ -37,7 +37,7 @@
                             </tr>
                             <tr>
                                 <td class="info-tda"><b>Items Loaded:</b></td>
-                                <td class="info-tdb">{{$manifest->waybill_manifest}}</td>
+                                <td class="info-tdb">{{isset($manifest->waybill_manifest)?$manifest->waybill_manifest->distinct('waybill')->count('waybill'):0}}</td>
                                 <td class="info-tda"><b>Conductor:</b></td>
                                 <td class="info-tdb">{{$manifest->conductor}}</td>
                             </tr>
