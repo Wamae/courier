@@ -99,7 +99,6 @@
                         <th>Weight</th>
                         <th>Status</th>
                         <th style="width:50px"></th>
-                        <th style="width:50px"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,21 +135,15 @@
             { "name": "a.status", "targets": 9 },
             {
             "render": function (data, type, row) {
-            return '<a href="{{ url(' / waybills') }}/' + row[0] + '">' + data + '</a>';
+                return '<a href="{{ url('/waybills') }}/' + row[0] + '">' + data + '</a>';
             },
                     "targets": 1
             },
             {
             "render": function (data, type, row) {
-            return '<a href="{{ url(' / waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
+                return '<a href="{{ url('/waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
             },
-                    "targets": 10                    },
-            {
-            "render": function (data, type, row) {
-            //return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
-            return '';
-            },
-                    "targets": 10 + 1
+                "targets": 11                    
             },
             ]
     });
@@ -205,7 +198,7 @@
     });
     function doDelete(id) {
     if (confirm('You really want to delete this record?')) {
-    $.ajax({ url: '{{ url(' / waybills') }}/' + id, type: 'DELETE'}).success(function() {
+    $.ajax({ url: '{{ url('/waybills') }}/' + id, type: 'DELETE'}).success(function() {
     theGrid.ajax.reload();
     });
     }
