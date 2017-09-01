@@ -104,6 +104,9 @@
                                 <li>
                                     <a href="{{url('stations')}}">Stations</a>
                                 </li>
+                                <li>
+                                    <a href="{{url('manifests')}}"><i class="icon-truck"></i>Manifests</a>
+                                </li>
                             </ul>
                         </li>
 

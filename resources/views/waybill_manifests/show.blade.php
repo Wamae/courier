@@ -109,7 +109,7 @@
             "serverSide": true,
             "ordering": true,
             "responsive": true,
-            "ajax": "{{url('waybill_manifests/grid')}}",
+            "ajax": "{{url('waybill_manifests/grid')}}/{{$manifest->id}}",
             "sEmptyTable": "Loading data from server",
             "columnDefs": [
             { "searchable": false,"orderable":false, "targets": 0 },

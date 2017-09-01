@@ -79,7 +79,7 @@ class Waybill_manifestsController extends Controller {
         }*/
     }
 
-    public function grid(Request $request) {
+    public function grid(Request $request,$manifest_id) {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
@@ -100,6 +100,7 @@ class Waybill_manifestsController extends Controller {
         $presql .= " LEFT JOIN stations AS stations2 ON waybills.destination = stations2.id ";
         $presql .= " LEFT JOIN package_types ON waybills.package_type = package_types.id ";
         $presql .= " WHERE a.waybill IS NOT NULL";
+        $presql .= " AND a.manifest = ".$manifest_id;
 
         $presql .= "  ";
 

@@ -45,7 +45,7 @@ Route::resource('/test_tables', 'Test_tablesController');
 Route::get('/waybill_statuses/grid', 'Waybill_statusesController@grid');
 Route::resource('/waybill_statuses', 'Waybill_statusesController');
 
-Route::get('/waybill_manifests/grid', 'Waybill_manifestsController@grid');
+Route::get('/waybill_manifests/grid/{manifest}', 'Waybill_manifestsController@grid');
 Route::get('/waybill_manifests', 'Waybill_manifestsController@index');
 Route::get('/waybill_manifests/{manifest}', 'Waybill_manifestsController@show');
 Route::get('/waybill_manifests/filters/{manifest}', 'Waybill_manifestsController@filters');
