@@ -61,6 +61,13 @@
                     },
                     {
                         "render": function ( data, type, row ) {
+                            return '<a class="btn btn-info btn-xs" href="{{ url('/waybill_manifests') }}/'+row[0]+'">'+data+' items</a>';
+                            //return '';
+                        },
+                        "targets": 6
+                    },
+                    {
+                        "render": function ( data, type, row ) {
                             return '<a href="{{ url('/loading_manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
                         },
                         "targets": 8                   },

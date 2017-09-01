@@ -28,12 +28,13 @@
                                                                                                                         <div class="form-group">
                 <label for="origin" class="col-sm-3 control-label">Origin</label>
                 <div class="col-sm-2">
-                    <select name="origin" class="form-control">
+<!--                    <select name="origin" class="form-control" disabled>
                             <option value="">Select a station</option>
                         @foreach($stations as $station)
                             <option value="{{$station->id}}">{{$station->office_name}}</option>
                         @endforeach
-                    </select>
+                    </select>-->
+                    <input name="origin" class="form-control" id="origin" value="1" readonly/>
                 </div>
             </div>
                                                                                                 <div class="form-group">
@@ -72,12 +73,6 @@
                         <option value="{{$model['status'] or '1'}}">ACTIVE</option>
                         <option value="{{$model['status'] or '0'}}">INACTIVE</option>                        
                     </select>
-                </div>
-            </div>
-                                                                                                <div class="form-group">
-                <label for="loaded" class="col-sm-3 control-label">Loaded</label>
-                <div class="col-sm-2">
-                    <input type="number" name="loaded" id="loaded" class="form-control" value="{{$model['loaded'] or ''}}">
                 </div>
             </div>
                                                 
