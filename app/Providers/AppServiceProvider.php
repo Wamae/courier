@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use App\Waybill;
+use App\Manifest;
+use App\Observers\WaybillObserver;
+use App\Observers\ManifestObserver;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -14,6 +18,8 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         Schema::defaultStringLength(191);
+        Waybill::observe(new WaybillObserver);
+        Manifest::observe(new ManifestObserver);
     }
 
     /**

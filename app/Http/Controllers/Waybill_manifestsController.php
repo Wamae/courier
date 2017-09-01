@@ -38,7 +38,7 @@ class Waybill_manifestsController extends Controller {
         return view('waybill_manifests.add', compact('model', 'title'));
     }
 
-    public function createManifestNo($o_office_code, $d_office_code, $id) {
+    public function create_manifest_no($o_office_code, $d_office_code, $id) {
 
         return $o_office_code . "-" . $d_office_code . "-MANIFEST:" . $id;
     }
@@ -49,16 +49,14 @@ class Waybill_manifestsController extends Controller {
 //                        ->findOrFail($id);
         //$model = Waybill_manifest::manifest($id)->get();
         $model = Waybill_manifest::where("manifest", $manifest_id)->groupBy('manifest', 'waybill_manifests.id', 'waybill_manifests.waybill', 'waybill_manifests.status', 'waybill_manifests.created_by', 'waybill_manifests.created_at', 'waybill_manifests.updated_by', 'waybill_manifests.updated_at')->first();
-        //dd($model);
-        //return $waybill_manifest->manifests;
-        //MSA-DAR-MANIFEST:11222
+        if($model){
         $origin_id = $model->manifests->origin;
         $destination_id = $model->manifests->destination;
 
         $origin = Station::find($origin_id);
         $destination = Station::find($destination_id);
 
-        $manifest_no = $this->createManifestNo($origin["office_code"], $destination["office_code"], $manifest_id);
+        $manifest_no = $this->create_manifest_no($origin["office_code"], $destination["office_code"], $manifest_id);
 
         $from = $origin->office_name;
         $to = $destination->office_name;
@@ -73,27 +71,38 @@ class Waybill_manifestsController extends Controller {
 
         $items = $model->distinct()->get(['waybill'])->count();
 
-        return view('waybill_manifests.show', compact('model','manifest_id', 'manifest_no', 'from', 'to', 'driver', 'conductor', 'reg_no', 'manifest_date', 'items'));
+        return view('waybill_manifests.show', compact('model', 'manifest_id', 'manifest_no', 'from', 'to', 'driver', 'conductor', 'reg_no', 'manifest_date', 'items'));
+        }else{
+            $manifest = \App\Loading_manifest::find($manifest_id);
+            return view('waybill_manifests.show',compact('manifest'));
+        }
     }
 
     public function grid(Request $request) {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
-        $select = "SELECT a.id,manifest,status,users.name AS created_by,"
-                . "DATE_FORMAT(a.created_at,'%d-%m-%Y') AS created_at,"
-                . "IF(users2.name IS NULL,'N/A',users2.name) AS updated_by,"
-                . "DATE_FORMAT(a.updated_at,'%d-%m-%Y') AS updated_at,1,2 ";
+        /* $select = "SELECT a.id,manifest,waybills.status,users.name AS created_by,"
+          . "DATE_FORMAT(a.created_at,'%d-%m-%Y') AS created_at,"
+          . "IF(users2.name IS NULL,'N/A',users2.name) AS updated_by,"
+          . "DATE_FORMAT(a.updated_at,'%d-%m-%Y') AS updated_at,1,2 ";
+          $presql = " FROM waybill_manifests a ";
+          $presql .= " LEFT JOIN waybills ON a.waybill = waybills.id ";
+          $presql .= " LEFT JOIN loading_manifests ON a.manifest = loading_manifests.id ";
+          $presql .= " LEFT JOIN users ON a.created_by = users.id ";
+          $presql .= " LEFT JOIN users users2 ON a.updated_by = users2.id "; */
+
+        $select = "SELECT waybills.id,CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',UCASE(DATE_FORMAT(a.created_at,'%a'))),'-',a.id) AS waybill,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,weight,if(a.status = 1,'ACTIVE','INACTIVE') AS status";
         $presql = " FROM waybill_manifests a ";
-        $presql .= " LEFT JOIN users ON a.created_by = users.id ";
-        $presql .= " LEFT JOIN users users2 ON a.updated_by = users2.id ";
-        if ($_GET['search']['value']) {
-            $presql .= " WHERE manifest LIKE '%" . $_GET['search']['value'] . "%' ";
-        }
+        $presql .= " LEFT JOIN waybills ON waybills.id = a.waybill";
+        $presql .= " LEFT JOIN stations ON waybills.origin = stations.id ";
+        $presql .= " LEFT JOIN stations AS stations2 ON waybills.destination = stations2.id ";
+        $presql .= " LEFT JOIN package_types ON waybills.package_type = package_types.id ";
+        $presql .= " WHERE a.waybill IS NOT NULL";
 
         $presql .= "  ";
 
-        $sql = $select . $presql . " LIMIT " . $start . "," . $len;
+        $sql = $select . $presql . "LIMIT " . $start . "," . $len;
 
 
         $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
@@ -180,7 +189,7 @@ class Waybill_manifestsController extends Controller {
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
         $waybill_statuses = Waybill_status::select('id', 'waybill_status')->get();
 
-        $data = compact('package_types', 'stations', 'waybill_statuses','manifest_id');
+        $data = compact('package_types', 'stations', 'waybill_statuses', 'manifest_id');
 
         return (String) view("filters/waybill_filters", $data);
     }
@@ -189,14 +198,14 @@ class Waybill_manifestsController extends Controller {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
-        $select = "SELECT '',a.id,CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',UCASE(DATE_FORMAT(a.created_at,'%a'))),'-',a.id) AS waybill,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,weight,if(a.status = 1,'ACTIVE','INACTIVE') AS status";
+        $select = "SELECT a.id,CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',UCASE(DATE_FORMAT(a.created_at,'%a'))),'-',a.id) AS waybill,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,weight,if(a.status = 1,'ACTIVE','INACTIVE') AS status";
         $presql = " FROM waybills a ";
         $presql .= " LEFT JOIN waybill_manifests ON a.id = waybill_manifests.waybill";
         $presql .= " LEFT JOIN users u ON a.created_by = u.id ";
         $presql .= " LEFT JOIN stations ON a.origin = stations.id ";
         $presql .= " LEFT JOIN stations AS stations2 ON a.destination = stations2.id ";
         $presql .= " LEFT JOIN package_types ON a.package_type = package_types.id ";
-        $presql .= " WHERE waybill_manifests.waybill IS NULL" ;
+        $presql .= " WHERE waybill_manifests.waybill IS NULL";
 
         $presql .= "  ";
 
@@ -206,17 +215,17 @@ class Waybill_manifestsController extends Controller {
                 $name = $_GET["columns"][$i]["name"];
                 $search_value = $_GET["columns"][$i]["search"]["value"];
                 if ($search_value && $name) {
-                        $presql .= " AND {$name} = '" . $search_value . "' ";
+                    $presql .= " AND {$name} = '" . $search_value . "' ";
                 }
             }
         }
 
         if ($_GET['search']['value']) {
             $presql .= " AND consignor LIKE '%" . $_GET['search']['value'] . "%' "
-                            . "OR consignee LIKE '%".$_GET['search']['value']."%' "
-                            . "OR stations.office_name LIKE '%".$_GET['search']['value']."%' "
-                            . "OR stations2.office_name LIKE '%".$_GET['search']['value']."%' "
-                            . "OR consignee_tel LIKE '%".$_GET['search']['value']."%' "
+                    . "OR consignee LIKE '%" . $_GET['search']['value'] . "%' "
+                    . "OR stations.office_name LIKE '%" . $_GET['search']['value'] . "%' "
+                    . "OR stations2.office_name LIKE '%" . $_GET['search']['value'] . "%' "
+                    . "OR consignee_tel LIKE '%" . $_GET['search']['value'] . "%' "
             ;
         }
 
@@ -256,6 +265,30 @@ class Waybill_manifestsController extends Controller {
 
         $waybill_manifest->delete();
         return "OK";
+    }
+
+    public function add_batch(Request $request) {
+        $waybill_ids = $request["waybill_ids"];
+        $manifest_id = $request["manifest_id"];
+        $created_by = Auth::user()->id;
+        $created_at = date("Y-m-d H:i:s");
+
+        $waybill_manifests = array();
+        for ($i = 0; $i < count($waybill_ids); $i++) {
+            $waybill_manifests[$i] = array(
+                "status" => ACTIVE,
+                "waybill" => $waybill_ids[$i],
+                "manifest" => $manifest_id,
+                "created_by" => $created_by,
+                "created_at" => $created_at);
+        }
+        echo Waybill_manifest::insert($waybill_manifests);
+    }
+
+    public function remove_batch(Request $request) {
+        $waybill_ids = $request["waybill_ids"];
+        
+        echo Waybill_manifest::whereIn("waybill",$waybill_ids)->delete();
     }
 
 }

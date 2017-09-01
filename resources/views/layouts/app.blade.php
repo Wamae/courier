@@ -79,7 +79,7 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li></li>
+                                <li>Coming soon</li>
                             </ul>
                         </li>
 

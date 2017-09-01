@@ -3,15 +3,15 @@
 @section('content')
 
 
-<h2 class="page-header">Loading manifest</h2>
+<h2 class="page-header">Manifest</h2>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        Add/Modify Loading manifest    </div>
+        Add/Modify  Manifest    </div>
 
     <div class="panel-body">
                 
-        <form action="{{ url('/loading_manifests'.( isset($model) ? "/" . $model->id : "")) }}" method="POST" class="form-horizontal">
+        <form action="{{ url('/manifests'.( isset($model) ? "/" . $model->id : "")) }}" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
             @if (isset($model))
@@ -28,13 +28,8 @@
                                                                                                                         <div class="form-group">
                 <label for="origin" class="col-sm-3 control-label">Origin</label>
                 <div class="col-sm-2">
-<!--                    <select name="origin" class="form-control" disabled>
-                            <option value="">Select a station</option>
-                        @foreach($stations as $station)
-                            <option value="{{$station->id}}">{{$station->office_name}}</option>
-                        @endforeach
-                    </select>-->
-                    <input name="origin" class="form-control" id="origin" value="1" readonly/>
+                    <input type="hidden" name="origin" class="form-control" id="origin" value="{{Auth::user()->station}}" readonly/>
+                    <input name="origin_name" class="form-control" id="origin_name" value="{{Auth::user()->stations->office_name}}" readonly/>
                 </div>
             </div>
                                                                                                 <div class="form-group">
@@ -43,7 +38,7 @@
                     <select name="destination" class="form-control">
                             <option value="">Select a station</option>
                         @foreach($stations as $station)
-                            <option value="{{$station->id}}">{{$station->office_name}}</option>
+                            <option {{(isset($model))?($model['destination'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -51,7 +46,7 @@
             <div class="form-group">
                 <label for="registration no" class="col-sm-3 control-label">Registration No</label>
                 <div class="col-sm-6">
-                    <input type="text" name="registration no" id="registration no" class="form-control" value="{{$model['registration no'] or ''}}">
+                    <input type="text" name="registration no" id="registration no" class="form-control" value="{{$model['registration_no'] or ''}}">
                 </div>
             </div>
                                                                                                 <div class="form-group">
@@ -81,7 +76,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="fa fa-plus"></i> Save
                     </button> 
-                    <a class="btn btn-default" href="{{ url('/loading_manifests') }}"><i class="glyphicon glyphicon-chevron-left"></i> Back</a>
+                    <a class="btn btn-default" href="{{ url('/manifests') }}"><i class="glyphicon glyphicon-chevron-left"></i> Back</a>
                 </div>
             </div>
         </form>

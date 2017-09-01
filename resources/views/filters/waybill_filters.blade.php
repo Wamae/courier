@@ -9,6 +9,7 @@
                                 <label class="col-lg-4 control-label" for="keywords">Keywords:</label>
                                 <div class="col-lg-6">
                                     <input type="text" id="keywords" class="form-control input-sm" name="keywords" value="">
+                                    <input type="hidden" id="manifest_id" class="form-control input-sm" name="keywords" value="{{$manifest_id}}">
                                 </div>
                             </div>
                             <br>
@@ -79,7 +80,6 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="check-all"></th>
-                        <th>Id</th>
                         <th>Waybill</th>
                         <th>Date</th>
                         <th>Consignor</th>
@@ -117,7 +117,7 @@
             { "name": "a.status", "targets": 9 },
             {
             "render": function (data, type, row) {
-                return '<input type="checkbox" class="check-item" name="waybils[]" value="'+row[0]+'">';
+                return '<input type="checkbox" class="check-item" name="waybills[]" value="'+row[0]+'"/>';
             },
                     "targets": 0
             }
@@ -175,6 +175,33 @@
     theGrid.columns(9).search(status, false, true, true).draw();
     }
     });
+              
+    $("#load-selected-waybills").click(function(){
+        var listCheck = [];
+        $(".check-item:checked").each(function() {
+            
+            listCheck.push($(this).val());
+        });
+        console.log(listCheck);
+        //return false;       
+        
+        manifest_id = $("#manifest_id").val();
+        if(listCheck.length > 0){
+            $.ajax(
+                {url: "{{url('/waybill_manifests/add_batch/')}}",
+                data:{"waybill_ids":listCheck,"manifest_id":manifest_id},
+                type:"POST",
+                success:function(data){
+                    if(data === "1"){                        
+                        theGrid.ajax.reload();
+                        alert("Waybill(s) have been added to manifest");
+                    }
+            }});
+        }else{
+            alert("Select waybills first");
+        }
+    });
+    
     });
     function doDelete(id) {
     if (confirm('You really want to delete this record?')) {

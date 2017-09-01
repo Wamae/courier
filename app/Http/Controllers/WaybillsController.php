@@ -56,7 +56,7 @@ class WaybillsController extends Controller {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
-        $select = "SELECT a.id,CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',UCASE(DATE_FORMAT(a.created_at,'%a'))),'-',a.id) AS waybill,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,weight,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1";
+        $select = "SELECT a.id,waybill_no,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,weight,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1";
         $presql = " FROM waybills a ";
         $presql .= " LEFT JOIN users u ON a.created_by = u.id ";
         $presql .= " LEFT JOIN stations ON a.origin = stations.id ";
@@ -181,12 +181,18 @@ class WaybillsController extends Controller {
         $waybill->amount = $request->amount;
 
 
-        $waybill->status = 1;
-
-        //$waybill->user_id = $request->user()->id;
-        $waybill->save();
+        $waybill->status = ACTIVE;
+        
+        $waybill->save();  
 
         return redirect('/waybills');
+    }
+    
+    public function create_waybill_no($o_office_code, $d_office_code) {
+        $rand_string = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),-4);
+        $month = strtoupper(date("M"));
+        $year = date("Y");
+        return $o_office_code . "-" . $d_office_code . "-".$year."-".$month."-" . $rand_string;
     }
 
     public function store(Request $request) {

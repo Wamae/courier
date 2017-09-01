@@ -1,4 +1,4 @@
-@extends('crudgenerator::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
@@ -61,7 +61,7 @@
             <table class="table table-striped" id="thegrid">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th><input type="checkbox" id="check-all"></th>
                         <th>Waybill</th>
                         <th>Date</th>
                         <th>Consignor</th>
@@ -85,7 +85,7 @@
 <div class="btn-group pull-left waybil-l-btn-b  ">
 	<a class="btn btn-small btn-default print-manifes-btn" href="https://tahmeed-courier.api.co.ke/sheet-pdfsheet-40967.pdf"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
 			<a class="btn btn-default load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>
-		<a class="btn btn-default remove-waybil-btn" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>
+		<a class="btn btn-default remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>
 		<a class="btn btn-default dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>
 		</div>
 <div class="btn-group pull-right">
@@ -109,13 +109,20 @@
             "serverSide": true,
             "ordering": true,
             "responsive": true,
-            "ajax": "{{url('waybills/grid')}}",
+            "ajax": "{{url('waybill_manifests/grid')}}",
             "sEmptyTable": "Loading data from server",
             "columnDefs": [
+            { "searchable": false,"orderable":false, "targets": 0 },
             { "name": "a.package_type", "targets": 5 },
             { "name": "a.origin", "targets": 7 },
             { "name": "a.destination", "targets": 8 },
             { "name": "a.status", "targets": 9 },
+            {
+            "render": function (data, type, row) {
+                return '<input type="checkbox" class="check-item" name="waybills[]" value="'+row[0]+'"/>';
+            },
+                    "targets": 0
+            },
             {
             "render": function (data, type, row) {
             return '<a href="{{url('/waybills')}}/' + row[0] + '">' + data + '</a>';
@@ -125,13 +132,15 @@
             ]
     });
     
+    $('#check-all').change(function(){
+        $('.check-item').prop('checked', this.checked);
+    });
+    
     $("#back").click(function(){
         $("#bottom-buttons-two").addClass("hidden");
         $("#bottom-buttons-one").removeClass("hidden");
-    });
-    
-    $("#load-selected-waybills").click(function(){
-        alert();
+        
+        theGrid.ajax.reload();
     });
     
     $("#load-waybills").click(function(){
@@ -148,6 +157,32 @@
 
     });
     
+        
+    $("#remove-waybills").click(function(){
+        var listCheck = [];
+        $(".check-item:checked").each(function() {
+            
+            listCheck.push($(this).val());
+        });
+        console.log(listCheck);
+        
+        if(listCheck.length > 0){
+            $.ajax(
+                {url: "{{url('/waybill_manifests/remove_batch/')}}",
+                data:{"waybill_ids":listCheck},
+                type:"POST",
+                success:function(data){
+                    if(data === "1"){                        
+                        theGrid.ajax.reload();
+                        alert("Waybill(s) have been removed from manifest");
+                    }
+            }});
+        }else{
+            alert("Select waybills first");
+        }
     });
+    
+    });    
+    
 </script>
 @endsection

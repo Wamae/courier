@@ -13,7 +13,7 @@
     <div class="panel-body">
                 
 
-        <form action="{{ url('/loading_manifests') }}" method="POST" class="form-horizontal">
+        <form action="{{ url('/manifests') }}" method="POST" class="form-horizontal">
 
 
                 
@@ -115,7 +115,7 @@
         
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-6">
-                <a class="btn btn-default" href="{{ url('/loading_manifests') }}"><i class="glyphicon glyphicon-chevron-left"></i> Back</a>
+                <a class="btn btn-default" href="{{ url('/manifests') }}"><i class="glyphicon glyphicon-chevron-left"></i> Back</a>
             </div>
         </div>
 

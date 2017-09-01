@@ -3,11 +3,11 @@
 @section('content')
 
 
-<h2 class="page-header">{{ ucfirst('loading manifests') }}</h2>
+<h2 class="page-header">{{ ucfirst('manifests') }}</h2>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('loading manifests') }}
+        List of {{ ucfirst('manifests') }}
     </div>
 
     <div class="panel-body">
@@ -31,7 +31,7 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('loading_manifests/create')}}" class="btn btn-primary" role="button">Add loading manifest</a>
+        <a href="{{url('manifests/create')}}" class="btn btn-primary" role="button">Add loading manifest</a>
     </div>
 </div>
 
@@ -51,11 +51,11 @@
                 "serverSide": true,
                 "ordering": true,
                 "responsive": true,
-                "ajax": "{{url('loading_manifests/grid')}}",
+                "ajax": "{{url('manifests/grid')}}",
                 "columnDefs": [
                     {
                         "render": function ( data, type, row ) {
-                            return '<a href="{{ url('/loading_manifests') }}/'+row[0]+'">'+data+'</a>';
+                            return '<a href="{{ url('/manifests') }}/'+row[0]+'">'+data+'</a>';
                         },
                         "targets": 1
                     },
@@ -68,7 +68,7 @@
                     },
                     {
                         "render": function ( data, type, row ) {
-                            return '<a href="{{ url('/loading_manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
+                            return '<a href="{{ url('/manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
                         },
                         "targets": 8                   },
                     {
@@ -83,7 +83,7 @@
         });
         function doDelete(id) {
             if(confirm('You really want to delete this record?')) {
-               $.ajax({ url: '{{ url('/loading_manifests') }}/' + id, type: 'DELETE'}).success(function() {
+               $.ajax({ url: '{{ url('/manifests') }}/' + id, type: 'DELETE'}).success(function() {
                 theGrid.ajax.reload();
                });
             }
