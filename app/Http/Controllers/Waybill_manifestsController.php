@@ -11,6 +11,7 @@ use Auth;
 use App\Station;
 use App\Waybill_status;
 use App\Package_type;
+use App\Manifest;
 use View;
 
 class Waybill_manifestsController extends Controller {
@@ -44,11 +45,11 @@ class Waybill_manifestsController extends Controller {
     }
 
     public function show(Request $request, $manifest_id) {
-//		$waybill_manifest = Waybill_manifest::with("waybills")
+		$manifest = Manifest::find($manifest_id);
 //                        ->select('id','manifest','waybill')
 //                        ->findOrFail($id);
         //$model = Waybill_manifest::manifest($id)->get();
-        $model = Waybill_manifest::where("manifest", $manifest_id)->groupBy('manifest', 'waybill_manifests.id', 'waybill_manifests.waybill', 'waybill_manifests.status', 'waybill_manifests.created_by', 'waybill_manifests.created_at', 'waybill_manifests.updated_by', 'waybill_manifests.updated_at')->first();
+        /*$model = Waybill_manifest::where("manifest", $manifest_id)->groupBy('manifest', 'waybill_manifests.id', 'waybill_manifests.waybill', 'waybill_manifests.status', 'waybill_manifests.created_by', 'waybill_manifests.created_at', 'waybill_manifests.updated_by', 'waybill_manifests.updated_at')->first();
         if($model){
         $origin_id = $model->manifests->origin;
         $destination_id = $model->manifests->destination;
@@ -56,7 +57,7 @@ class Waybill_manifestsController extends Controller {
         $origin = Station::find($origin_id);
         $destination = Station::find($destination_id);
 
-        $manifest_no = $this->create_manifest_no($origin["office_code"], $destination["office_code"], $manifest_id);
+        //$manifest_no = $this->create_manifest_no($origin["office_code"], $destination["office_code"], $manifest_id);
 
         $from = $origin->office_name;
         $to = $destination->office_name;
@@ -69,13 +70,13 @@ class Waybill_manifestsController extends Controller {
 
         $manifest_date = $manifest->created_at->format("D d/m/Y");
 
-        $items = $model->distinct()->get(['waybill'])->count();
+        $items = $model->distinct()->get(['waybill'])->count();*/
 
-        return view('waybill_manifests.show', compact('model', 'manifest_id', 'manifest_no', 'from', 'to', 'driver', 'conductor', 'reg_no', 'manifest_date', 'items'));
-        }else{
+        return view('waybill_manifests.show', compact('manifest'));
+       /* }else{
             $manifest = \App\Loading_manifest::find($manifest_id);
             return view('waybill_manifests.show',compact('manifest'));
-        }
+        }*/
     }
 
     public function grid(Request $request) {

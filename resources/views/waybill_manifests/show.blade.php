@@ -19,27 +19,27 @@
                     <table class="table info-print" width="100%">
                         <tbody><tr>
                                 <td class="info-tda" width="20%"><b>Manifest Ref:</b></td>
-                                <td class="info-tdb" width="30%">{{$manifest_no}}</td>
+                                <td class="info-tdb" width="30%">{{$manifest->manifest_no}}</td>
                                 <td class="info-tda" width="20%"><b>From:</b></td>
-                                <td class="info-tdb" width="30%">{{$from}}</td>
+                                <td class="info-tdb" width="30%">{{$manifest->origins->office_name}}</td>
                             </tr>
                             <tr>
                                 <td class="info-tda"><b>Reg. Number:</b></td>
-                                <td class="info-tdb">{{$reg_no}}</td>
+                                <td class="info-tdb">{{$manifest->registration_no}}</td>
                                 <td class="info-tda"><b>To:</td>
-                                <td class="info-tdb">{{$to}}</td>
+                                <td class="info-tdb">{{$manifest->destinations->office_name}}</td>
                             </tr>
                             <tr>
                                 <td class="info-tda"><b>Date:</b></td>
-                                <td class="info-tdb">{{$manifest_date}}</td>
+                                <td class="info-tdb">{{$manifest->created_at}}</td>
                                 <td class="info-tda"><b>Driver:</b></td>
-                                <td class="info-tdb">{{$driver}}</td>
+                                <td class="info-tdb">{{$manifest->driver}}</td>
                             </tr>
                             <tr>
                                 <td class="info-tda"><b>Items Loaded:</b></td>
-                                <td class="info-tdb">{{$items}}</td>
+                                <td class="info-tdb">{{$manifest->waybill_manifest}}</td>
                                 <td class="info-tda"><b>Conductor:</b></td>
-                                <td class="info-tdb">{{$conductor}}</td>
+                                <td class="info-tdb">{{$manifest->conductor}}</td>
                             </tr>
                         </tbody></table>
                 </div>
@@ -137,16 +137,17 @@
     });
     
     $("#back").click(function(){
+        theGrid.ajax.reload();
         $("#bottom-buttons-two").addClass("hidden");
         $("#bottom-buttons-one").removeClass("hidden");
         
-        theGrid.ajax.reload();
+        
     });
     
     $("#load-waybills").click(function(){
         
     $.ajax({
-        "url":"{{url('/waybill_manifests/filters/')}}/{{$manifest_id}}"
+        "url":"{{url('/waybill_manifests/filters/')}}/{{$manifest->id}}"
     }).done(function (data) {
         $("#bottom-content").html(data);
         
