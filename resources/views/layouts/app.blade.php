@@ -91,6 +91,15 @@
                             <ul class="dropdown-menu" role="menu">
                                 @role('admin')
                                 <li>
+                                    <a href="{{url('users')}}">Users</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('roles')}}">Roles</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('permissions')}}">Permissions</a>
+                                </li>
+                                <li>
                                     <a href="{{url('package_types')}}">Package Types</a>
                                 </li>
                                 <li>
