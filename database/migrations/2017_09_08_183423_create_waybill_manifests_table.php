@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateMainOfficesTable extends Migration {
+class CreateWaybillManifestsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,14 @@ class CreateMainOfficesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('main_offices', function(Blueprint $table)
+		Schema::create('waybill_manifests', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('main_office', 50)->unique('main_office');
+			$table->integer('manifest')->index('manifest');
+			$table->integer('waybill')->index('waybill');
 			$table->integer('status');
-			$table->timestamps();
 			$table->integer('created_by')->unsigned()->index('created_by');
+			$table->timestamps();
 			$table->integer('updated_by')->unsigned()->nullable()->index('updated_by');
 		});
 	}
@@ -31,7 +32,7 @@ class CreateMainOfficesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('main_offices');
+		Schema::drop('waybill_manifests');
 	}
 
 }

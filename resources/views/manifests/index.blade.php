@@ -1,4 +1,4 @@
-@extends('crudgenerator::layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
@@ -31,7 +31,9 @@
               </tbody>
             </table>
         </div>
-        <a href="{{url('manifests/create')}}" class="btn btn-primary" role="button">Add loading manifest</a>
+        @can('create manifest')
+        <a href="{{url('manifests/create')}}" class="btn btn-primary" role="button">Create loading manifest</a>
+        @endcan
     </div>
 </div>
 
@@ -68,7 +70,11 @@
                     },
                     {
                         "render": function ( data, type, row ) {
-                            return '<a href="{{ url('/manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
+                            @can('create waybill')
+                                return '<a href="{{ url('/manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
+                            @else
+                                return '';
+                            @endcan
                         },
                         "targets": 8                   },
                     {

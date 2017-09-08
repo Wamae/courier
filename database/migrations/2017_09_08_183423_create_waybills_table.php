@@ -15,6 +15,7 @@ class CreateWaybillsTable extends Migration {
 		Schema::create('waybills', function(Blueprint $table)
 		{
 			$table->integer('id', true);
+			$table->string('waybill_no', 30)->nullable()->unique('waybill_no');
 			$table->string('consignor', 50);
 			$table->string('consignor_tel', 30);
 			$table->string('consignee', 50);

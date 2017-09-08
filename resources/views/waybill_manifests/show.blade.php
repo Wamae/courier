@@ -83,10 +83,10 @@
 
 <div id="bottom-buttons-one" class="clearfix non-print" style="padding: 2px 0;">
 <div class="btn-group pull-left waybil-l-btn-b  ">
-	<a class="btn btn-small btn-default print-manifes-btn" href="https://tahmeed-courier.api.co.ke/sheet-pdfsheet-40967.pdf"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
-			<a class="btn btn-default load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>
-		<a class="btn btn-default remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>
-		<a class="btn btn-default dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>
+	<a class="btn btn-small btn-default print-manifes-btn" href="#"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
+			@can('load waybills')<a class="btn btn-default load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>@endcan
+		@can('remove waybills')<a class="btn btn-default remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>@endcan
+		@can('dispatch manifest')<a class="btn btn-default dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>@endcan
 		</div>
 <div class="btn-group pull-right">
 </div>

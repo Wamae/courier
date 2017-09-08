@@ -85,10 +85,11 @@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                ADMIN MENU <span class="caret"></span>
+                                MENUS <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                @role('admin')
                                 <li>
                                     <a href="{{url('package_types')}}">Package Types</a>
                                 </li>
@@ -104,9 +105,15 @@
                                 <li>
                                     <a href="{{url('stations')}}">Stations</a>
                                 </li>
+                                @endrole
+                                @role('staff')
                                 <li>
                                     <a href="{{url('manifests')}}"><i class="icon-truck"></i>Manifests</a>
                                 </li>
+                                <li>
+                                    <a href="{{url('waybills')}}"><i class="icon-truck"></i>Waybills</a>
+                                </li>
+                                @endrole
                             </ul>
                         </li>
 
