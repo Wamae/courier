@@ -52,10 +52,10 @@ use AuthenticatesUsers;
         ];
     }
 
-    protected function authenticated() {
-        if (Auth::user()->role == 'admin') {
+    protected function redirectPath() {
+        if (Auth::user()->hasRole('admin')) {
             return '/package_types';
-        } else if(Auth::user()->role == 'staff'){
+        } else if(Auth::user()->hasRole('staff')){
             return '/waybills';
         }
     }
