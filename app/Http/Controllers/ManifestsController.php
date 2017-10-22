@@ -10,6 +10,8 @@ use DB;
 use Auth;
 use App\Station;
 use App\user;
+use App\Waybill_manifest;
+use App\Manifest_status;
 
 class ManifestsController extends Controller {
 
@@ -28,17 +30,21 @@ class ManifestsController extends Controller {
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)
                         ->where('id', '!=', $users_station)->get();
 
-        return view('manifests.add', compact('stations'));
+        $manifest_status = Manifest_status::all();
+
+        return view('manifests.add', compact('stations', 'manifest_status'));
     }
 
     public function edit(Request $request, $id) {
         $users_station = Auth::user()->station;
         $model = Manifest::findOrFail($id);
-        
+
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)
                         ->where('id', '!=', $users_station)->get();
-        
-        return view('manifests.add', compact('model','stations'));
+
+        $manifest_status = Manifest_status::all();
+
+        return view('manifests.add', compact('model', 'stations', 'manifest_status'));
     }
 
     public function show(Request $request, $id) {
@@ -52,10 +58,11 @@ class ManifestsController extends Controller {
         $start = $_GET['start'];
 
         $select = "SELECT a.id,CONCAT(CONCAT(CONCAT(cs.office_code,'-',cs2.office_code),'-','MANIFEST'),':',a.id) AS loading_manifest,DATE_FORMAT(a.created_at,'%a %d/%m/%Y') AS created_at,cs.office_name AS origin,cs2.office_name AS destination,u.name AS uname,"
-                . "COUNT(DISTINCT waybill_manifests.waybill) AS loaded,if(a.status = 1,'ACTIVE','INACTIVE') AS status,1,2";
+                . "COUNT(DISTINCT waybill_manifests.waybill) AS loaded,ms.status,1,2";
         $presql = " FROM manifests a ";
         $presql .= " LEFT JOIN users u ON a.created_by = u.id ";
         $presql .= " LEFT JOIN stations cs ON a.origin = cs.id ";
+        $presql .= " LEFT JOIN manifest_statuses ms ON a.status = ms.id ";
         $presql .= " LEFT JOIN stations cs2 ON a.destination = cs2.id ";
         $presql .= " LEFT JOIN waybill_manifests ON a.id = waybill_manifests.manifest";
 
@@ -66,7 +73,7 @@ class ManifestsController extends Controller {
         $presql .= "  ";
 
         $sql = $select . $presql . " GROUP BY a.id,cs.office_code,cs2.office_code,"
-                . "a.created_at,cs.office_name,cs2.office_name,u.name,a.status"
+                . "a.created_at,cs.office_name,cs2.office_name,u.name,a.status,ms.status"
                 . "  LIMIT " . $start . "," . $len;
 
 
@@ -131,10 +138,54 @@ class ManifestsController extends Controller {
 
 
         $manifest->status = $request->status;
-        
+
         $manifest->save();
-        
+
         return redirect('/manifests');
+    }
+
+    public function dispatch_manifest(Request $request) {
+        $id = $request["manifest_id"];
+
+        $manifest = Manifest::findOrFail($id);
+
+        $waybill_manifests = Waybill_manifest::where("manifest", $id)->get();
+
+
+        $result = true;
+
+        DB::transaction(function () use($manifest, $waybill_manifests,$result) {
+                    try {
+
+                        $user_id = Auth::user()->id;
+                        $manifest->updated_by = $user_id;
+                        $manifest->status = DISPATCHED;
+
+                        foreach ($waybill_manifests as $waybill_manifest) {
+                            $waybill = $waybill_manifest->waybill;
+
+                            $data = array("updated_by" => $user_id, "status" => LOADED);
+                            $bill_update = DB::table('waybills')->where('id', $waybill)->update($data);
+                            
+                        }
+
+                        $manifest->save();
+                    } catch (\Exception $e) {
+                        $result = false; 
+                    }
+                });
+                
+        echo ($result) ? "1" : "0";
+    }
+
+    public function cancelled($id) {
+        $manifest = Manifest::findOrFail($id);
+
+        $user_id = Auth::user()->id;
+        $manifest->updated_by = $user_id;
+        $manifest->status = CANCELLED;
+        //TODO: Add log for who cancelled manifest
+        $manifest->save();
     }
 
     public function store(Request $request) {

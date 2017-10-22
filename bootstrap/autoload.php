@@ -4,6 +4,12 @@ define('LARAVEL_START', microtime(true));
 define('ACTIVE', 1);
 define('INACTIVE', 0);
 
+/*Manifest status*/
+define('DISPATCHED', 2);
+define('CENCELLED', 3);
+
+/*Waybill status*/
+define('LOADED', 2);
 /*
 |--------------------------------------------------------------------------
 | Register The Composer Auto Loader

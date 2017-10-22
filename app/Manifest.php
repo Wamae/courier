@@ -19,6 +19,11 @@ class Manifest extends Model
     
     public function waybill_manifest()
     {
-        return $this->hasOne(Waybill_manifest::class,'manifest', 'id');
+        return $this->hasMany(Waybill_manifest::class,'manifest', 'id');
+    }
+    
+    public function statuses()
+    {
+        return $this->hasOne(ManifestStatus::class,'id', 'status');
     }
 }

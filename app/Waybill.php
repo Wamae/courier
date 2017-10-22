@@ -15,4 +15,8 @@ class Waybill extends Model
     {
         return $this->hasOne('App\Station','id', 'destination');
     }
+    
+    public function waybill_manifest(){
+        return $this->belongsTo(Waybill_manifest::class,"waybill","id");
+    }
 }

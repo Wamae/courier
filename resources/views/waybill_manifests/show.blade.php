@@ -37,7 +37,7 @@
                             </tr>
                             <tr>
                                 <td class="info-tda"><b>Items Loaded:</b></td>
-                                <td class="info-tdb">{{isset($manifest->waybill_manifest)?$manifest->waybill_manifest->distinct('waybill')->count('waybill'):0}}</td>
+                                <td class="info-tdb">{{isset($manifest->waybill_manifest)?$manifest->waybill_manifest->count('waybill'):0}}</td>
                                 <td class="info-tda"><b>Conductor:</b></td>
                                 <td class="info-tdb">{{$manifest->conductor}}</td>
                             </tr>
@@ -82,19 +82,31 @@
 </div>
 
 <div id="bottom-buttons-one" class="clearfix non-print" style="padding: 2px 0;">
-<div class="btn-group pull-left waybil-l-btn-b  ">
-	<a class="btn btn-small btn-default print-manifes-btn" href="#"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
-			@can('load waybills')<a class="btn btn-default load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>@endcan
-		@can('remove waybills')<a class="btn btn-default remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>@endcan
-		@can('dispatch manifest')<a class="btn btn-default dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>@endcan
-		</div>
-<div class="btn-group pull-right">
-</div>
+    <div class="btn-group pull-left waybil-l-btn-b  ">
+        <a class="btn btn-small btn-default print-manifes-btn" href="#"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
+        @if ($manifest->status === ACTIVE)
+        @can('load waybills')
+        <a class="btn btn-default load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>
+        @endcan
+        @endif
+        @if ($manifest->status === ACTIVE)
+        @can('remove waybills')
+        <a class="btn btn-default remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>
+        @endcan
+        @endif
+        @if ($manifest->status === ACTIVE)
+        @can('dispatch manifest')
+        <a id="dispatch-manifest" class="btn btn-default dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>
+        @endcan
+        @endif
+    </div>
+    <div class="btn-group pull-right">
+    </div>
 </div>
 
 <div id="bottom-buttons-two" class="clearfix non-print hidden" style="padding: 2px 0;"><div class="btn-group pull-left hidden-el waybil-l-btn-a" style="display: block;">
-<a id="back" class="btn btn-warning waybil-l-back-btn" href="javascript:;"><i class="icon-arrow-left"></i> BACK</a>
-<a id="load-selected-waybills" class="btn btn-success waybil-l-load-btn" href="javascript:;"><i class="icon-arrow-up"></i> LOAD SELECTED WAYBILS</a></div></div>
+        <a id="back" class="btn btn-warning waybil-l-back-btn" href="javascript:;"><i class="icon-arrow-left"></i> BACK</a>
+        <a id="load-selected-waybills" class="btn btn-success waybil-l-load-btn" href="javascript:;"><i class="icon-arrow-up"></i> LOAD SELECTED WAYBILS</a></div></div>
 
 
 
@@ -102,9 +114,9 @@
 @section('scripts')
 <script type="text/javascript">
     var theGrid = null;
-    $(document).ready(function(){
-    theGrid = $('#thegrid').DataTable({
-    "processing": true,
+    $(document).ready(function () {
+        theGrid = $('#thegrid').DataTable({
+            "processing": true,
             "dom": "t",
             "serverSide": true,
             "ordering": true,
@@ -112,78 +124,79 @@
             "ajax": "{{url('waybill_manifests/grid')}}/{{$manifest->id}}",
             "sEmptyTable": "Loading data from server",
             "columnDefs": [
-            { "searchable": false,"orderable":false, "targets": 0 },
-            { "name": "a.package_type", "targets": 5 },
-            { "name": "a.origin", "targets": 7 },
-            { "name": "a.destination", "targets": 8 },
-            { "name": "a.status", "targets": 9 },
-            {
-            "render": function (data, type, row) {
-                return '<input type="checkbox" class="check-item" name="waybills[]" value="'+row[0]+'"/>';
-            },
+                {"searchable": false, "orderable": false, "targets": 0},
+                {"name": "a.package_type", "targets": 5},
+                {"name": "a.origin", "targets": 7},
+                {"name": "a.destination", "targets": 8},
+                {"name": "a.status", "targets": 9},
+                {
+                    "render": function (data, type, row) {
+                        return '<input type="checkbox" class="check-item" name="waybills[]" value="' + row[0] + '"/>';
+                    },
                     "targets": 0
-            },
-            {
-            "render": function (data, type, row) {
-            return '<a href="{{url('/waybills')}}/' + row[0] + '">' + data + '</a>';
-            },
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<a href="{{url(' / waybills')}}/' + row[0] + '">' + data + '</a>';
+                    },
                     "targets": 1
-            }
+                }
             ]
-    });
-    
-    $('#check-all').change(function(){
-        $('.check-item').prop('checked', this.checked);
-    });
-    
-    $("#back").click(function(){
-        theGrid.ajax.reload();
-        $("#bottom-buttons-two").addClass("hidden");
-        $("#bottom-buttons-one").removeClass("hidden");
-        
-        
-    });
-    
-    $("#load-waybills").click(function(){
-        
-    $.ajax({
-        "url":"{{url('/waybill_manifests/filters/')}}/{{$manifest->id}}"
-    }).done(function (data) {
-        $("#bottom-content").html(data);
-        
-        $("#bottom-buttons-one").addClass("hidden");
-        $("#bottom-buttons-two").removeClass("hidden");
-        
+        });
+        $('#check-all').change(function () {
+            $('.check-item').prop('checked', this.checked);
+        });
+        $("#back").click(function () {
+            theGrid.ajax.reload();
+            $("#bottom-buttons-two").addClass("hidden");
+            $("#bottom-buttons-one").removeClass("hidden");
+        });
+        $("#load-waybills").click(function () {
+
+            $.ajax({
+                "url": "{{url('/waybill_manifests/filters/')}}/{{$manifest->id}}"
+            }).done(function (data) {
+                $("#bottom-content").html(data);
+                $("#bottom-buttons-one").addClass("hidden");
+                $("#bottom-buttons-two").removeClass("hidden");
+            });
+        });
+        $("#remove-waybills").click(function () {
+            var listCheck = [];
+            $(".check-item:checked").each(function () {
+
+                listCheck.push($(this).val());
+            });
+            console.log(listCheck);
+            if (listCheck.length > 0) {
+                $.ajax(
+                        {url: "{{url('/waybill_manifests/remove_batch/')}}",
+                            data: {"waybill_ids": listCheck},
+                            type: "POST",
+                            success: function (data) {
+                                if (data === "1") {
+                                    theGrid.ajax.reload();
+                                    alert("Waybill(s) have been removed from manifest");
+                                }
+                            }});
+            } else {
+                alert("Select waybills first");
+            }
+        });
+        $("#dispatch-manifest").click(function () {
+            manifest_id = "{{$manifest-> id}}";
+            $.ajax(
+                    {url: "{{url('/manifests/dispatch_manifest/')}}",
+                        data: {"manifest_id": manifest_id},
+                        type: "POST",
+                        success: function (data) {
+                            if (data === "1") {
+                                location.reload();
+                                alert("Manifest has been dispatched!");
+                            }
+                        }});
+        });
     });
 
-    });
-    
-        
-    $("#remove-waybills").click(function(){
-        var listCheck = [];
-        $(".check-item:checked").each(function() {
-            
-            listCheck.push($(this).val());
-        });
-        console.log(listCheck);
-        
-        if(listCheck.length > 0){
-            $.ajax(
-                {url: "{{url('/waybill_manifests/remove_batch/')}}",
-                data:{"waybill_ids":listCheck},
-                type:"POST",
-                success:function(data){
-                    if(data === "1"){                        
-                        theGrid.ajax.reload();
-                        alert("Waybill(s) have been removed from manifest");
-                    }
-            }});
-        }else{
-            alert("Select waybills first");
-        }
-    });
-    
-    });    
-    
 </script>
 @endsection

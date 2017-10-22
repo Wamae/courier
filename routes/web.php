@@ -47,20 +47,21 @@ Auth::routes();
 Route::get('/home', 'WaybillsController@index')->name('home');
 
 Route::group(['middleware' => ['role:staff']], function () {
-    
-Route::get('/manifests/grid', 'ManifestsController@grid');
-Route::resource('/manifests', 'ManifestsController');
 
-Route::get('/waybills/grid', 'WaybillsController@grid');
-Route::resource('/waybills', 'WaybillsController');
+    Route::get('/manifests/grid', 'ManifestsController@grid');
+    Route::resource('/manifests', 'ManifestsController');
+    Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
+
+    Route::get('/waybills/grid', 'WaybillsController@grid');
+    Route::resource('/waybills', 'WaybillsController');
 
 
-Route::get('/waybill_manifests/grid/{manifest}', 'Waybill_manifestsController@grid');
-Route::get('/waybill_manifests', 'Waybill_manifestsController@index');
-Route::get('/waybill_manifests/{manifest}', 'Waybill_manifestsController@show');
-Route::get('/waybill_manifests/filters/{manifest}', 'Waybill_manifestsController@filters');
-Route::get('/waybill_manifests/filter_grid/{manifest}', 'Waybill_manifestsController@filter_grid');
-Route::post('/waybill_manifests/add_batch', 'Waybill_manifestsController@add_batch');
-Route::post('/waybill_manifests/remove_batch', 'Waybill_manifestsController@remove_batch');
+    Route::get('/waybill_manifests/grid/{manifest}', 'Waybill_manifestsController@grid');
+    Route::get('/waybill_manifests', 'Waybill_manifestsController@index');
+    Route::get('/waybill_manifests/{manifest}', 'Waybill_manifestsController@show');
+    Route::get('/waybill_manifests/filters/{manifest}', 'Waybill_manifestsController@filters');
+    Route::get('/waybill_manifests/filter_grid/{manifest}', 'Waybill_manifestsController@filter_grid');
+    Route::post('/waybill_manifests/add_batch', 'Waybill_manifestsController@add_batch');
+    Route::post('/waybill_manifests/remove_batch', 'Waybill_manifestsController@remove_batch');
 });
 

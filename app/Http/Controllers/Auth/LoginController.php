@@ -52,7 +52,7 @@ use AuthenticatesUsers;
         ];
     }
 
-    protected function redirectPath() {
+    protected function redirectTo() {
         if (Auth::user()->hasRole('admin')) {
             return '/package_types';
         } else if(Auth::user()->hasRole('staff')){

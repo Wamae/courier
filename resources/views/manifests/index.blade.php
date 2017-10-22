@@ -71,7 +71,11 @@
                     {
                         "render": function ( data, type, row ) {
                             @can('create waybill')
-                                return '<a href="{{ url('/manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
+                                if(row[7] == "ACTIVE"){
+                                    return '<a href="{{ url('/manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
+                                }else{
+                                    return '';
+                                }
                             @else
                                 return '';
                             @endcan

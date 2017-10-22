@@ -15,6 +15,10 @@ class Waybill_manifest extends Model
     }
     
     public function manifests(){
-        return $this->hasOne(Loading_manifest::class,"id","manifest");
+        return $this->hasMany(Loading_manifest::class,"id","manifest");
+    }
+    
+    public function dispatch_waybills($id){
+        return $this::where('manifest', '=', $id)->update(['status' => LOADED]);
     }
 }
