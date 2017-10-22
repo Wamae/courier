@@ -84,7 +84,7 @@
         </div>
         <br>
         <div class="">
-            <table class="table table-striped" id="thegrid">
+            <table class="table table-striped table-responsive table-condensed" id="thegrid">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -96,7 +96,7 @@
                         <th>Quantity</th>
                         <th>Origin</th>
                         <th>Destination</th>
-                        <th>Weight</th>
+                        <th class="none">Weight</th>
                         <th>Status</th>
                         <th style="width:50px"></th>
                     </tr>
@@ -147,8 +147,13 @@
             },
             {
             "render": function (data, type, row) {
+              
             @can('create waybill')
+            if(row[10] === "ACTIVE"){  
                 return '<a href="{{ url(' / waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
+            }else{
+                return '';
+            }
             @else
                 return '';
             @endcan
