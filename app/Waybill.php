@@ -8,7 +8,7 @@ class Waybill extends Model
 {
     public function origins()
     {
-        return $this->hasOne('App\Station','id', 'origin');
+        return $this->hasOne(Station::class,'id', 'origin');
     }
     
     public function destinations()
@@ -18,5 +18,17 @@ class Waybill extends Model
     
     public function waybill_manifest(){
         return $this->belongsTo(Waybill_manifest::class,"waybill","id");
+    }
+    
+    public function waybill_status(){
+        return $this->hasOne(Waybill_status::class,"id","status");
+    }
+    
+    public function package_types(){
+        return $this->hasOne(Package_type::class,"id","package_type");
+    } 
+    
+    public function creator(){
+        return $this->hasOne(User::class,"id","created_by");
     }
 }
