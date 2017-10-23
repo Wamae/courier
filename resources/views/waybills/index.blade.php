@@ -152,7 +152,7 @@
             if(row[10] === "ACTIVE"){  
                 return '<a href="{{ url(' / waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
             }else{
-                return '';
+                return '<a href="{{ url('waybills') }}/print_waybill/pdf?id=' + row[0] + '" class="btn btn-default">Print</a>';
             }
             @else
                 return '';

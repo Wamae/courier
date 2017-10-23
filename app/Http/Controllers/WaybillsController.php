@@ -10,7 +10,6 @@ use App\Station;
 use App\Package_type;
 use App\payment_mode;
 use App\Waybill_status;
-
 use DB;
 use Auth;
 
@@ -25,7 +24,7 @@ class WaybillsController extends Controller {
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
         $waybill_statuses = Waybill_status::select('id', 'waybill_status')->get();
 
-        return view('waybills.index', compact('package_types', 'stations','waybill_statuses'));
+        return view('waybills.index', compact('package_types', 'stations', 'waybill_statuses'));
     }
 
     public function create(Request $request) {
@@ -183,17 +182,17 @@ class WaybillsController extends Controller {
 
 
         $waybill->status = ACTIVE;
-        
-        $waybill->save();  
+
+        $waybill->save();
 
         return redirect('/waybills');
     }
-    
+
     public function create_waybill_no($o_office_code, $d_office_code) {
-        $rand_string = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),-4);
+        $rand_string = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), -4);
         $month = strtoupper(date("M"));
         $year = date("Y");
-        return $o_office_code . "-" . $d_office_code . "-".$year."-".$month."-" . $rand_string;
+        return $o_office_code . "-" . $d_office_code . "-" . $year . "-" . $month . "-" . $rand_string;
     }
 
     public function store(Request $request) {
@@ -206,6 +205,18 @@ class WaybillsController extends Controller {
 
         $waybill->delete();
         return "OK";
+    }
+
+    public function print_waybill(Request $request) {
+        $id = $request["id"];
+        $waybill = Waybill::find($id);
+
+        $pdf = \App::make('dompdf.wrapper');
+        
+        $pdf->loadView('pdf.waybill',compact('waybill'))->setPaper('a5', 'landscape');
+        return $pdf->stream();
+
+        dd($waybill);
     }
 
 }
