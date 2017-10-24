@@ -14,33 +14,34 @@
         </style>
     </head>
     <body>
-        <div align="center">TAHMEED COURIER LOADING MANIFEST REPORT</div>
+        <div align="center">{{config('app.name')}} LOADING MANIFEST REPORT</div>
         <table>
             <tr>
                 <td><font size="1">MANIFEST REF:</font></td>
-                <td><b>{{$manifest->manifest_no}}</b></td>
+                <td><font size="1"><b>{{$manifest->manifest_no}}</b></font></td>
                 <td><font size="1">FROM:</font></td>
-                <td><b>{{$manifest->origins->office_name}}</b></td>
+                <td><font size="1"><b>{{$manifest->origins->office_name}}</b></font></td>
             </tr>
             <tr>
                 <td><font size="1">REG NUMBER:</font></td>
-                <td><b>{{$manifest->registration_no}}</b></td>
+                <td><font size="1"><b>{{$manifest->registration_no}}</b></font></td>
                 <td><font size="1">TO:</font></td>
-                <td><b>{{$manifest->destinations->office_name}}</b></td>
+                <td><font size="1"><b>{{$manifest->destinations->office_name}}</b></font></td>
             </tr>
             <tr>
                 <td><font size="1">DATE:</font></td>
-                <td><b>{{$manifest->created_at->format('D d/m/Y')}}</b></td>
+                <td><font size="1"><b>{{$manifest->created_at->format('D d/m/Y')}}</b></font></td>
                 <td><font size="1">DRIVER:</font></td>
-                <td><b>{{$manifest->driver}}</b></td>
+                <td><font size="1"><b>{{$manifest->driver}}</b></font></td>
             </tr>
             <tr>
                 <td><font size="1">ITEMS LOADED:</font></td>
-                <td><b>{{isset($manifest->waybill_manifest)?$manifest->waybill_manifest->count('waybill'):0}}</b></td>
+                <td><font size="1"><b>{{isset($manifest->waybill_manifest)?$manifest->waybill_manifest->count('waybill'):0}}</b></font></td>
                 <td><font size="1">CONDUCTOR:</font></td>
-                <td><b>{{$manifest->conductor}}</b></td>
+                <td><font size="1"><b>{{$manifest->conductor}}</b></font></td>
             </tr>
         </table>
+        <br>
         <br>
         <div align="center">LOADED WAYBILLS</div>
         <table>
@@ -72,7 +73,13 @@
             </tr>
             @endforeach
         </table>
-
+        <br>
+        <br>
+        <div><font size="1">Printed By: <b>{{Auth::user()->name}} {{date('H:i:s D d/m/Y')}}</b></font></div>
+        <br>
+        <div><font size="1">Loading By: ...............................................................SIGN:...........................................</font></div>
+        <br>
+        <div><font size="1">Offloading By: ...........................................................SIGN:...........................................</font></div>
 
     </body>
 </html>
