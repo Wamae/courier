@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-        <div align="center">TAHMEED COURIER LOADING MANIFEST REPORT</div>
+        <div align="center">{{config('app.name')}} LOADING MANIFEST REPORT</div>
         <table>
             <tr>
                 <td><font size="1">MANIFEST REF:</font></td>
@@ -72,7 +72,13 @@
             </tr>
             @endforeach
         </table>
-
+        <br>
+        <br>
+        <div><font size="1">Printed By: <b>{{Auth::user()->name}} {{date('H:i:s D d/m/Y')}}</b></font></div>
+        <br>
+        <div><font size="1">Loading By: ...............................................................SIGN:...........................................</font></div>
+        <br>
+        <div><font size="1">Offloading By: ...........................................................SIGN:...........................................</font></div>
 
     </body>
 </html>
