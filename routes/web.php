@@ -51,6 +51,7 @@ Route::group(['middleware' => ['role:staff']], function () {
     Route::get('/manifests/grid', 'ManifestsController@grid');
     Route::resource('/manifests', 'ManifestsController');
     Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
+    Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
 
     Route::get('/waybills/grid', 'WaybillsController@grid');
     Route::resource('/waybills', 'WaybillsController');

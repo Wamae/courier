@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Waybill;
-use App\Loading_manifest;
+use App\Manifest;
 
 class Waybill_manifest extends Model
 {
@@ -15,7 +15,7 @@ class Waybill_manifest extends Model
     }
     
     public function manifests(){
-        return $this->hasMany(Loading_manifest::class,"id","manifest");
+        return $this->hasMany(Manifest::class,"id","manifest");
     }
     
     public function dispatch_waybills($id){

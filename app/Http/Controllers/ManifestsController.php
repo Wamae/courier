@@ -199,5 +199,14 @@ class ManifestsController extends Controller {
         $manifest->delete();
         return "OK";
     }
+    
+    public function print_manifest(Request $request) {
+        $id = $request["id"];
+        $manifest = Manifest::where('id',$id)->with('waybill_manifest.waybills')->get()->first();
+        $pdf = \App::make('dompdf.wrapper');
+        //dd($manifest);
+        $pdf->loadView('pdf.manifest',compact('manifest'));
+        return $pdf->stream();
+    }
 
 }

@@ -215,8 +215,6 @@ class WaybillsController extends Controller {
         
         $pdf->loadView('pdf.waybill',compact('waybill'))->setPaper('a5', 'landscape');
         return $pdf->stream();
-
-        dd($waybill);
     }
 
 }

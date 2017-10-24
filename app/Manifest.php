@@ -26,4 +26,8 @@ class Manifest extends Model
     {
         return $this->hasOne(ManifestStatus::class,'id', 'status');
     }
+    
+    public function waybills(){
+        return $this->hasManyThrough(Waybill::class, Waybill_manifest::class, 'waybill', 'id');
+    }
 }
