@@ -74,7 +74,7 @@
                                 if(row[7] == "ACTIVE"){
                                     return '<a href="{{ url('manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
                                 }else{
-                                    return '<a href="{{ url('manifests') }}/print_manifest/pdf?id=' + row[0] + '" class="btn btn-default">Print</a>';
+                                    return '<a href="{{ url('manifests') }}/print_manifest/pdf?id=' + row[0] + '" class="btn btn-status btn-xs btn-success"><span class="glyphicon glyphicon-print"></span> Print</a>';
                                 }
                             @else
                                 return '';
