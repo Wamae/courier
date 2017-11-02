@@ -20,6 +20,8 @@
 
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/dataTables.bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.0/css/responsive.dataTables.min.css">
+        <link rel="stylesheet" href="{{asset('css/bootstrap-datetimepicker-standalone.css')}}">
+        <link rel="stylesheet" href="{{asset('css/bootstrap-datetimepicker.css')}}">
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -78,8 +80,11 @@
                                 REPORTS <span class="caret"></span>
                             </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li>Coming soon</li>
+                            <ul class="dropdown-menu dropdown-menu-large" role="menu">
+                                <a><span class="glyphicon glyphicon-stats"></span> STATION REPORTS</a>
+                                <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span> USER REPORTS</a>
+                                <a><span class="glyphicon glyphicon-usd"></span>ACCOUNT REPORTS</a>
+                                <a><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
                             </ul>
                         </li>
 
@@ -168,6 +173,9 @@
         <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.0.0/js/dataTables.responsive.min.js"></script>
+                
+        <script src="{{asset('js/moment.js')}}"></script>
+        <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 
         <script>
                                                    $.ajaxSetup({
