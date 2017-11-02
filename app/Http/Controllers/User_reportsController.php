@@ -36,7 +36,7 @@ class User_reportsController extends Controller {
 
         $select = "SELECT a.id,waybill_no,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,"
                 . "consignor,package_types.package_type,quantity,stations.office_name AS origin,"
-                . "stations2.office_name AS destination,weight, wbs.waybill_status,1,a.payment_mode";
+                . "stations2.office_name AS destination,u.name,a.amount,1,a.payment_mode,stations.currency_id";
         $presql = " FROM waybills a ";
         $presql .= " LEFT JOIN users u ON a.created_by = u.id ";
         $presql .= " LEFT JOIN waybill_statuses wbs ON a.status = wbs.id ";

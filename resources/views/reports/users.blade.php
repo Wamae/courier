@@ -64,7 +64,7 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="origin">Currency:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="origin_search" id="currency-search" data-live-search="true" class="form-control selectpicker">
+                                    <select name="currency_search" id="currency-search" data-live-search="true" class="form-control selectpicker">
                                         <option value="0" selected="selected">ALL CURRENCIES</option>
                                         @foreach($currencies as $currency)
                                         <option {{(KSH == $station->id)?'selected':''}} value="{{$currency->id}}">{{$currency->currency}}</option>   
@@ -140,6 +140,7 @@
                             <th>TOTAL AMOUNT</th>
                             <th>STATUS</th>
                             <th>PAYMENT MODE</th>
+                            <th>CURRENCY</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,13 +163,13 @@
             viewMode: 'years',
             format: 'MM/YYYY'
         });
-        
+
         $('#end-date-search').datetimepicker({
             viewMode: 'years',
             format: 'MM/YYYY',
             useCurrent: false //Important! See issue #1075
         });
-        
+
         $("#start-date-search").on("dp.change", function (e) {
             $('#end-date-search').data("DateTimePicker").minDate(e.date);
         });
@@ -193,7 +194,8 @@
                 {"name": "a.origin", "targets": 7},
                 {"name": "a.destination", "targets": 8},
                 {"name": "a.status", "targets": 9},
-                {"name":"a.payment_mode", "visible": false, "targets": 11 },
+                {"name": "a.payment_mode", "visible": false, "targets": 11},
+                {"name": "stations.currency_id", "visible": false, "targets": 12},
                 {
                     "render": function (data, type, row) {
                         return '<a href="{{ url('user_reports') }}/print_waybill/pdf?id=' + row[0] + '" class="btn btn-status btn-xs btn-success"><span class="glyphicon glyphicon-print"></span> Print</a>';
@@ -204,45 +206,38 @@
         });
 
         $("#station-search").change(function () {
-         var station = $(this).val();
-         if (station == "0") {
-         theGrid.columns(5).search(station).draw();
-         } else {
-         
-         console.log("Station: ", station);
-         theGrid.columns(5).search(station, false, true, true).draw();
-         }
-         });
-         
-         $("#payment-mode-search").change(function () {
-         var paymentMode = $(this).val();
-         if (paymentMode == "0") {
-         theGrid.columns(11).search(paymentMode).draw();
-         } else {
-         
-         console.log("Payment mode: ", paymentMode);
-         theGrid.columns(11).search(paymentMode, false, true, true).draw();
-         }
-         });
-         
-         /*$("#origin_search").change(function () {
-         var origin = $(this).val();
-         if (origin == "0") {
-         theGrid.columns(7).search(origin).draw();
-         } else {
-         console.log("Origin: ", origin);
-         theGrid.columns(7).search(origin, false, true, true).draw();
-         }
-         });
-         $("#destination_search").change(function () {
-         var destination = $(this).val();
-         if (destination == "0") {
-         theGrid.columns(8).search(destination).draw();
-         } else {
-         console.log("Destination: ", destination);
-         theGrid.columns(8).search(destination, false, true, true).draw();
-         }
-         });*/
+            var station = $(this).val();
+            if (station == "0") {
+                theGrid.columns(5).search(station).draw();
+            } else {
+
+                console.log("Station: ", station);
+                theGrid.columns(5).search(station, false, true, true).draw();
+            }
+        });
+
+        $("#payment-mode-search").change(function () {
+            var paymentMode = $(this).val();
+            if (paymentMode == "0") {
+                theGrid.columns(11).search(paymentMode).draw();
+            } else {
+
+                console.log("Payment mode: ", paymentMode);
+                theGrid.columns(11).search(paymentMode, false, true, true).draw();
+            }
+        });
+
+        $("#currency-search").change(function () {
+            var currency = $(this).val();
+            if (currency == "0") {
+                theGrid.columns(12).search(currency).draw();
+            } else {
+
+                console.log("Currency: ", currency);
+                theGrid.columns(12).search(currency, false, true, true).draw();
+            }
+        });
+
     });
 
 </script>
