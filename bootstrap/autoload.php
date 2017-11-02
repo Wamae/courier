@@ -10,6 +10,9 @@ define('CENCELLED', 3);
 
 /*Waybill status*/
 define('LOADED', 2);
+
+/*Currencies*/
+define('KSH', 1);
 /*
 |--------------------------------------------------------------------------
 | Register The Composer Auto Loader

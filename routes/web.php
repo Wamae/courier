@@ -64,6 +64,11 @@ Route::group(['middleware' => ['role:staff']], function () {
     Route::get('/waybill_manifests/filters/{manifest}', 'Waybill_manifestsController@filters');
     Route::get('/waybill_manifests/filter_grid/{manifest}', 'Waybill_manifestsController@filter_grid');
     Route::post('/waybill_manifests/add_batch', 'Waybill_manifestsController@add_batch');
-    Route::post('/waybill_manifests/remove_batch', 'Waybill_manifestsController@remove_batch');    
+    Route::post('/waybill_manifests/remove_batch', 'Waybill_manifestsController@remove_batch'); 
+    /*Reports*/
+    Route::get('/user_reports/grid', 'User_reportsController@grid'); 
+    Route::get('/user_reports/print_waybill/pdf', 'User_reportsController@print_waybill');
+    Route::resource('/user_reports', 'User_reportsController'); 
+    
 });
 
