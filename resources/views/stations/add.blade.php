@@ -44,15 +44,19 @@
             <div class="form-group">
                 <label for="currency" class="col-sm-3 control-label">Currency</label>
                 <div class="col-sm-6">
-                    <input type="text" name="currency" required id="currency" class="form-control" value="{{$model['currency'] or ''}}">
+                     <select name="currency_id" class="form-control">
+                        @foreach($currencies as $currency)
+                        <option {{(isset($model))?($model['currency_id'] == $currency->id)?'selected':'':''}} value="{{$currency->id}}">{{$currency->currency}}</option>   
+                        @endforeach                    
+                    </select>
                 </div>
             </div>
             <div class="form-group">
-                <label for="main_office" class="col-sm-3 control-label">Main Office</label>
+                <label for="main_office_id" class="col-sm-3 control-label">Main Office</label>
                 <div class="col-sm-2">
-                    <select name="main_office" class="form-control">
+                    <select name="main_office_id" class="form-control">
                         @foreach($main_offices as $main_office)
-                        <option {{(isset($model))?($model['main_office'] == $main_office->id)?'selected':'':''}} value="{{$main_office->id}}">{{$main_office->main_office}}</option>   
+                        <option {{(isset($model))?($model['main_office_id'] == $main_office->id)?'selected':'':''}} value="{{$main_office->id}}">{{$main_office->main_office}}</option>   
                         @endforeach                    
                     </select>
                 </div>
