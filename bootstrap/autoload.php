@@ -6,7 +6,8 @@ define('INACTIVE', 0);
 
 /*Manifest status*/
 define('DISPATCHED', 2);
-define('CENCELLED', 3);
+define('CANCELLED', 3);
+define('OFFLOADED', 4);
 
 /*Waybill status*/
 define('LOADED', 2);

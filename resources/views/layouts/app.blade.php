@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.0/css/responsive.dataTables.min.css">
         <link rel="stylesheet" href="{{asset('css/bootstrap-datetimepicker-standalone.css')}}">
         <link rel="stylesheet" href="{{asset('css/bootstrap-datetimepicker.css')}}">
+        <link rel="stylesheet" href="{{asset('css/jquery-ui.css')}}">
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -176,6 +177,7 @@
                 
         <script src="{{asset('js/moment.js')}}"></script>
         <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
+        <script src="{{asset('js/jquery-ui.js')}}"></script>
 
         <script>
                                                    $.ajaxSetup({

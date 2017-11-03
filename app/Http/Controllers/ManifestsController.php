@@ -154,27 +154,26 @@ class ManifestsController extends Controller {
 
         $result = true;
 
-        DB::transaction(function () use($manifest, $waybill_manifests,$result) {
-                    try {
+        DB::transaction(function () use($manifest, $waybill_manifests, $result) {
+            try {
 
-                        $user_id = Auth::user()->id;
-                        $manifest->updated_by = $user_id;
-                        $manifest->status = DISPATCHED;
+                $user_id = Auth::user()->id;
+                $manifest->updated_by = $user_id;
+                $manifest->status = DISPATCHED;
 
-                        foreach ($waybill_manifests as $waybill_manifest) {
-                            $waybill = $waybill_manifest->waybill;
+                foreach ($waybill_manifests as $waybill_manifest) {
+                    $waybill = $waybill_manifest->waybill;
 
-                            $data = array("updated_by" => $user_id, "status" => LOADED);
-                            $bill_update = DB::table('waybills')->where('id', $waybill)->update($data);
-                            
-                        }
+                    $data = array("updated_by" => $user_id, "status" => LOADED);
+                    $bill_update = DB::table('waybills')->where('id', $waybill)->update($data);
+                }
 
-                        $manifest->save();
-                    } catch (\Exception $e) {
-                        $result = false; 
-                    }
-                });
-                
+                $manifest->save();
+            } catch (\Exception $e) {
+                $result = false;
+            }
+        });
+
         echo ($result) ? "1" : "0";
     }
 
@@ -199,14 +198,99 @@ class ManifestsController extends Controller {
         $manifest->delete();
         return "OK";
     }
-    
+
     public function print_manifest(Request $request) {
         $id = $request["id"];
-        $manifest = Manifest::where('id',$id)->with('waybill_manifest.waybills')->get()->first();
+        $manifest = Manifest::where('id', $id)->with('waybill_manifest.waybills')->get()->first();
         $pdf = \App::make('dompdf.wrapper');
-        //dd($manifest);
-        $pdf->loadView('pdf.manifest',compact('manifest'));
+
+        $pdf->loadView('pdf.manifest', compact('manifest'));
         return $pdf->stream();
+    }
+
+    public function offload_manifest(Request $request) {
+        return view('manifests.offload');
+    }
+
+    public function offload(Request $request) {
+
+        $id = $request['id'];
+
+        if ($id == "") {
+            echo "0";
+            return;
+        }
+
+        $manifest = Manifest::where('id', $id)->with('waybill_manifest.waybills')->get()->first();
+
+        $waybill_manifests = $manifest->waybill_manifest()->get()->toArray();
+
+        //dd($waybill_manifests);
+
+        $result = true;
+
+        $waybills = array();
+
+        DB::transaction(function () use($manifest, $waybill_manifests, $result, &$waybills) {
+            try {
+
+                $user_id = Auth::user()->id;
+                $manifest->updated_by = $user_id;
+                $manifest->status = OFFLOADED;
+                $manifest->save();
+
+                for ($i = 0; $i <= count($waybill_manifests); $i++) {
+                    $id = $waybill_manifests[$i]['waybill'];
+
+                    $data = array("updated_by" => $user_id, "status" => OFFLOADED);
+                    DB::table('waybills')->where('id', $id)->update($data);
+
+                    $waybill = \App\Waybill::find($id);
+                    
+                    array_push($waybills, $waybill);
+                }
+            } catch (\Exception $e) {
+                $result = false;
+            }
+        });
+
+        if ($result) {
+            //dd($waybills);
+            foreach ($waybills as $waybill) {
+                //dd($waybill->destinations->office_name);
+                $message = "Hello, " . $waybill->consignee . ". Your package has arrived at " . $waybill->destinations->office_name . " station. Kindly collect.";
+                //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);
+
+                dispatch(new \App\Jobs\SendSMS($waybill->consignee_tel, $message));
+            }
+        }
+        //$CSV_numbers = implode(",", $waybills);
+
+
+
+        echo ($result) ? "1" : "0";
+    }
+
+    public function autocomplete(Request $request) {
+        $term = $request->term;
+        $data = Manifest::where('manifest_no', 'LIKE', '%' . $term . '%')
+                ->where('origin', Auth::user()->station)
+                //->where('created',Auth::user()->station)
+                ->where('status', DISPATCHED)
+                ->get();
+        $result = array();
+
+        foreach ($data as $key => $v) {
+            $result[] = [
+                'value' => $v->manifest_no,
+                'id' => $v->id,
+                'registration_no' => $v->registration_no,
+                'driver' => $v->driver,
+                'conductor' => $v->conductor,
+                'destination' => $v->destinations->office_name];
+        }
+
+        return response()->json($result);
     }
 
 }

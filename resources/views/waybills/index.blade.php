@@ -105,8 +105,9 @@
             </table>
         </div>
         @can('create waybill')
-        <a href="{{url('waybills/create')}}" class="btn btn-primary" role="button">Create waybill</a>
+        <a href="{{url('waybills/create')}}" class="btn btn-primary" role="button">CREATE WAYBILL</a>
         @endcan
+        <a href="{{url('manifests/offload/manifest')}}" class="btn btn-info" role="button">OFFLOAD MANIFEST</a>
     </div>
 </div>
 
@@ -210,7 +211,7 @@
     });
     function doDelete(id) {
     if (confirm('You really want to delete this record?')) {
-    $.ajax({ url: '{{ url(' / waybills') }}/' + id, type: 'DELETE'}).success(function() {
+    $.ajax({ url: '{{ url('waybills') }}/' + id, type: 'DELETE'}).success(function() {
     theGrid.ajax.reload();
     });
     }

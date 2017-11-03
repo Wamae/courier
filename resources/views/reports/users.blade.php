@@ -141,6 +141,7 @@
                             <th>STATUS</th>
                             <th>PAYMENT MODE</th>
                             <th>CURRENCY</th>
+                            <th>CREATED AT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -160,21 +161,16 @@
     $(document).ready(function () {
 
         $('#start-date-search').datetimepicker({
-            viewMode: 'years',
-            format: 'MM/YYYY'
+            format: 'DD/MM/YYYY'
         });
 
         $('#end-date-search').datetimepicker({
-            viewMode: 'years',
-            format: 'MM/YYYY',
+            format: 'DD/MM/YYYY',
             useCurrent: false //Important! See issue #1075
         });
 
         $("#start-date-search").on("dp.change", function (e) {
             $('#end-date-search').data("DateTimePicker").minDate(e.date);
-        });
-        $("#end-date-search").on("dp.change", function (e) {
-            $('#start-date-search').data("DateTimePicker").maxDate(e.date);
         });
 
         theGrid = $('#thegrid').DataTable({
@@ -196,6 +192,7 @@
                 {"name": "a.status", "targets": 9},
                 {"name": "a.payment_mode", "visible": false, "targets": 11},
                 {"name": "stations.currency_id", "visible": false, "targets": 12},
+                {"name": "a.created_at", "visible": false, "targets": 13},
                 {
                     "render": function (data, type, row) {
                         return '<a href="{{ url('user_reports') }}/print_waybill/pdf?id=' + row[0] + '" class="btn btn-status btn-xs btn-success"><span class="glyphicon glyphicon-print"></span> Print</a>';
@@ -203,6 +200,32 @@
                     "targets": 10
                 },
             ]
+        });
+
+        // Extend dataTables search
+        $.fn.dataTableExt.afnFiltering.push(
+                function (settings, data, dataIndex) {
+                    var min = $('#start-date-search').val();
+                    var max = $('#end-date-search').val();
+                    var createdAt = data[13] || 0; // Our date column in the table
+                    console.log("CA: ",createdAt);
+
+                    if (
+                            (min == "" || max == "") ||
+                            (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))
+                            ) {
+                        return true;
+                    }
+                    return false;
+                }
+        );
+
+        $("#end-date-search").on("dp.change", function (e) {
+            $('#start-date-search').data("DateTimePicker").maxDate(e.date);
+            //theGrid.columns(11).search("0").draw();
+            //startDate = $('#start-date-search').data("date");
+            //endDate = $('#end-date-search').data("date");
+            theGrid.draw();
         });
 
         $("#station-search").change(function () {

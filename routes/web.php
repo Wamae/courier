@@ -40,6 +40,11 @@ Route::group(['middleware' => ['isAdmin']], function () {
 
     Route::get('/test_tables/grid', 'Test_tablesController@grid');
     Route::resource('/test_tables', 'Test_tablesController');
+    
+    /*Reports*/
+    Route::get('/user_reports/grid', 'User_reportsController@grid'); 
+    Route::get('/user_reports/print_waybill/pdf', 'User_reportsController@print_waybill');
+    Route::resource('/user_reports', 'User_reportsController'); 
 });
 
 Auth::routes();
@@ -52,6 +57,9 @@ Route::group(['middleware' => ['role:staff']], function () {
     Route::resource('/manifests', 'ManifestsController');
     Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
     Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
+    Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
+    Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest');    
+    Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
 
     Route::get('/waybills/grid', 'WaybillsController@grid');
     Route::resource('/waybills', 'WaybillsController');
