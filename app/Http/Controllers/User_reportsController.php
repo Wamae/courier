@@ -24,12 +24,12 @@ class User_reportsController extends Controller {
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
         $waybill_statuses = Waybill_status::select('id', 'waybill_status')->get();
-        $payment_modes = Payment_mode::select('id', 'payment_mode')->get();  
-        $currencies = Currency::select('id', 'currency')->get();  
+        $payment_modes = Payment_mode::select('id', 'payment_mode')->get();
+        $currencies = Currency::select('id', 'currency')->get();
 
-        return view('reports.users', compact('package_types', 'stations', 'waybill_statuses','payment_modes','currencies'));
+        return view('reports.users', compact('package_types', 'stations', 'waybill_statuses', 'payment_modes', 'currencies'));
     }
-    
+
     public function grid(Request $request) {
         $len = $_GET['length'];
         $start = $_GET['start'];
@@ -52,16 +52,30 @@ class User_reportsController extends Controller {
                 $name = $_GET["columns"][$i]["name"];
                 $search_value = $_GET["columns"][$i]["search"]["value"];
                 if ($search_value && $name) {
-                    if ($first) {
+                    if ($first && $name != "a.created_at") {
                         $presql .= " WHERE {$name} = '" . $search_value . "' ";
                         $first = false;
+                    } else if ($first && $name == "a.created_at") {
+                        $search_value = explode('|', $search_value);
+                        $start_date = $search_value[0];
+                        $end_date = $search_value[1];
+
+                        $presql .= " WHERE DATE({$name})  >= '" .$start_date . "' ";
+                        $presql .= " AND DATE({$name})  <= '" .$end_date . "' ";
+                    }else if(!$first && $name == "a.created_at"){
+                        $search_value = explode('|', $search_value);
+                        $start_date = $search_value[0];
+                        $end_date = $search_value[1];
+
+                        $presql .= " AND DATE({$name})  >= '" .$start_date . "' ";
+                        $presql .= " AND DATE({$name})  <= '" .$end_date . "' ";
                     } else {
                         $presql .= " AND {$name} = '" . $search_value . "' ";
                     }
                 }
             }
         }
-
+        
         if ($_GET['search']['value']) {
             $presql .= " WHERE consignor LIKE '%" . $_GET['search']['value'] . "%' "
 //                            . "OR consignee LIKE '%".$_GET['search']['value']."%' "
@@ -70,11 +84,11 @@ class User_reportsController extends Controller {
 //                            . "OR consignee_tel LIKE '%".$_GET['search']['value']."%' "
             ;
         }
-
+        //dd($presql);
         $sql = $select . $presql . " LIMIT " . $start . "," . $len;
 
         $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
-        
+
         $count = $qcount[0]->c;
 
         $results = DB::select($sql);
@@ -93,22 +107,22 @@ class User_reportsController extends Controller {
 
         $ret['recordsFiltered'] = count($ret);
         $ret['draw'] = $_GET['draw'];
-        
+
         echo json_encode($ret);
     }
-    
-    public function show(){
+
+    public function show() {
         
     }
-    
+
     public function print_waybill(Request $request) {
         $id = $request["id"];
         $waybill = Waybill::find($id);
 
         $pdf = \App::make('dompdf.wrapper');
-        
-        $pdf->loadView('pdf.waybill',compact('waybill'))->setPaper('a5', 'landscape');
-        return $pdf->stream('waybill_'.$waybill->consignor.'.pdf');
+
+        $pdf->loadView('pdf.waybill', compact('waybill'))->setPaper('a5', 'landscape');
+        return $pdf->stream('waybill_' . $waybill->consignor . '.pdf');
     }
 
 }

@@ -178,6 +178,7 @@
         <script src="{{asset('js/moment.js')}}"></script>
         <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
         <script src="{{asset('js/jquery-ui.js')}}"></script>
+        <script src="{{asset('js/range_dates.js')}}"></script>
 
         <script>
                                                    $.ajaxSetup({

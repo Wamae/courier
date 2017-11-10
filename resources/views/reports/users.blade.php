@@ -182,10 +182,10 @@
             "language": {
                 "sLoadingRecords": "LOADING"
             },
-            "processing": true,
             "ajax": "{{ url('user_reports/grid') }}",
             "sEmptyTable": "Loading data from server",
             "columnDefs": [
+                {"name": "a.created_at", "targets": 2},
                 {"name": "a.origin", "targets": 5},
                 {"name": "a.origin", "targets": 7},
                 {"name": "a.destination", "targets": 8},
@@ -202,29 +202,14 @@
             ]
         });
 
-        // Extend dataTables search
-        $.fn.dataTableExt.afnFiltering.push(
-                function (settings, data, dataIndex) {
-                    var min = $('#start-date-search').val();
-                    var max = $('#end-date-search').val();
-                    var createdAt = data[13] || 0; // Our date column in the table
-                    console.log("CA: ",createdAt);
-
-                    if (
-                            (min == "" || max == "") ||
-                            (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))
-                            ) {
-                        return true;
-                    }
-                    return false;
-                }
-        );
-
         $("#end-date-search").on("dp.change", function (e) {
             $('#start-date-search').data("DateTimePicker").maxDate(e.date);
-            //theGrid.columns(11).search("0").draw();
-            //startDate = $('#start-date-search').data("date");
-            //endDate = $('#end-date-search').data("date");
+            
+            startDate = moment($('#start-date-search').data("date"), 'DD/MM/YYYY').format("YYYY-MM-DD");
+            endDate = moment($('#end-date-search').data("date"), 'DD/MM/YYYY').format("YYYY-MM-DD");
+            
+            console.log(startDate+"|"+endDate);
+            theGrid.columns(2).search(startDate+"|"+endDate, false, true, true).draw();
             theGrid.draw();
         });
 
