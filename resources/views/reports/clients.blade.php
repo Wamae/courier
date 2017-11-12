@@ -11,7 +11,7 @@
     <div class="panel-body">
         <div class="non-print search-panel ">
             <div>
-                <table class="table table-responsive table-condensed" border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                <table class="table table-striped table-responsive table-condensed" border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                        <thead>
                         <tr>
                             <th></th>
