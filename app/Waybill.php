@@ -31,4 +31,8 @@ class Waybill extends Model
     public function creator(){
         return $this->hasOne(User::class,"id","created_by");
     }
+    
+    public function waybill(){
+        return $this->hasOne(Client::class,"id","client_id");
+    }
 }

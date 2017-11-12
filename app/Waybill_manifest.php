@@ -8,8 +8,7 @@ use App\Manifest;
 
 class Waybill_manifest extends Model
 {
-    
-    
+
     public function waybills(){
         return $this->hasMany(Waybill::class,"id","waybill");
     }

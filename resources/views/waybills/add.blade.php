@@ -150,6 +150,7 @@
                             </div>
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="vat"> INCLUDED V.A.T (16.0%):</label>
+                                <input id="vat-per" value="16" hidden="true" type="number"/>
 
                                 <div class="col-lg-4">
                                     <select name="currency_vat" id="currency_vat" class="form-control selectpicker">
@@ -157,7 +158,7 @@
                                     </select>   </div>
 
                                 <div class="col-lg-4">
-                                    <input type="text" id="vat" name="vat" readonly="readonly" class="form-control" value="16">
+                                    <input type="text" id="vat" name="vat" readonly="readonly" class="form-control" value="">
                                 </div>
                             </div>
                             <div class="control-group form-group">
@@ -197,13 +198,14 @@
 <script>
     $(function () {
         $("#amount_per_item").keyup(function () {
-            vat = $("#vat").val();
+            vatPer = $("#vat-per").val();
 
-            amount_per_item = $(this).val();
-            vat_amount = (vat / 100) * amount_per_item;
-            final_amount = Math.ceil(amount_per_item - vat_amount);
+            amountPerItem = $(this).val();
+            vatAmount = (vatPer / 100) * amountPerItem;
+            $("#vat").val(vatAmount);
+            finalAmount = Math.ceil(amountPerItem - vatAmount);
 
-            $("#amount").val(final_amount);
+            $("#amount").val(finalAmount);
         });
     });
 </script>

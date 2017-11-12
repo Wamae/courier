@@ -14,6 +14,10 @@ define('LOADED', 2);
 
 /*Currencies*/
 define('KSH', 1);
+
+/*Payment modes*/
+define('ACCOUNT_PAYMENT', 4);
+
 /*
 |--------------------------------------------------------------------------
 | Register The Composer Auto Loader

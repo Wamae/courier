@@ -3,8 +3,8 @@
 @section('content')
 
 <div class="panel panel-default">
-    <div class="panel-heading">
-        List of {{ ucfirst('waybills') }}
+    <div class="panel-heading" align="center">
+        <b>TAHMEED COURIER COURIER SALES REPORTS</b>
     </div>
 
     <div class="panel-body">
@@ -13,50 +13,48 @@
             <table width="100%">
                 <tbody><tr>
                         <td width="50%">
-                            <!-- ========================================================================== -->
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="keywords">Keywords:</label>
+                                <label class="col-lg-4 control-label" for="keywords">Waybill Station:</label>
                                 <div class="col-lg-6">
-                                    <input type="text" id="keywords" class="form-control input-sm" name="keywords" value="">
+                                    <select name="station_search" id="station-search" class="form-control">
+                                        <option value="0" selected="selected">ALL WAYBILL STATIONS</option>
+                                        @foreach($stations as $station)
+                                        <option value="{{$station->id}}">{{$station->office_name}}
+                                        </option>   
+                                        @endforeach
+                                    </select>	
                                 </div>
                             </div>
                             <br>
                             <br>
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="status_search">Waybill Station:</label>
+                                <label class="col-lg-4 control-label" for="status_search">System User:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="status_search" id="status_search" class="form-control">
-                                        <option value="0" selected="selected">ALL STATIONS</option>
-                                        @foreach($waybill_stations as $station)
-                                        <option {{(isset($model))?($model['origin'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
-                                        @endforeach
-                                    </select>	</div>
+                                    <select name="status_search" id="user-search" class="form-control">
+                                        <option value="0" selected="selected">ALL SYSTEM USERS</option>
+                                    </select>	
+                                </div>
                             </div>
                             <br>
                             <br>
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="package_type_search">System User:</label>
+                                <label class="col-lg-4 control-label" for="orientation">PDF Orientation:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="package_type_search" id="package_type_search" class="form-control">
-                                        <option value="0" selected="selected">ALL TYPES</option>
-                                        @foreach($users as $user)
-                                        <option {{(isset($model))?($model['created_by'] == $user->id)?'selected':'':''}} value="{{$user->id}}">{{$user->name}}</option>   
-                                        @endforeach
+                                    <select name="orientation" id="orientation" class="form-control">
+                                        <option value="0" selected="selected">Landscape</option>
+                                        <option value="1">Potrait</option>
                                     </select>		
                                 </div>
                             </div>
-
-                            <!-- ========================================================================== -->
                         </td>
                         <td width="50%">
-                            <!-- ========================================================================== -->
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="origin">Origin Station:</label>
+                                <label class="col-lg-4 control-label" for="origin">Currency:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="origin_search" id="origin_search" data-live-search="true" class="form-control selectpicker">
-                                        <option value="0" selected="selected">ALL STATIONS</option>
-                                        @foreach($stations as $station)
-                                        <option {{(isset($model))?($model['destination'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
+                                    <select name="currency_search" id="currency-search" data-live-search="true" class="form-control selectpicker">
+                                        <option value="0" selected="selected">ALL CURRENCIES</option>
+                                        @foreach($currencies as $currency)
+                                        <option {{(KSH == $station->id)?'selected':''}} value="{{$currency->id}}">{{$currency->currency}}</option>   
                                         @endforeach
                                     </select>		
                                 </div>
@@ -64,158 +62,145 @@
                             <br>
                             <br>
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="destination_search">Destination:</label>
+                                <label class="col-lg-4 control-label" for="start_date_search">Start Date:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="destination_search" id="destination_search" data-live-search="true" class="form-control">
-                                        <option value="0" selected="selected">ALL STATIONS</option>
-                                        @foreach($stations as $station)
-                                        <option {{(isset($model))?($model['destination'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
-                                        @endforeach
-                                    </select>
+                                    <div class="form-group">
+                                        <div class='input-group date' id='start-date-search'>
+                                            <input type='text' class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar">
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <label class="col-lg-4 control-label" for="end_date_search">End Date:</label>
+                                <div class="controls col-lg-6">
+                                    <div class="form-group">
+                                        <div class='input-group date' id='end-date-search'>
+                                            <input type='text' class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar">
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <br>
                             <br>
-                            <!-- ========================================================================== -->
+                            <div class="control-group form-group">
+                                <label class="col-lg-4 control-label" for="end_date_search"></label>
+                                <div class="controls col-lg-6">
+                                    <button class="btn btn-info">DOWNLOAD PDF</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </tbody></table>
 
         </div>
-        <br>
-        <div class="">
-            <table class="table table-striped table-responsive table-condensed" id="thegrid">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Waybill</th>
-                        <th>Date</th>
-                        <th>Consignor</th>
-                        <th>Consignee</th>                                        
-                        <th>Package</th>
-                        <th>Quantity</th>
-                        <th>Origin</th>
-                        <th>Destination</th>
-                        <th class="none">Weight</th>
-                        <th>Status</th>
-                        <th style="width:50px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading" align="center">
+        SYSTEM USER WAYBIL REPORTS
+    </div>
+
+    <div class="panel-body">
+        <div class="non-print search-panel ">
+            <div>
+                <table class="table table-striped table-responsive table-condensed" id="thegrid">
+                    <thead>
+                        <tr>
+                            <th>COLLECTION</th>
+                            <th colspan="3">COD IN - KSH</th>
+                            <th colspan="3">ACCOUNT - KSH</th>
+                            <th colspan="3">CASH - KSH</th>
+                            <th>COD + CASH - KSH</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>Amount</th>
+                            <th>V.A.T</th>
+                            <th>Total</th>
+                            <th>Amount</th>
+                            <th>V.A.T</th>
+                            <th>Total</th>
+                            <th>Amount</th>
+                            <th>V.A.T</th>
+                            <th>Total</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="d-content">
+                    </tbody>
+                </table>
+            </div>
         </div>
-        @can('create waybill')
-        <a href="{{url('waybills/create')}}" class="btn btn-primary" role="button">Create waybill</a>
-        @endcan
     </div>
 </div>
 
-
-
-
 @endsection
 
-
-
 @section('scripts')
+
 <script type="text/javascript">
     var theGrid = null;
-    $(document).ready(function(){
-    theGrid = $('#thegrid').DataTable({
-    "processing": true,
-            "dom": "t",
-            "serverSide": true,
-            "ordering": true,
-            "responsive": true,
-            "language": {
-            "sLoadingRecords": "LOADING"
-            },
-            "processing" : true,
-            "ajax": "{{url('waybills/grid')}}",
-            "sEmptyTable": "Loading data from server",
-            "columnDefs": [
-            { "name": "a.package_type", "targets": 5 },
-            { "name": "a.origin", "targets": 7 },
-            { "name": "a.destination", "targets": 8 },
-            { "name": "a.status", "targets": 9 },
-            {
-            "render": function (data, type, row) {
-            return '<a href="{{ url(' / waybills') }}/' + row[0] + '">' + data + '</a>';
-            },
-                    "targets": 1
-            },
-            {
-            "render": function (data, type, row) {
-              
-            @can('create waybill')
-            if(row[10] === "ACTIVE"){  
-                return '<a href="{{ url('waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
-            }else{
-                return '<a href="{{ url('waybills') }}/print_waybill/pdf?id=' + row[0] + '" class="btn btn-default">Print</a>';
-            }
-            @else
-                return '';
-            @endcan
-            },
-                    "targets": 11
-            },
-            ]
-    });
-    $("#keywords").keyup(function(){
-    var keywords = $(this).val().trim();
-    if (keywords == "") {
-    theGrid.search("").draw();
-    } else {
-    console.log("Keywords: ", keywords);
-    theGrid.search(keywords).draw();
-    }
-    });
-    $("#package_type_search").change(function(){
-    var packageType = $(this).val();
-    if (packageType == "0") {
-    theGrid.columns(5).search(packageType).draw();
-    } else {
+    $(document).ready(function () {
 
-    console.log("Packgage type: ", packageType);
-    theGrid.columns(5).search(packageType, false, true, true).draw();
-    }
+        var stationId = 0, userId = 0, orientation = 0, currencyId = 0, 
+        startDate = moment(new Date()).subtract(90, "days").format('YYYY-MM-DD'), 
+        endDate = moment(new Date()).format('YYYY-MM-DD');
+
+        $('#start-date-search').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+
+        $('#end-date-search').datetimepicker({
+            format: 'DD/MM/YYYY',
+            useCurrent: false //Important! See issue #1075
+        });
+
+        $("#start-date-search").on("dp.change", function (e) {
+            $('#end-date-search').data("DateTimePicker").minDate(e.date);
+        });
+
+
+        $("#end-date-search").on("dp.change", function (e) {
+            $('#start-date-search').data("DateTimePicker").maxDate(e.date);
+
+            startDate = moment($('#start-date-search').data("date"), 'DD/MM/YYYY').format("YYYY-MM-DD");
+            endDate = moment($('#end-date-search').data("date"), 'DD/MM/YYYY').format("YYYY-MM-DD");
+
+            console.log(startDate + "|" + endDate);
+            getData(stationId, userId, orientation, currencyId, startDate, endDate);
+        });
+
+        $("#station-search").change(function () {
+            var stationId = $(this).val();
+            getData(stationId, userId, orientation, currencyId, startDate, endDate);
+        });
+
+        $("#currency-search").change(function () {
+            var currencyId = $(this).val();
+            getData(stationId, userId, orientation, currencyId, startDate, endDate);
+        });
+
+        function getData(stationId, userId, orientation, currencyId, startDate, endDate) {
+            //TODO: ajax call
+            $.ajax({
+                url: "{{ url('station_reports/get_report_data') }}",
+                type: "GET",
+                data: {station_id:stationId,user_id:userId,currency_id:currencyId,start_date:startDate,end_date:endDate},
+                success: function (result) {
+                    $("#d-content").html(result);
+                }});
+        }
+
     });
-    $("#origin_search").change(function(){
-    var origin = $(this).val();
-    if (origin == "0") {
-    theGrid.columns(7).search(origin).draw();
-    } else {
-    console.log("Origin: ", origin);
-    theGrid.columns(7).search(origin, false, true, true).draw();
-    }
-    });
-    $("#destination_search").change(function(){
-    var destination = $(this).val();
-    if (destination == "0") {
-    theGrid.columns(8).search(destination).draw();
-    } else {
-    console.log("Destination: ", destination);
-    theGrid.columns(8).search(destination, false, true, true).draw();
-    }
-    });
-    $("#status_search").change(function(){
-    var status = $(this).val();
-    if (status == "0") {
-    theGrid.columns(9).search(status).draw();
-    } else {
-    console.log("status: ", status);
-    theGrid.columns(9).search(status, false, true, true).draw();
-    }
-    });
-    });
-    function doDelete(id) {
-    if (confirm('You really want to delete this record?')) {
-    $.ajax({ url: '{{ url(' / waybills') }}/' + id, type: 'DELETE'}).success(function() {
-    theGrid.ajax.reload();
-    });
-    }
-    return false;
-    }
+
 </script>
 @endsection

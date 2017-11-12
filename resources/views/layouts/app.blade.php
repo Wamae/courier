@@ -82,9 +82,9 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-large" role="menu">
-                                <a><span class="glyphicon glyphicon-stats"></span> STATION REPORTS</a>
+                                <a  href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> STATION REPORTS</a>
                                 <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span> USER REPORTS</a>
-                                <a><span class="glyphicon glyphicon-usd"></span>ACCOUNT REPORTS</a>
+                                <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span>ACCOUNT REPORTS</a>
                                 <a><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
                             </ul>
                         </li>
