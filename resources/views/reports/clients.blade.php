@@ -12,7 +12,7 @@
         <div class="non-print search-panel ">
             <div>
                 <table class="table table-striped table-responsive table-condensed" border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                       <thead>
+                    <thead>
                         <tr>
                             <th></th>
                             <th>CLIENT NAME</th>
@@ -30,19 +30,40 @@
                             <th>TOTAL</th>
                         </tr>
                     </thead>
-                    <tbody>                        
+                    <tbody> 
+                        <?php $totalAmount = 0;
+                        $totalVAT = 0;
+                        $totalVATAmount = 0; 
+                        $currency = "";
+                        ?>
                         @foreach ($invoices as $invoice)
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$invoice->client_name}}</td>
-                                <td>{{$invoice->currency}} {{number_format($invoice->total_amount,2)}}</td>
-                                <td>{{$invoice->currency}} {{number_format($invoice->total_vat,2)}}</td>
-                                <td>{{$invoice->currency}} {{number_format(($invoice->total_amount + $invoice->total_vat),2)}}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$invoice->client_name}}</td>
+                            <td>{{$invoice->currency}} {{number_format($invoice->total_amount,2)}}</td>
+                            <td>{{$invoice->currency}} {{number_format($invoice->total_vat,2)}}</td>
+                            <td>{{$invoice->currency}} {{number_format(($invoice->total_amount + $invoice->total_vat),2)}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <?php
+                        $totalAmount += $invoice->total_amount;
+                        $totalVAT += $invoice->total_vat;
+                        $totalVATAmount += ($invoice->total_vat + $invoice->total_amount);
+                        $currency = $invoice->currency;
+                        ?>
                         @endforeach
+                        <tr>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td>{{$currency}} {{number_format($totalAmount,2)}}</td>
+                            <td>{{$currency}} {{number_format($totalVAT,2)}}</td>
+                            <td>{{$currency}} {{number_format($totalVATAmount,2)}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
