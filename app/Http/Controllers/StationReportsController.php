@@ -14,7 +14,7 @@ use App\Waybill_status;
 use DB;
 use Auth;
 
-class Station_reportsController extends Controller {
+class StationReportsController extends Controller {
 
     public function __construct() {
         //$this->middleware('auth');
@@ -115,7 +115,7 @@ class Station_reportsController extends Controller {
         
     }
 
-    public function get_report_data(Request $request) {
+    public function getReportData(Request $request) {
         $station_id = $request["station_id"];
         $user_id = $request["user_id"];
         $orientation = $request["orientation"];
@@ -155,7 +155,7 @@ class Station_reportsController extends Controller {
         echo json_encode();
     }
 
-    public function print_waybill(Request $request) {
+    public function printWaybill(Request $request) {
         $id = $request["id"];
         $waybill = Waybill::find($id);
 

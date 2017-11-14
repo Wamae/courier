@@ -82,10 +82,18 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-large" role="menu">
-                                <a  href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> STATION REPORTS</a>
-                                <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span> USER REPORTS</a>
-                                <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span>ACCOUNT REPORTS</a>
-                                <a><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
+                                <li>
+                                    <a href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> STATION REPORTS</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span>USER REPORTS</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span> ACCOUNT REPORTS</a>
+                                </li>
+                                <li>
+                                    <a><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
+                                </li>
                             </ul>
                         </li>
 
@@ -141,7 +149,7 @@
                                 <li>
                                     <a href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
-                                                   document.getElementById('logout-form').submit();">
+                                               document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
 
@@ -174,18 +182,18 @@
         <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.0.0/js/dataTables.responsive.min.js"></script>
-                
+
         <script src="{{asset('js/moment.js')}}"></script>
         <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
         <script src="{{asset('js/jquery-ui.js')}}"></script>
         <script src="{{asset('js/range_dates.js')}}"></script>
 
         <script>
-                                                   $.ajaxSetup({
-                                                       headers: {
-                                                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                       }
-                                                   });
+                                           $.ajaxSetup({
+                                               headers: {
+                                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                               }
+                                           });
         </script>    
 
         @yield('scripts')

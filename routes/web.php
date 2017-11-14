@@ -46,9 +46,13 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/user_reports/print_waybill/pdf', 'User_reportsController@print_waybill');
     Route::resource('/user_reports', 'User_reportsController'); 
     
-    Route::resource('/station_reports', 'Station_reportsController'); 
-    Route::get('/station_reports/get_report_data', 'Station_reportsController@get_report_data'); 
+    Route::resource('/station_reports', 'StationReportsController'); 
+    Route::get('/station_reports/get_report_data', 'StationReportsController@get_report_data'); 
+    
     Route::resource('/client_reports', 'ClientReportsController'); 
+    
+    Route::get('/invoices/grid', 'InvoicesController@grid'); 
+    Route::resource('/invoices', 'InvoicesController');     
     
 });
 
@@ -83,9 +87,13 @@ Route::group(['middleware' => ['role:staff']], function () {
     Route::get('/user_reports/print_waybill/pdf', 'User_reportsController@print_waybill');
     Route::resource('/user_reports', 'User_reportsController'); 
     
-    Route::resource('/station_reports', 'Station_reportsController'); 
-    Route::get('/station_reports/get_report_data/extra/', 'Station_reportsController@get_report_data'); 
+    Route::resource('/station_reports', 'StationReportsController'); 
+    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@get_report_data'); 
+    
     Route::resource('/client_reports', 'ClientReportsController'); 
+    
+    Route::get('/invoices/grid', 'InvoicesController@grid'); 
+    Route::resource('/invoices', 'InvoicesController');    
     
 });
 
