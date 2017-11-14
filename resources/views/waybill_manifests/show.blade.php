@@ -137,7 +137,7 @@
                 },
                 {
                     "render": function (data, type, row) {
-                        return '<a href="{{url(' / waybills')}}/' + row[0] + '">' + data + '</a>';
+                        return '<a href="{{url('waybills')}}/' + row[0] + '">' + data + '</a>';
                     },
                     "targets": 1
                 }
@@ -154,7 +154,7 @@
         $("#load-waybills").click(function () {
 
             $.ajax({
-                "url": "{{url('/waybill_manifests/filters/')}}/{{$manifest->id}}"
+                "url": "{{url('waybill_manifests/filters/')}}/{{$manifest->id}}"
             }).done(function (data) {
                 $("#bottom-content").html(data);
                 $("#bottom-buttons-one").addClass("hidden");
@@ -170,7 +170,7 @@
             console.log(listCheck);
             if (listCheck.length > 0) {
                 $.ajax(
-                        {url: "{{url('/waybill_manifests/remove_batch/')}}",
+                        {url: "{{url('waybill_manifests/remove_batch/')}}",
                             data: {"waybill_ids": listCheck},
                             type: "POST",
                             success: function (data) {
@@ -186,7 +186,7 @@
         $("#dispatch-manifest").click(function () {
             manifest_id = "{{$manifest-> id}}";
             $.ajax(
-                    {url: "{{url('/manifests/dispatch_manifest/')}}",
+                    {url: "{{url('manifests/dispatch_manifest/')}}",
                         data: {"manifest_id": manifest_id},
                         type: "POST",
                         success: function (data) {
