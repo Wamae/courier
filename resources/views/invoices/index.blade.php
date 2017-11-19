@@ -41,9 +41,14 @@
             </table>
         </div>
 
-        <a href="{{url('invoices/create')}}" class="btn btn-small btn-primary add-new-form" role="button">
+        <a href="{{url('invoices/create')}}" class="btn btn-small btn-primary" role="button">
             <i class="icon-plus-sign"></i> 
             Add {{$title}}
+        </a>
+        
+        <a id="cancel-invoices" href="#" class="btn btn-small btn-primary" role="button">
+            <i class="icon-plus-sign"></i> 
+            Cancel {{$title}}
         </a>
     </div>
 </div>
@@ -95,7 +100,7 @@
                 },
                  {
                     "render": function (data, type, row) {
-                        return '<a href="{{url("invoices/show")}}/'+row[2]+'" class="btn btn-info">' + row[5] + ' ITEMS</a>';
+                        return '<a href="{{url("invoices")}}/'+row[2]+'" class="btn btn-info">' + row[5] + ' ITEMS</a>';
                     },
                     "targets": 5
                 },
@@ -125,14 +130,32 @@
                          },*/
             ]
         });
-    });
-    function doDelete(id) {
-        if (confirm('You really want to delete this record?')) {
-            $.ajax({url: '{{ url('payment_modes') }}/' + id, type: 'DELETE'}).success(function () {
-                theGrid.ajax.reload();
+        
+        $("#cancel-invoices").click(function(){
+            invoiceIds = [];
+             $(".check-item:checked").each(function () {
+
+                invoiceIds.push($(this).val());
             });
-        }
-        return false;
-    }
+            console.log(invoiceIds);
+            
+            if (invoiceIds.length > 0) {
+                $.ajax(
+                        {url: "{{url('invoices/cancel_invoices/')}}",
+                            data: {"invoice_ids": invoiceIds},
+                            type: "POST",
+                            success: function (data) {
+                                if (data === "1") {
+                                    theGrid.ajax.reload();
+                                    alert("Invoice has been cancelled");
+                                }
+                            }});
+            } else {
+                alert("Select waybills first");
+            }
+            
+        });
+        
+    });
 </script>
 @endsection

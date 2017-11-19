@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2017 at 10:46 AM
+-- Generation Time: Nov 19, 2017 at 08:21 AM
 -- Server version: 10.1.24-MariaDB
 -- PHP Version: 7.1.6
 
@@ -40,6 +40,14 @@ CREATE TABLE `clients` (
   `updated_by` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `clients`
+--
+
+INSERT INTO `clients` (`id`, `client_name`, `client_telephone`, `billing_address`, `status`, `created_by`, `created_at`, `updated_at`, `updated_by`) VALUES
+(1, 'MILLBROOK GARMENT', '789456147', 'PO BOX 12345 Nairobi', 1, 5, '2017-11-12 06:19:02', '2017-11-12 06:19:02', NULL),
+(2, 'TRANSAFRICA MOTORS LTD', '345678909', 'PO BOX 54321 Nairobi', 1, 5, '2017-11-12 06:19:27', '2017-11-12 06:19:27', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -59,6 +67,54 @@ INSERT INTO `currencies` (`id`, `currency`) VALUES
 (1, 'KSH'),
 (2, 'TSH'),
 (3, 'USH');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoices`
+--
+
+CREATE TABLE `invoices` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `created_by` int(11) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` int(11) UNSIGNED DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `due_date` datetime NOT NULL,
+  `currency_id` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `invoices`
+--
+
+INSERT INTO `invoices` (`id`, `client_id`, `created_by`, `created_at`, `updated_by`, `updated_at`, `due_date`, `currency_id`, `status`) VALUES
+(1, 2, 1, '2017-11-18 20:37:52', 1, '2017-11-18 17:37:52', '2017-11-30 00:00:00', 1, 0),
+(2, 1, 1, '2017-11-15 23:01:14', NULL, '2017-11-15 23:01:14', '0000-00-00 00:00:00', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice_waybills`
+--
+
+CREATE TABLE `invoice_waybills` (
+  `id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `waybill_id` int(11) NOT NULL,
+  `created_by` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `invoice_waybills`
+--
+
+INSERT INTO `invoice_waybills` (`id`, `invoice_id`, `waybill_id`, `created_by`, `created_at`, `status`) VALUES
+(1, 1, 5, 1, '2017-11-12 09:57:36', 1);
 
 -- --------------------------------------------------------
 
@@ -323,7 +379,8 @@ CREATE TABLE `payment_modes` (
 INSERT INTO `payment_modes` (`id`, `payment_mode`, `status`, `created_by`, `created_at`, `updated_at`, `updated_by`) VALUES
 (1, 'MPESA', 1, 1, '2017-08-26 01:06:42', '2017-08-26 01:06:42', NULL),
 (2, 'CASH ON DELIVERY', 1, 1, '2017-08-26 01:06:48', '2017-08-26 01:06:48', NULL),
-(3, 'CASH PAYMENT', 1, 1, '2017-08-26 01:06:55', '2017-08-26 01:06:55', NULL);
+(3, 'CASH PAYMENT', 1, 1, '2017-08-26 01:06:55', '2017-08-26 01:06:55', NULL),
+(4, 'ACCOUNT PAYMENT', 1, 5, '2017-08-26 01:06:55', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -433,7 +490,7 @@ CREATE TABLE `stations` (
 --
 
 INSERT INTO `stations` (`id`, `office_name`, `office_code`, `telephone_number`, `currency_id`, `main_office_id`, `status`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'ORIGIN', 'ORG', 'dsfdsa', 3, 1, 1, '2017-08-26 01:12:41', '2017-11-02 10:47:41', 1, 5),
+(1, 'ORIGIN', 'ORG', 'dsfdsa', 1, 1, 1, '2017-08-26 01:12:41', '2017-11-02 10:47:41', 1, 5),
 (2, 'DESTINATION', 'DEST', 'dlksf', 1, 1, 1, '2017-08-26 01:13:05', '2017-08-26 01:13:05', 1, NULL);
 
 -- --------------------------------------------------------
@@ -450,6 +507,55 @@ CREATE TABLE `test_tables` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `transaction_type_id` int(11) NOT NULL,
+  `ref` varchar(50) NOT NULL,
+  `amount` float NOT NULL,
+  `created_by` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `invoice_id`, `transaction_type_id`, `ref`, `amount`, `created_by`, `created_at`) VALUES
+(1, 1, 1, '026CHDP173120081', 150, 1, '2017-11-14 20:53:11'),
+(2, 1, 4, 'LJHJGIIG67', 250, 1, '2017-11-12 10:01:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transaction_types`
+--
+
+CREATE TABLE `transaction_types` (
+  `id` int(11) NOT NULL,
+  `transaction_type` varchar(50) NOT NULL,
+  `created_by` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` int(10) UNSIGNED DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `transaction_types`
+--
+
+INSERT INTO `transaction_types` (`id`, `transaction_type`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+(1, 'BANK DEPOSIT', 5, '2017-11-12 10:00:10', NULL, NULL),
+(2, 'BANKERS CHEQUE', 5, '2017-11-12 10:00:10', NULL, NULL),
+(3, 'CASH PAYMENT', 5, '2017-11-12 10:00:39', NULL, NULL),
+(4, 'MPESA TRANSFER', 5, '2017-11-12 10:00:39', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -473,8 +579,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `station`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'staff', 1, 'staff@courier.co.ke', '$2y$10$xbaKLpfeaPE8AHBtjmw7feVp3ODcBGsvYDGjeI2H.3pAHjQQqwa4y', 'Ac5lRX2Dx4g5vAcF5ov7WiHwE2Ry16fxMy2I5rTJmwgLtwY8wLJXaBwWfAkY', '2017-08-26 00:12:39', '2017-09-08 16:55:19'),
-(5, 'admin', NULL, 'admin@courier.co.ke', '$2y$10$lzB5g.ZxNHRO68akTV.hYudYaly119eXBmsImSeYVwXq5HN0QqOZ6', 'KEZROobQIGxcArGVHLY8y5Uv6N3eWTeUbxvIGemDjfArii5vB328YFWbck6w', '2017-09-08 18:15:47', '2017-09-08 18:15:47');
+(1, 'staff', 1, 'staff@courier.co.ke', '$2y$10$xbaKLpfeaPE8AHBtjmw7feVp3ODcBGsvYDGjeI2H.3pAHjQQqwa4y', 'qZjraNXp1HsYj8jZTWEUMIcID6FNb2RMrZDErRll8kWnB7cXyTdfTO3U3trh', '2017-08-26 00:12:39', '2017-09-08 16:55:19'),
+(5, 'admin', NULL, 'admin@courier.co.ke', '$2y$10$lzB5g.ZxNHRO68akTV.hYudYaly119eXBmsImSeYVwXq5HN0QqOZ6', 'osfYrLjbXZrzjftOLYCiIM9wXEyowcyYHw42Ro8I9dFV0iVh1FgG8w79PB2X', '2017-09-08 18:15:47', '2017-09-08 18:15:47');
 
 -- --------------------------------------------------------
 
@@ -485,6 +591,7 @@ INSERT INTO `users` (`id`, `name`, `station`, `email`, `password`, `remember_tok
 CREATE TABLE `waybills` (
   `id` int(11) NOT NULL,
   `waybill_no` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `client_id` int(11) DEFAULT NULL,
   `consignor` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `consignor_tel` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `consignee` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -498,8 +605,8 @@ CREATE TABLE `waybills` (
   `consignor_email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `payment_mode` int(11) NOT NULL,
-  `amount_per_item` double NOT NULL,
-  `vat` double NOT NULL,
+  `amount_per_item` float NOT NULL,
+  `vat` float NOT NULL,
   `amount` float NOT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -512,12 +619,12 @@ CREATE TABLE `waybills` (
 -- Dumping data for table `waybills`
 --
 
-INSERT INTO `waybills` (`id`, `waybill_no`, `consignor`, `consignor_tel`, `consignee`, `consignee_tel`, `origin`, `destination`, `package_type`, `quantity`, `weight`, `cbm`, `consignor_email`, `description`, `payment_mode`, `amount_per_item`, `vat`, `amount`, `created_by`, `created_at`, `updated_at`, `updated_by`, `status`) VALUES
-(1, 'ORG-DEST-2017-SEP-KGUJ', 'John', 'dsfads', 'ssafd', '+2540716690166', 1, 2, 1, 50, '55kg', NULL, 'fdsaf', 'fdsaf', 1, 900, 16, 756, 1, '2017-08-26 01:13:57', '2017-09-01 09:56:44', 1, 4),
-(2, 'DEST-DEST-2017-SEP-GPAD', 'Jane', '87u0324', '349u9854', '0716690166', 2, 2, 1, 10, '7kg', NULL, 'consigrnor@gmail.com', 'Description', 3, 900, 16, 756, 1, '2017-09-01 04:09:30', '2017-09-01 09:57:29', 1, 4),
-(3, 'ORG-DEST-2017-SEP-RCUH', 'Kokko', '87u0324', 'SHaru', '3948324', 1, 2, 2, 15, '7kg', NULL, 'consigrnor@gmail.com', 'Description', 3, 900, 16, 756, 1, '2017-09-01 04:09:30', '2017-09-01 11:26:11', 1, 1),
-(4, 'ORG-DEST-2017-SEP-WZHA', 'kllksdkl', 'jljlksdjal', 'jfkldsj', 'flkdsjaf', 1, 2, 1, 89, '989', '89', '898989', '89', 1, 100, 16, 84, 1, '2017-09-01 11:28:47', '2017-09-01 11:29:58', 1, 1),
-(5, 'ORG-ORG-2017-SEP-SDCP', 'fkldajslfj', 'klfdjsla', 'ljlfdjsl', 'jljlsklj', 1, 1, 1, 9090, '98', '89', '899', '89', 1, 500, 16, 420, 1, '2017-09-01 11:30:25', '2017-09-01 11:30:25', NULL, 1);
+INSERT INTO `waybills` (`id`, `waybill_no`, `client_id`, `consignor`, `consignor_tel`, `consignee`, `consignee_tel`, `origin`, `destination`, `package_type`, `quantity`, `weight`, `cbm`, `consignor_email`, `description`, `payment_mode`, `amount_per_item`, `vat`, `amount`, `created_by`, `created_at`, `updated_at`, `updated_by`, `status`) VALUES
+(1, 'ORG-DEST-2017-SEP-KGUJ', NULL, 'John', 'dsfads', 'ssafd', '+2540716690166', 1, 2, 1, 50, '55kg', NULL, 'fdsaf', 'fdsaf', 1, 900, 16, 751, 1, '2017-08-26 01:13:57', '2017-09-01 09:56:44', 1, 4),
+(2, 'DEST-DEST-2017-SEP-GPAD', NULL, 'Jane', '87u0324', '349u9854', '0716690166', 2, 2, 1, 10, '7kg', NULL, 'consigrnor@gmail.com', 'Description', 3, 900, 16, 752, 1, '2017-09-01 04:09:30', '2017-09-01 09:57:29', 1, 4),
+(3, 'ORG-DEST-2017-SEP-RCUH', NULL, 'Kokko', '87u0324', 'SHaru', '3948324', 1, 2, 2, 15, '7kg', NULL, 'consigrnor@gmail.com', 'Description', 3, 900, 16, 753, 1, '2017-09-01 04:09:30', '2017-09-01 11:26:11', 1, 1),
+(4, 'ORG-DEST-2017-SEP-WZHA', NULL, 'kllksdkl', 'jljlksdjal', 'jfkldsj', 'flkdsjaf', 1, 2, 1, 89, '989', '89', '898989', '89', 1, 100, 16, 84, 1, '2017-09-01 11:28:47', '2017-09-01 11:29:58', 1, 1),
+(5, 'ORG-ORG-2017-SEP-SDCP', 2, 'TRANSAFRICA MOTORS LTD', '345678909', 'ljlfdjsl', 'jljlsklj', 1, 1, 1, 9090, '98', '89', '899', '89', 1, 500, 16, 420, 1, '2017-09-01 11:30:25', '2017-09-01 11:30:25', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -588,6 +695,27 @@ ALTER TABLE `clients`
 ALTER TABLE `currencies`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `currency` (`currency`);
+
+--
+-- Indexes for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `client_id` (`client_id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `client_id_2` (`client_id`),
+  ADD KEY `updated_by` (`updated_by`),
+  ADD KEY `currency_id` (`currency_id`),
+  ADD KEY `currency_id_2` (`currency_id`);
+
+--
+-- Indexes for table `invoice_waybills`
+--
+ALTER TABLE `invoice_waybills`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invoice_id` (`invoice_id`),
+  ADD KEY `waybill_id` (`waybill_id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- Indexes for table `main_offices`
@@ -702,6 +830,24 @@ ALTER TABLE `test_tables`
   ADD KEY `updated_by` (`updated_by`);
 
 --
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_type_id` (`transaction_type_id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `invoice_id` (`invoice_id`);
+
+--
+-- Indexes for table `transaction_types`
+--
+ALTER TABLE `transaction_types`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `transaction_type` (`transaction_type`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -720,7 +866,8 @@ ALTER TABLE `waybills`
   ADD KEY `payment_mode` (`payment_mode`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `updated_by` (`updated_by`),
-  ADD KEY `status` (`status`);
+  ADD KEY `status` (`status`),
+  ADD KEY `client_id` (`client_id`);
 
 --
 -- Indexes for table `waybill_manifests`
@@ -748,12 +895,22 @@ ALTER TABLE `waybill_statuses`
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `currencies`
 --
 ALTER TABLE `currencies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `invoices`
+--
+ALTER TABLE `invoices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `invoice_waybills`
+--
+ALTER TABLE `invoice_waybills`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `main_offices`
 --
@@ -783,7 +940,7 @@ ALTER TABLE `package_types`
 -- AUTO_INCREMENT for table `payment_modes`
 --
 ALTER TABLE `payment_modes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `permissions`
 --
@@ -804,6 +961,16 @@ ALTER TABLE `stations`
 --
 ALTER TABLE `test_tables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `transaction_types`
+--
+ALTER TABLE `transaction_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `users`
 --
@@ -834,6 +1001,23 @@ ALTER TABLE `waybill_statuses`
 ALTER TABLE `clients`
   ADD CONSTRAINT `clients_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `clients_ibfk_2` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD CONSTRAINT `invoices_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`),
+  ADD CONSTRAINT `invoices_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `invoices_ibfk_3` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `invoices_ibfk_4` FOREIGN KEY (`currency_id`) REFERENCES `currencies` (`id`);
+
+--
+-- Constraints for table `invoice_waybills`
+--
+ALTER TABLE `invoice_waybills`
+  ADD CONSTRAINT `invoice_waybills_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`),
+  ADD CONSTRAINT `invoice_waybills_ibfk_2` FOREIGN KEY (`waybill_id`) REFERENCES `waybills` (`id`),
+  ADD CONSTRAINT `invoice_waybills_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `main_offices`
@@ -888,6 +1072,21 @@ ALTER TABLE `stations`
   ADD CONSTRAINT `stations_ibfk_4` FOREIGN KEY (`currency_id`) REFERENCES `currencies` (`id`);
 
 --
+-- Constraints for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types` (`id`),
+  ADD CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`);
+
+--
+-- Constraints for table `transaction_types`
+--
+ALTER TABLE `transaction_types`
+  ADD CONSTRAINT `transaction_types_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `transaction_types_ibfk_2` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
@@ -903,7 +1102,8 @@ ALTER TABLE `waybills`
   ADD CONSTRAINT `waybills_ibfk_4` FOREIGN KEY (`payment_mode`) REFERENCES `payment_modes` (`id`),
   ADD CONSTRAINT `waybills_ibfk_5` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `waybills_ibfk_6` FOREIGN KEY (`origin`) REFERENCES `stations` (`id`),
-  ADD CONSTRAINT `waybills_ibfk_7` FOREIGN KEY (`status`) REFERENCES `waybill_statuses` (`id`);
+  ADD CONSTRAINT `waybills_ibfk_7` FOREIGN KEY (`status`) REFERENCES `waybill_statuses` (`id`),
+  ADD CONSTRAINT `waybills_ibfk_8` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`);
 
 --
 -- Constraints for table `waybill_manifests`

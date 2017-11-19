@@ -7,46 +7,46 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Test_table;
+use App\Main_office;
 
 use DB;
 use Auth;
 
-class Test_tablesController extends Controller
+class MainOfficesController extends Controller
 {
     public $title;
     
     public function __construct()
     {
         $this->middleware('auth');
-        $this->title = ucfirst(str_replace('_',' ','Test_tables'));
+        $this->title = ucfirst(str_replace('_',' ','Main_offices'));
     }
 
 
     public function index(Request $request)
 	{
             $title = $this->title;
-	    return view('test_tables.index', compact('title'));
+	    return view('main_offices.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
             $title = $this->title;
-	    return view('test_tables.add', compact('title'));
+	    return view('main_offices.add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-		$test_table = Test_table::findOrFail($id);
-	    return view('test_tables.add', [
-	        'model' => $test_table	    ]);
+            $model = Main_office::findOrFail($id);
+            $title = $this->title;
+	    return view('main_offices.add', compact('model','title'));
 	}
 
 	public function show(Request $request, $id)
 	{
-		$test_table = Test_table::findOrFail($id);
-	    return view('test_tables.show', [
-	        'model' => $test_table	    ]);
+		$main_office = Main_office::findOrFail($id);
+	    return view('main_offices.show', [
+	        'model' => $main_office	    ]);
 	}
 
 	public function grid(Request $request)
@@ -54,10 +54,13 @@ class Test_tablesController extends Controller
 		$len = $_GET['length'];
 		$start = $_GET['start'];
 
-		$select = "SELECT *,1,2 ";
-		$presql = " FROM test_tables a ";
+		$select = "SELECT a.id,main_office,if(a.status = 1,'ACTIVE','INACTIVE') AS status,a.created_at,u.name AS uname,a.updated_at,u2.name,1,2 ";
+		$presql = " FROM main_offices a ";
+		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
+		$presql .= " LEFT JOIN users u2 ON a.updated_by = u2.id ";
+                
 		if($_GET['search']['value']) {	
-			$presql .= " WHERE name LIKE '%".$_GET['search']['value']."%' ";
+			$presql .= " WHERE main_office LIKE '%".$_GET['search']['value']."%' ";
 		}
 		
 		$presql .= "  ";
@@ -96,47 +99,35 @@ class Test_tablesController extends Controller
 	    /*$this->validate($request, [
 	        'name' => 'required|max:255',
 	    ]);*/
-		$test_table = null;
+		$main_office = null;
                 $user_id = Auth::user()->id;
                 
 		if($request->id > 0) { 
-                    $test_table = Test_table::findOrFail($request->id);
-                    $test_table->updated_by = $user_id;
+                    $main_office = Main_office::findOrFail($request->id);
+                    $main_office->updated_by = $user_id;
                     
                 }else { 
-			$test_table = new Test_table;
-                        $test_table->created_by = $user_id;
+			$main_office = new Main_office;
+                        $main_office->created_by = $user_id;
 		}
 	    
 
 	    		
-			    $test_table->id = $request->id?:0;
+			    $main_office->id = $request->id?:0;
 		            
 		
 	    		
 		            
-			    $test_table->name = $request->name;
+			    $main_office->main_office = $request->main_office;
 		
 	    		
 		            
-			    $test_table->created_by = $request->created_by;
+			    $main_office->status = $request->status;
 		
-	    		
-		            
-			    $test_table->created_at = $request->created_at;
-		
-	    		
-		            
-			    $test_table->updated_by = $request->updated_by;
-		
-	    		
-		            
-			    $test_table->updated_at = $request->updated_at;
-		
-	    	    //$test_table->user_id = $request->user()->id;
-	    $test_table->save();
+	    	    //$main_office->user_id = $request->user()->id;
+	    $main_office->save();
 
-	    return redirect('/test_tables');
+	    return redirect('/main_offices');
 
 	}
 
@@ -147,9 +138,9 @@ class Test_tablesController extends Controller
 
 	public function destroy(Request $request, $id) {
 		
-		$test_table = Test_table::findOrFail($id);
+		$main_office = Main_office::findOrFail($id);
 
-		$test_table->delete();
+		$main_office->delete();
 		return "OK";
 	    
 	}

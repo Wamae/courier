@@ -17,4 +17,8 @@ class Invoice extends Model
     public function waybills(){
         return $this->hasManyThrough(Waybill::class, InvoiceWaybills::class, 'waybill_id', 'id');
     }
+    
+    public function transactions(){
+        return $this->hasMany(Transaction::class, 'invoice_id', 'id');
+    }
 }

@@ -7,46 +7,46 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Payment_mode;
+use App\Test_table;
 
 use DB;
 use Auth;
 
-class Payment_modesController extends Controller
+class TestTablesController extends Controller
 {
     public $title;
     
     public function __construct()
     {
         $this->middleware('auth');
-        $this->title = ucfirst(str_replace('_',' ','Payment_modes'));
+        $this->title = ucfirst(str_replace('_',' ','Test_tables'));
     }
 
 
     public function index(Request $request)
 	{
             $title = $this->title;
-	    return view('payment_modes.index', compact('title'));
+	    return view('test_tables.index', compact('title'));
 	}
 
 	public function create(Request $request)
 	{
             $title = $this->title;
-	    return view('payment_modes.add', compact('title'));
+	    return view('test_tables.add', compact('title'));
 	}
 
 	public function edit(Request $request, $id)
 	{
-            $model = Payment_mode::findOrFail($id);
-            $title = $this->title;
-	    return view('payment_modes.add', compact('model','title'));
+		$test_table = Test_table::findOrFail($id);
+	    return view('test_tables.add', [
+	        'model' => $test_table	    ]);
 	}
 
 	public function show(Request $request, $id)
 	{
-		$payment_mode = Payment_mode::findOrFail($id);
-	    return view('payment_modes.show', [
-	        'model' => $payment_mode	    ]);
+		$test_table = Test_table::findOrFail($id);
+	    return view('test_tables.show', [
+	        'model' => $test_table	    ]);
 	}
 
 	public function grid(Request $request)
@@ -54,13 +54,10 @@ class Payment_modesController extends Controller
 		$len = $_GET['length'];
 		$start = $_GET['start'];
 
-		$select = "SELECT a.id,payment_mode,if(a.status = 1,'ACTIVE','INACTIVE') AS status,u.name AS uname,a.created_at,u2.name,a.updated_at,1,2 ";
-		$presql = " FROM payment_modes a ";
-		$presql .= " LEFT JOIN users u ON a.created_by = u.id ";
-		$presql .= " LEFT JOIN users u2 ON a.updated_by = u2.id ";
-                
+		$select = "SELECT *,1,2 ";
+		$presql = " FROM test_tables a ";
 		if($_GET['search']['value']) {	
-			$presql .= " WHERE payment_mode LIKE '%".$_GET['search']['value']."%' ";
+			$presql .= " WHERE name LIKE '%".$_GET['search']['value']."%' ";
 		}
 		
 		$presql .= "  ";
@@ -99,35 +96,47 @@ class Payment_modesController extends Controller
 	    /*$this->validate($request, [
 	        'name' => 'required|max:255',
 	    ]);*/
-		$payment_mode = null;
+		$test_table = null;
                 $user_id = Auth::user()->id;
                 
 		if($request->id > 0) { 
-                    $payment_mode = Payment_mode::findOrFail($request->id);
-                    $payment_mode->updated_by = $user_id;
+                    $test_table = Test_table::findOrFail($request->id);
+                    $test_table->updated_by = $user_id;
                     
                 }else { 
-			$payment_mode = new Payment_mode;
-                        $payment_mode->created_by = $user_id;
+			$test_table = new Test_table;
+                        $test_table->created_by = $user_id;
 		}
 	    
 
 	    		
-			    $payment_mode->id = $request->id?:0;
+			    $test_table->id = $request->id?:0;
 		            
 		
 	    		
 		            
-			    $payment_mode->payment_mode = $request->payment_mode;
+			    $test_table->name = $request->name;
 		
 	    		
 		            
-			    $payment_mode->status = $request->status;
+			    $test_table->created_by = $request->created_by;
 		
-	    	    //$payment_mode->user_id = $request->user()->id;
-	    $payment_mode->save();
+	    		
+		            
+			    $test_table->created_at = $request->created_at;
+		
+	    		
+		            
+			    $test_table->updated_by = $request->updated_by;
+		
+	    		
+		            
+			    $test_table->updated_at = $request->updated_at;
+		
+	    	    //$test_table->user_id = $request->user()->id;
+	    $test_table->save();
 
-	    return redirect('/payment_modes');
+	    return redirect('/test_tables');
 
 	}
 
@@ -138,9 +147,9 @@ class Payment_modesController extends Controller
 
 	public function destroy(Request $request, $id) {
 		
-		$payment_mode = Payment_mode::findOrFail($id);
+		$test_table = Test_table::findOrFail($id);
 
-		$payment_mode->delete();
+		$test_table->delete();
 		return "OK";
 	    
 	}

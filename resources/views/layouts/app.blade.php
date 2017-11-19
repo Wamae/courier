@@ -92,7 +92,7 @@
                                     <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span> ACCOUNT REPORTS</a>
                                 </li>
                                 <li>
-                                    <a><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
+                                    <a href="{{url('invoices')}}"><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
                                 </li>
                             </ul>
                         </li>

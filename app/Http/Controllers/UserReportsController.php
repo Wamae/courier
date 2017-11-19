@@ -14,7 +14,7 @@ use App\Waybill_status;
 use DB;
 use Auth;
 
-class User_reportsController extends Controller {
+class UserReportsController extends Controller {
 
     public function __construct() {
         //$this->middleware('auth');

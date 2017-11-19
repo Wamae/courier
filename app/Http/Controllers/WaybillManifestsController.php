@@ -14,7 +14,7 @@ use App\Package_type;
 use App\Manifest;
 use View;
 
-class Waybill_manifestsController extends Controller {
+class WaybillManifestsController extends Controller {
 
     public $title;
 
