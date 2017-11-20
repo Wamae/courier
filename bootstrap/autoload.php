@@ -11,6 +11,7 @@ define('OFFLOADED', 4);
 
 /*Waybill status*/
 define('LOADED', 2);
+define('DELIVERED', 3);
 
 /*Currencies*/
 define('KSH', 1);

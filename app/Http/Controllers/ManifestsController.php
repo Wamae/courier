@@ -242,7 +242,7 @@ class ManifestsController extends Controller {
                 for ($i = 0; $i <= count($waybill_manifests); $i++) {
                     $id = $waybill_manifests[$i]['waybill'];
 
-                    $data = array("updated_by" => $user_id, "status" => OFFLOADED);
+                    $data = array("updated_by" => $user_id, "status" => DELIVERED);
                     DB::table('waybills')->where('id', $id)->update($data);
 
                     $waybill = \App\Waybill::find($id);

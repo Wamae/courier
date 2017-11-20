@@ -216,5 +216,16 @@ class WaybillsController extends Controller {
         $pdf->loadView('pdf.waybill',compact('waybill'))->setPaper('a5', 'landscape');
         return $pdf->stream();
     }
+    
+    public function tracking(){
+        return view('waybills.tracking');
+    }
+    
+    public function trackWaybill($waybillNo){
+        $waybill = Waybill::select(['waybill_no','waybill_status'])
+                ->join('waybill_statuses','waybill_statuses.id','=','waybills.status')
+                ->where('waybill_no',$waybillNo)->get()->first();
+        echo json_encode($waybill);
+    }
 
 }
