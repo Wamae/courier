@@ -66,6 +66,9 @@ Auth::routes();
 
 Route::get('/home', 'WaybillsController@index')->name('home');
 
+Route::get('/waybills/tracking/status', 'WaybillsController@tracking');
+Route::get('/waybills/tracking/trackWaybill/{waybillNo}', 'WaybillsController@trackWaybill');
+
 Route::group(['middleware' => ['role:staff']], function () {
 
     Route::get('/manifests/grid', 'ManifestsController@grid');
@@ -79,8 +82,8 @@ Route::group(['middleware' => ['role:staff']], function () {
     Route::get('/waybills/grid', 'WaybillsController@grid');
     Route::resource('/waybills', 'WaybillsController');
     Route::get('/waybills/print_waybill/pdf', 'WaybillsController@print_waybill');
-    Route::get('/waybills/tracking/status', 'WaybillsController@tracking');
-    Route::get('/waybills/tracking/trackWaybill/{waybillNo}', 'WaybillsController@trackWaybill');
+    //Route::get('/waybills/tracking/status', 'WaybillsController@tracking');
+    //Route::get('/waybills/tracking/trackWaybill/{waybillNo}', 'WaybillsController@trackWaybill');
 
 
     Route::get('/waybill_manifests/grid/{manifest}', 'WaybillManifestsController@grid');
