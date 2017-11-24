@@ -9,8 +9,8 @@
     <h1><i class="fa fa-users"></i> User Administration <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
     <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a></h1>
     <hr>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+    <div class="">
+        <table id="thegrid" class="table table-bordered table-striped">
 
             <thead>
                 <tr>
@@ -48,5 +48,18 @@
     <a href="{{ route('users.create') }}" class="btn btn-success">Add User</a>
 
 </div>
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        var theGrid = null;
+        $(document).ready(function(){
+            theGrid = $('#thegrid').DataTable({
+                "processing": false,
+                "serverSide": false,
+                "ordering": true,
+                "responsive": true
+            });
+        });
 
+    </script>
 @endsection
