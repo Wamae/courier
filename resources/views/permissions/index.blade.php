@@ -8,11 +8,11 @@
 <div class="col-lg-10 col-lg-offset-1">
     <h1><i class="fa fa-key"></i>Available Permissions
 
-    <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
-    <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a></h1>
+    <a href="{{ route('users.index') }}" class="btn btn-info">Users</a>
+    <a href="{{ route('roles.index') }}" class="btn btn-info">Roles</a></h1>
     <hr>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+    <div class="">
+        <table id="thegrid" class="table table-bordered table-striped table-condensed">
 
             <thead>
                 <tr>
@@ -41,5 +41,19 @@
     <a href="{{ URL::to('permissions/create') }}" class="btn btn-success">Add Permission</a>
 
 </div>
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        var theGrid = null;
+        $(document).ready(function(){
+            theGrid = $('#thegrid').DataTable({
+                "processing": false,
+                "serverSide": false,
+                "ordering": true,
+                "responsive": true
+            });
+        });
+
+    </script>
 
 @endsection
