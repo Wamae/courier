@@ -31,6 +31,13 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/payment_modes/grid', 'PaymentModesController@grid');
     Route::resource('/payment_modes', 'PaymentModesController');
 
+	Route::get('/manifests/grid', 'ManifestsController@grid');
+    Route::resource('/manifests', 'ManifestsController');
+    Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
+    Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
+    Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
+    Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest'); 
+	
     Route::get('/waybill_statuses/grid', 'WaybillStatusesController@grid');
     Route::resource('/waybill_statuses', 'WaybillStatusesController');
 
@@ -77,7 +84,7 @@ Route::group(['middleware' => ['role:staff']], function () {
     Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
     Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
     Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest');    
-    Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
+    //Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
 
     Route::get('/waybills/grid', 'WaybillsController@grid');
     Route::resource('/waybills', 'WaybillsController');

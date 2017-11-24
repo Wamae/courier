@@ -149,11 +149,11 @@
             "render": function (data, type, row) {
               
             @can('create waybill')
-            if(row[10] === "ACTIVE"){  
-                return '<a href="{{ url('waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
-            }else{
+            //if(row[10] === "ACTIVE"){  
+            //    return '<a href="{{ url('waybills') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
+            //}else{
                 return '<a href="{{ url('waybills') }}/print_waybill/pdf?id=' + row[0] + '" class="btn btn-status btn-xs btn-success"><span class="glyphicon glyphicon-print"></span> Print</a>';
-            }
+            //}
             @else
                 return '';
             @endcan
