@@ -4,7 +4,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        List of {{ ucfirst('waybills') }}
+        {{ ucfirst('waybill') }} Information Entry Management
     </div>
 
     <div class="panel-body">
