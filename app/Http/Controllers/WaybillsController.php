@@ -136,6 +136,7 @@ class WaybillsController extends Controller {
 
         $waybill->id = $request->id ?: 0;
 
+        $waybill->client_id = $request->client_id;
 
         $waybill->consignor = $request->consignor;
 

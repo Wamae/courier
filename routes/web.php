@@ -31,7 +31,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/payment_modes/grid', 'PaymentModesController@grid');
     Route::resource('/payment_modes', 'PaymentModesController');
 
-	Route::get('/manifests/grid', 'ManifestsController@grid');
+    Route::get('/manifests/grid', 'ManifestsController@grid');
     Route::resource('/manifests', 'ManifestsController');
     Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
     Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
@@ -75,6 +75,8 @@ Route::get('/home', 'WaybillsController@index')->name('home');
 
 Route::get('/waybills/tracking/status', 'WaybillsController@tracking');
 Route::get('/waybills/tracking/trackWaybill/{waybillNo}', 'WaybillsController@trackWaybill');
+
+Route::get('/clients/getClients/all', 'ClientsController@getAllClients');
 
 Route::group(['middleware' => ['role:staff']], function () {
 

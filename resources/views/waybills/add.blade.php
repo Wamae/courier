@@ -39,7 +39,7 @@
 
                                 <!--   ---->
                                 <!-- <label class="col-lg-4 control-label" for="consignor_name">CONSIGNOR:<sup>*</sup></label> ---->
-                                <div class="col-lg-8 non-acc">
+                                <div class="col-lg-8 non-acc" id="consignor-div">
                                     <input type="text" name="consignor" required id="consignor" class="form-control" value="{{$model['consignor'] or ''}}">
                                 </div>
                             </div>
@@ -47,8 +47,8 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="consignor_name">CONSIGNOR TEL:<sup>*</sup></label>
 
-                                <div class="col-lg-8 non-acc">
-                                    <input type="text" name="consignor_tel" required id="consignor_tel" class="form-control" value="{{$model['consignor_tel'] or ''}}">
+                                <div class="col-lg-8 non-acc" id="consignor-tel-div">
+                                    <input type="text" name="consignor_tel" required id="consignor-tel" class="form-control" value="{{$model['consignor_tel'] or ''}}">
                                 </div>
                             </div>
 
@@ -62,7 +62,7 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="consignor_name">CONSIGNEE TEL:<sup>*</sup></label>
                                 <div class="col-lg-8">
-                                    <input type="text" name="consignee_tel" required id="consignee_tel" class="form-control" value="{{$model['consignee_tel'] or ''}}">
+                                    <input type="text" name="consignee_tel" required id="consignee-tel" class="form-control" value="{{$model['consignee_tel'] or ''}}">
                                 </div>
                             </div>
 
@@ -132,7 +132,7 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="payment_mode">PAYMENT MODE:<sup>*</sup></label>
                                 <div class="col-lg-8">
-                                    <select name="payment_mode" required id="payment_mode"  data-live-search="true" class="form-control selectpicker">
+                                    <select name="payment_mode" required id="payment-mode"  data-live-search="true" class="form-control selectpicker">
                                         @foreach($payment_modes as $payment_mode)
                                         <option {{(isset($model))?($model['payment_mode'] == $payment_mode->id)?'selected':'':''}} value="{{$payment_mode->id}}">{{$payment_mode->payment_mode}}</option>   
                                         @endforeach
@@ -207,7 +207,47 @@
 
             $("#amount").val(finalAmount);
         });
+
+        $("#payment-mode").change(function () {
+            paymentMode = $(this).val();
+            //if(paymentMode == 4){
+            changeConsignorDetails(paymentMode);
+            //}
+        });
+
+        function changeConsignorDetails(paymentMode) {
+            if (paymentMode == 4) {
+                $.ajax({
+                    url: "{{url('clients/getClients/all')}}",
+                    dataType: "JSON",
+                    success: function (clients) {
+                        clientOptions = `<select id='consignor' name='client_id' 
+                onchange='consignorUpdate(this.options[this.selectedIndex].getAttribute("phone"))' class='form-control'>`;
+                        for (i = 0; i < clients.length; i++) {
+                            clientOptions += `<option phone='${clients[i].client_telephone}' value='${clients[i].id}'>${clients[i].client_name}</option>`;
+                        }
+                        $("#consignor-div").html(clientOptions);
+                        
+                        $("#consignor-tel").val(clients[0].client_telephone);
+                         $("#consignor-tel").attr("readonly", true);
+
+                    }
+                });
+
+            } else {
+            
+                htmlString = '<input type="text" name="consignor_tel" required id="consignor_tel" class="form-control" value="{{$model["consignor_tel"] or ""}}">';
+                $("#consignor-tel-div").html(htmlString);
+                
+                $("#consignor-div").html('<input type="text" name="consignor" required id="consignor" class="form-control" value="{{$model['consignor'] or ''}}">');
+            }
+        }
     });
+
+    function consignorUpdate(phone) {
+        console.log(phone);
+        $("#consignor-tel").val(phone);
+    }
 </script>
 @endsection
 
