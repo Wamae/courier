@@ -86,7 +86,9 @@
                 </tbody>
             </table>
         </div>
+        @can('add transaction')
         <a id="modal-transaction" href="#" class="btn btn-primary">ADD TRANSACTION</a>
+        @endcan
     </div>
 </div>
 <div class="modal fade" id="transaction-modal" role="dialog">

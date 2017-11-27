@@ -40,16 +40,18 @@
                 </tbody>
             </table>
         </div>
-
+        @can('create invoice')
         <a href="{{url('invoices/create')}}" class="btn btn-small btn-primary" role="button">
             <i class="icon-plus-sign"></i> 
             Add {{$title}}
         </a>
-        
+        @endcan
+        @can('cancel invoice')
         <a id="cancel-invoices" href="#" class="btn btn-small btn-primary" role="button">
             <i class="icon-plus-sign"></i> 
             Cancel {{$title}}
         </a>
+        @endcan
     </div>
 </div>
 
