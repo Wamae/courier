@@ -17,6 +17,8 @@ define('DELIVERED', 3);
 define('KSH', 1);
 
 /*Payment modes*/
+define('CASH_ON_DELIVERY', 2);
+define('CASH_PAYMENT', 3);
 define('ACCOUNT_PAYMENT', 4);
 
 /*
