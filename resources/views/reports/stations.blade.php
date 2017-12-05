@@ -112,7 +112,7 @@
     <div class="panel-body">
         <div class="non-print search-panel ">
             <div>
-                <table class="table table-striped table-responsive table-condensed" id="thegrid">
+                <table class="table table-striped table-responsive table-condensed" id="thegrid" style="border: 1px solid black;">
                     <thead>
                         <tr>
                             <th>COLLECTION</th>
@@ -151,9 +151,9 @@
     var theGrid = null;
     $(document).ready(function () {
 
-        var stationId = 0, userId = 0, orientation = 0, currencyId = 0, 
-        startDate = moment(new Date()).subtract(90, "days").format('YYYY-MM-DD'), 
-        endDate = moment(new Date()).format('YYYY-MM-DD');
+        var stationId = 0, userId = 0, orientation = 0, currencyId = 0,
+                startDate = moment(new Date()).subtract(90, "days").format('YYYY-MM-DD'),
+                endDate = moment(new Date()).format('YYYY-MM-DD');
 
         $('#start-date-search').datetimepicker({
             format: 'DD/MM/YYYY'
@@ -192,12 +192,35 @@
         function getData(stationId, userId, orientation, currencyId, startDate, endDate) {
             //TODO: ajax call
             $.ajax({
-                url: "{{ url('station_reports/get_report_data') }}",
+                url: "{{ url('station_reports/get_report_data/extra/') }}",
                 type: "GET",
-                data: {station_id:stationId,user_id:userId,currency_id:currencyId,start_date:startDate,end_date:endDate},
+                dataType: "JSON",
+                data: {station_id: stationId, user_id: userId, currency_id: currencyId, start_date: startDate, end_date: endDate},
                 success: function (result) {
-                    $("#d-content").html(result);
+                    content = makeTableContent(result);
+                    $("#d-content").html(content);
                 }});
+        }
+
+        function makeTableContent(data) {
+            content = "";
+            for (i = 0; i < data.length; i++) {
+                total = data[i].cod_amount+data[i].cash_amount+data[i].acc_amount+data[i].cod_vat+data[i].cash_vat+data[i].acc_vat;
+               content += `<tr>
+    <td>${data[i].office_name}</td>
+        <td>${data[i].cod_amount}</td>
+            <td>${data[i].cod_vat}</td>
+                <td>${data[i].cod_amount + data[i].cod_vat}</td>
+                    <td>${data[i].acc_amount}</td>
+                        <td>${data[i].acc_vat}</td>
+                            <td>${data[i].acc_amount + data[i].acc_vat}</td>
+                            <td>${data[i].cash_amount}</td>
+                                <td>${data[i].cash_vat}</td>   
+                                    <td>${data[i].cash_amount + data[i].cash_vat}</td>
+                                        <td>${total}</td>
+</tr>`;
+            }
+            return content;
         }
 
     });

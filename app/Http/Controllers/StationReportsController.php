@@ -116,43 +116,78 @@ class StationReportsController extends Controller {
     }
 
     public function getReportData(Request $request) {
-        $station_id = $request["station_id"];
-        $user_id = $request["user_id"];
+        $stationId = $request["station_id"];
+        $userId = $request["user_id"];
         $orientation = $request["orientation"];
-        $currency_id = $request["currency_id"];
-        $start_date = $request["start_date"];
-        $end_date = $request["end_date"];
+        $currencyId = $request["currency_id"];
+        $startDate = $request["start_date"];
+        $endDate = $request["end_date"];
 
         $sql = DB::table('waybills')->select(['destination', 'office_name', 'payment_mode', 'amount', 'vat'])
                 ->join('stations', 'waybills.destination', '=', 'stations.id')
-                ->groupBy(['waybills.id', 'payment_mode']);
-        //->join('stations','stations.id','=','waybills.id')
+                ->groupBy(['waybills.id'])
+                //->where('payment_mode','=',CASH_ON_DELIVERY)
+                
         ;
 
-        if ($station_id != "0") {
-            $sql->where('destination', $station_id);
+        if ($stationId != "0") {
+            $sql->where('destination', $stationId);
         }
 
-        if ($user_id != "0") {
-            $sql->where('waybills.created_by', $user_id);
+        if ($userId != "0") {
+            $sql->where('waybills.created_by', $userId);
         }
 
-        if ($start_date != "0") {
-            $sql->where('DATE(waybills.created_at) >= ', $start_date);
+        if ($startDate != "0") {
+            $sql->whereDate('waybills.created_at', '>=', $startDate);
         }
 
-        if ($end_date != "0") {
-            $sql->where('DATE(waybills.created_at) <= ', $end_date);
+        if ($endDate != "0") {
+            $sql->whereDate('waybills.created_at', '<=', $endDate);
         }
-        $data = $sql->get()->toArray();
+        $cash = $sql->get()->toArray();
+        $cash = array_map(function($item) {
+            return (array) $item;
+        }, $cash);
+        //dd($cash);
         $result = array();
 
-        for ($i = 0; $i < count($data); $i++) {
-            dd($data[$i]);
-            $result[] = array('station_id' => $data[$i]->destination, '');
-        }
+        $allStations = Station::select(['id', 'office_name', DB::raw('0 AS cod_amount'),
+                    DB::raw('0 AS cod_vat'),
+                    //DB::raw('0 AS cod_total'),
+                    DB::raw('0 AS acc_amount'),
+                    DB::raw('0 AS acc_vat'),
+                    //DB::raw('0 AS acc_total'),
+                    DB::raw('0 AS cash_amount'),
+                    DB::raw('0 AS cash_vat'),
+                        //DB::raw('0 AS cash_total')
+                ])->get()->toArray();
 
-        echo json_encode();
+        $allStations = array_map(function($item) {
+            return (array) $item;
+        }, $allStations);
+
+
+
+        for ($i = 0; $i < count($cash); $i++) {
+            for ($j = 0; $j < count($allStations); $j++) {
+                //dd($data[$i]);
+                if ($cash[$i]["destination"] == $allStations[$j]["id"]) {
+                    if ($cash[$i]["payment_mode"] == CASH_PAYMENT) {
+                        $allStations[$j]["cash_amount"] += $cash[$i]["amount"];
+                        $allStations[$j]["cash_vat"] += $cash[$i]["vat"];
+                    } else if ($cash[$i]["payment_mode"] == ACCOUNT_PAYMENT) {
+                        $allStations[$j]["acc_amount"] += $cash[$i]["amount"];
+                        $allStations[$j]["acc_vat"] += $cash[$i]["vat"];
+                    } else if ($cash[$i]["payment_mode"] == CASH_ON_DELIVERY) {
+                        $allStations[$j]["cod_amount"] += $cash[$i]["amount"];
+                        $allStations[$j]["cod_vat"] += $cash[$i]["vat"];
+                    }
+                }
+            }
+        }
+        //dd($allStations);
+        echo json_encode($allStations);
     }
 
     public function printWaybill(Request $request) {
