@@ -63,6 +63,7 @@
             "time": "2017-07-29T19:01:17+00:00"
         },
         {
+
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",
             "source": {
@@ -279,6 +280,7 @@
             "time": "2017-09-14T01:36:24+00:00"
         },
         {
+
             "name": "egulias/email-validator",
             "version": "2.1.2",
             "source": {
@@ -523,6 +525,7 @@
             "time": "2016-12-07T09:37:55+00:00"
         },
         {
+
             "name": "kepex/laravel-crud-generator",
             "version": "v0.1.7",
             "source": {
@@ -981,6 +984,7 @@
             "time": "2017-09-19T19:36:48+00:00"
         },
         {
+
             "name": "monolog/monolog",
             "version": "1.23.0",
             "source": {
@@ -1389,6 +1393,7 @@
             "time": "2015-05-01T07:00:55+00:00"
         },
         {
+
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -1732,6 +1737,7 @@
             "time": "2016-07-19T19:14:21+00:00"
         },
         {
+
             "name": "spatie/laravel-permission",
             "version": "2.5.3",
             "source": {
@@ -2447,6 +2453,7 @@
             "time": "2017-10-11T12:05:26+00:00"
         },
         {
+
             "name": "symfony/process",
             "version": "v3.3.8",
             "source": {
@@ -2997,6 +3004,7 @@
             "time": "2017-11-02T02:30:46+00:00"
         },
         {
+
             "name": "yaroslavmolchan/rbac",
             "version": "1.0.1",
             "source": {

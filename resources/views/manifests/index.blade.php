@@ -75,12 +75,14 @@
                         }, "searchable": false
                     },
                     { "data": "Y", "searchable": false}
+
                 ]
             });
         });
         function doDelete(id) {
             if(confirm('You really want to delete this record?')) {
                $.ajax({ url: "{{ url('manifests') }}/" + id, type: 'DELETE'}).success(function() {
+
                 theGrid.ajax.reload();
                });
             }

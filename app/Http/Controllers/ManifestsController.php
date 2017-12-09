@@ -70,6 +70,7 @@ class ManifestsController extends Controller {
         //    $presql .= " WHERE origin LIKE '%" . $_GET['search']['value'] . "%' ";
         //}
 
+
         $presql .= "  ";
 
         $sql = $select . $presql . " GROUP BY a.id,cs.office_code,cs2.office_code,"

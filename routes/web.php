@@ -37,6 +37,7 @@ Route::get('/', function () {
     Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
     Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
     Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest'); 
+    
 	Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
 	
 	/*Route::get('/waybills/grid', 'WaybillsController@grid');
@@ -63,6 +64,7 @@ Route::get('/', function () {
     
 //});
 
+
 Auth::routes();
 
 Route::get('/home', 'WaybillsController@index')->name('home');
@@ -74,12 +76,13 @@ Route::get('/clients/getClients/all', 'ClientsController@getAllClients');
 
 //Route::group(['middleware' => ['role:admin|staff']], function () {
 	/*Reports*/
+
     Route::get('/user_reports/grid', 'UserReportsController@grid'); 
     Route::get('/user_reports/print_waybill/pdf', 'UserReportsController@print_waybill');
     Route::resource('/user_reports', 'UserReportsController'); 
     
     Route::resource('/station_reports', 'StationReportsController'); 
-    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData'); 
+    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData');
     
     Route::resource('/client_reports', 'ClientReportsController'); 
     
@@ -121,4 +124,5 @@ Route::get('/clients/getClients/all', 'ClientsController@getAllClients');
        
     
 //});
+
 
