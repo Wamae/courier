@@ -18,9 +18,9 @@ class SendSMS implements ShouldQueue
     protected $gateway;
 
     // africastalking credentials
-    protected $username = 'sandbox';
+    protected $username = 'courier-sms';
 
-    protected $key = '9ea2066025a3135671578adc0c46459bfbb510164b8852c5d27b050d41735449';
+    protected $key = 'ebe9ec8452b153df0896dbde6748d801e29a91dfb2859f832124494346ec3cb8';
 
     // Sends to
     protected $recipients;
@@ -54,7 +54,7 @@ class SendSMS implements ShouldQueue
      protected function getInstance()
      {
        if (!$this->gateway) {
-         $this->gateway = new AfricasTalkingGateway($this->username, $this->key,'sandbox');
+         $this->gateway = new AfricasTalkingGateway($this->username, $this->key,'prod');
        }
        return $this->gateway;
      }

@@ -37,6 +37,19 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
     Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
     Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest'); 
+	Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
+	
+	/*Route::get('/waybills/grid', 'WaybillsController@grid');
+    Route::resource('/waybills', 'WaybillsController');
+    Route::get('/waybills/print_waybill/pdf', 'WaybillsController@print_waybill');*/
+	
+	Route::get('/waybill_manifests/grid/{manifest}', 'WaybillManifestsController@grid');
+    Route::get('/waybill_manifests', 'WaybillManifestsController@index');
+    Route::get('/waybill_manifests/{manifest}', 'WaybillManifestsController@show');
+    Route::get('/waybill_manifests/filters/{manifest}', 'WaybillManifestsController@filters');
+    Route::get('/waybill_manifests/filter_grid/{manifest}', 'WaybillManifestsController@filter_grid');
+    Route::post('/waybill_manifests/add_batch', 'WaybillManifestsController@add_batch');
+    Route::post('/waybill_manifests/remove_batch', 'WaybillManifestsController@remove_batch'); 
 	
     Route::get('/waybill_statuses/grid', 'WaybillStatusesController@grid');
     Route::resource('/waybill_statuses', 'WaybillStatusesController');
@@ -54,7 +67,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::resource('/user_reports', 'UserReportsController'); 
     
     Route::resource('/station_reports', 'StationReportsController'); 
-    Route::get('/station_reports/get_report_data', 'StationReportsController@get_report_data'); 
+    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData'); 
     
     Route::resource('/client_reports', 'ClientReportsController'); 
     
@@ -80,14 +93,14 @@ Route::get('/clients/getClients/all', 'ClientsController@getAllClients');
 
 Route::group(['middleware' => ['role:staff']], function () {
 
-    Route::get('/manifests/grid', 'ManifestsController@grid');
-    Route::resource('/manifests', 'ManifestsController');
-    Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
-    Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
+    //Route::get('/manifests/grid', 'ManifestsController@grid');
+    //Route::resource('/manifests', 'ManifestsController');
+    //Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
+   // Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
     Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
-    Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest');    
+    //Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest');    
     //Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
-
+	
     Route::get('/waybills/grid', 'WaybillsController@grid');
     Route::resource('/waybills', 'WaybillsController');
     Route::get('/waybills/print_waybill/pdf', 'WaybillsController@print_waybill');
@@ -95,20 +108,20 @@ Route::group(['middleware' => ['role:staff']], function () {
     //Route::get('/waybills/tracking/trackWaybill/{waybillNo}', 'WaybillsController@trackWaybill');
 
 
-    Route::get('/waybill_manifests/grid/{manifest}', 'WaybillManifestsController@grid');
-    Route::get('/waybill_manifests', 'WaybillManifestsController@index');
-    Route::get('/waybill_manifests/{manifest}', 'WaybillManifestsController@show');
-    Route::get('/waybill_manifests/filters/{manifest}', 'WaybillManifestsController@filters');
-    Route::get('/waybill_manifests/filter_grid/{manifest}', 'WaybillManifestsController@filter_grid');
-    Route::post('/waybill_manifests/add_batch', 'WaybillManifestsController@add_batch');
-    Route::post('/waybill_manifests/remove_batch', 'WaybillManifestsController@remove_batch'); 
+    //Route::get('/waybill_manifests/grid/{manifest}', 'WaybillManifestsController@grid');
+    //Route::get('/waybill_manifests', 'WaybillManifestsController@index');
+    //Route::get('/waybill_manifests/{manifest}', 'WaybillManifestsController@show');
+    //Route::get('/waybill_manifests/filters/{manifest}', 'WaybillManifestsController@filters');
+    //Route::get('/waybill_manifests/filter_grid/{manifest}', 'WaybillManifestsController@filter_grid');
+    //Route::post('/waybill_manifests/add_batch', 'WaybillManifestsController@add_batch');
+    //Route::post('/waybill_manifests/remove_batch', 'WaybillManifestsController@remove_batch'); 
     /*Reports*/
     Route::get('/user_reports/grid', 'UserReportsController@grid'); 
     Route::get('/user_reports/print_waybill/pdf', 'UserReportsController@print_waybill');
     Route::resource('/user_reports', 'UserReportsController'); 
     
     Route::resource('/station_reports', 'StationReportsController'); 
-    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@get_report_data'); 
+    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData'); 
     
     Route::resource('/client_reports', 'ClientReportsController'); 
     

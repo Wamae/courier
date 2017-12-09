@@ -95,7 +95,6 @@
                         <th>Quantity</th>
                         <th>Origin</th>
                         <th>Destination</th>
-                        <th class="none">Weight</th>
                         <th>Status</th>
                         <th style="width:50px"></th>
                     </tr>
@@ -107,7 +106,9 @@
         @can('create waybill')
         <a href="{{url('waybills/create')}}" class="btn btn-primary" role="button">CREATE WAYBILL</a>
         @endcan
+		@can('offload manifest')
         <a href="{{url('manifests/offload/manifest')}}" class="btn btn-info" role="button">OFFLOAD MANIFEST</a>
+		@endcan
     </div>
 </div>
 
@@ -158,7 +159,7 @@
                 return '';
             @endcan
             },
-                    "targets": 11
+                    "targets": 10
             },
             ]
     });

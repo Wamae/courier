@@ -17,7 +17,7 @@ class ManifestsController extends Controller {
 
     //
     public function __construct() {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     public function index(Request $request) {
@@ -258,7 +258,7 @@ class ManifestsController extends Controller {
             //dd($waybills);
             foreach ($waybills as $waybill) {
                 //dd($waybill->destinations->office_name);
-                $message = "Hello, " . $waybill->consignee . ". Your package has arrived at " . $waybill->destinations->office_name . " station. Kindly collect.";
+                $message = "Dear Customer,Your parcel has been received at ". $waybill->destinations->office_name ."Please come with this code(".$waybill->waybill_no.") and your ID card to collect your parcel.";
                 //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);
 
                 dispatch(new \App\Jobs\SendSMS($waybill->consignee_tel, $message));

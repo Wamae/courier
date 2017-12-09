@@ -134,9 +134,6 @@
                                 
                                 @endrole
                                 @role('staff')
-                                <!--<li>
-                                    <a href="{{url('manifests')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-compressed"></span> Loading Manifest</a>
-                                </li>-->
                                 <li>
                                     <a href="{{url('waybills')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-th"></span> Waybill Entry</a>
                                 </li>
