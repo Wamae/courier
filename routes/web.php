@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
-Route::group(['middleware' => ['isAdmin']], function () {
+//Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/package_types/grid', 'PackageTypesController@grid');
     Route::resource('/package_types', 'PackageTypesController');
 
@@ -37,6 +37,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
     Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
     Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest'); 
+
 	Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
 	
 	/*Route::get('/waybills/grid', 'WaybillsController@grid');
@@ -61,26 +62,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::get('/test_tables/grid', 'TestTablesController@grid');
     Route::resource('/test_tables', 'TestTablesController');
     
-    /*Reports*/
-    Route::get('/user_reports/grid', 'UserReportsController@grid'); 
-    Route::get('/user_reports/print_waybill/pdf', 'UserReportsController@print_waybill');
-    Route::resource('/user_reports', 'UserReportsController'); 
-    
-    Route::resource('/station_reports', 'StationReportsController'); 
-    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData'); 
-    
-    Route::resource('/client_reports', 'ClientReportsController'); 
-    
-    Route::get('/invoices/grid', 'InvoicesController@grid'); 
-    Route::get('/invoices/get_waybills/{invoice_id}', 'InvoicesController@getWaybills');  
-    Route::get('/invoices/get_transactions/{invoice_id}', 'InvoicesController@getTransactions');  
-    Route::resource('/invoices', 'InvoicesController');   
-    Route::get('/invoices/{id}', 'InvoicesController@show');
-    Route::post('/invoices/cancel_invoices', 'InvoicesController@cancelInvoices');  
-    
-    Route::resource('/transactions', 'TransactionsController');
-    
-});
+//});
 
 Auth::routes();
 
@@ -91,13 +73,34 @@ Route::get('/waybills/tracking/trackWaybill/{waybillNo}', 'WaybillsController@tr
 
 Route::get('/clients/getClients/all', 'ClientsController@getAllClients');
 
-Route::group(['middleware' => ['role:staff']], function () {
+//Route::group(['middleware' => ['role:admin|staff']], function () {
+	/*Reports*/
+    Route::get('/user_reports/grid', 'UserReportsController@grid'); 
+    Route::get('/user_reports/print_waybill/pdf', 'UserReportsController@print_waybill');
+    Route::resource('/user_reports', 'UserReportsController'); 
+    
+    Route::resource('/station_reports', 'StationReportsController'); 
+    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData');
+    
+    Route::resource('/client_reports', 'ClientReportsController'); 
+    
+    Route::get('/invoices/grid', 'InvoicesController@grid'); 
+    Route::get('/invoices/get_waybills/{invoice_id}', 'InvoicesController@getWaybills');  
+    Route::get('/invoices/get_transactions/{invoice_id}', 'InvoicesController@getTransactions');
+    Route::resource('/invoices', 'InvoicesController');  
+    Route::get('/invoices/{id}', 'InvoicesController@show');
+    Route::post('/invoices/cancel_invoices', 'InvoicesController@cancelInvoices'); 
+    
+    Route::resource('/transactions', 'TransactionsController');
+//});
+
+//Route::group(['middleware' => ['role:staff']], function () {
 
     //Route::get('/manifests/grid', 'ManifestsController@grid');
     //Route::resource('/manifests', 'ManifestsController');
     //Route::post('/manifests/dispatch_manifest', 'ManifestsController@dispatch_manifest');
    // Route::get('/manifests/print_manifest/pdf', 'ManifestsController@print_manifest');
-    Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
+    //Route::get('/manifests/manifest_no/autocomplete', 'ManifestsController@autocomplete');
     //Route::get('/manifests/offload/manifest', 'ManifestsController@offload_manifest');    
     //Route::post('/manifests/manifest/offload', 'ManifestsController@offload');
 	
@@ -115,25 +118,9 @@ Route::group(['middleware' => ['role:staff']], function () {
     //Route::get('/waybill_manifests/filter_grid/{manifest}', 'WaybillManifestsController@filter_grid');
     //Route::post('/waybill_manifests/add_batch', 'WaybillManifestsController@add_batch');
     //Route::post('/waybill_manifests/remove_batch', 'WaybillManifestsController@remove_batch'); 
-    /*Reports*/
-    Route::get('/user_reports/grid', 'UserReportsController@grid'); 
-    Route::get('/user_reports/print_waybill/pdf', 'UserReportsController@print_waybill');
-    Route::resource('/user_reports', 'UserReportsController'); 
     
-    Route::resource('/station_reports', 'StationReportsController'); 
-    Route::get('/station_reports/get_report_data/extra/', 'StationReportsController@getReportData'); 
-    
-    Route::resource('/client_reports', 'ClientReportsController'); 
-    
-    Route::get('/invoices/grid', 'InvoicesController@grid'); 
-    Route::get('/invoices/get_waybills/{invoice_id}', 'InvoicesController@getWaybills');  
-    Route::get('/invoices/get_transactions/{invoice_id}', 'InvoicesController@getTransactions');
-    Route::resource('/invoices', 'InvoicesController');  
-    Route::get('/invoices/{id}', 'InvoicesController@show');
-    Route::post('/invoices/cancel_invoices', 'InvoicesController@cancelInvoices'); 
-    
-    Route::resource('/transactions', 'TransactionsController');
        
     
-});
+//});
+
 

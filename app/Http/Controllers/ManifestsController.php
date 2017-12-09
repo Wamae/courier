@@ -54,8 +54,8 @@ class ManifestsController extends Controller {
     }
 
     public function grid(Request $request) {
-        $len = $_GET['length'];
-        $start = $_GET['start'];
+        //$len = $_GET['length'];
+        //$start = $_GET['start'];
 
         $select = "SELECT a.id,CONCAT(CONCAT(CONCAT(cs.office_code,'-',cs2.office_code),'-','MANIFEST'),':',a.id) AS loading_manifest,DATE_FORMAT(a.created_at,'%a %d/%m/%Y') AS created_at,cs.office_name AS origin,cs2.office_name AS destination,u.name AS uname,"
                 . "COUNT(DISTINCT waybill_manifests.waybill) AS loaded,ms.status,1,2";
@@ -66,16 +66,31 @@ class ManifestsController extends Controller {
         $presql .= " LEFT JOIN stations cs2 ON a.destination = cs2.id ";
         $presql .= " LEFT JOIN waybill_manifests ON a.id = waybill_manifests.manifest";
 
-        if ($_GET['search']['value']) {
-            $presql .= " WHERE origin LIKE '%" . $_GET['search']['value'] . "%' ";
-        }
+        //if ($_GET['search']['value']) {
+        //    $presql .= " WHERE origin LIKE '%" . $_GET['search']['value'] . "%' ";
+        //}
+
 
         $presql .= "  ";
 
         $sql = $select . $presql . " GROUP BY a.id,cs.office_code,cs2.office_code,"
-                . "a.created_at,cs.office_name,cs2.office_name,u.name,a.status,ms.status"
-                . "  LIMIT " . $start . "," . $len;
-
+                . "a.created_at,cs.office_name,cs2.office_name,u.name,a.status,ms.status";
+        //. "  LIMIT " . $start . "," . $len;
+        //dd(DB::select($sql))[0];
+        $data = DB::select($sql);
+        //return \Yajra\DataTables\Facades\DataTables::of($data)->make(true);
+        return datatables(
+                        DB::table('manifests AS a')
+                ->leftJoin('users AS u', 'a.created_by', '=', 'u.id')
+                ->leftJoin('stations AS cs', 'a.origin', '=', 'cs.id')
+                ->leftJoin('manifest_statuses AS ms', 'a.status', '=', 'ms.id')
+                ->leftJoin('stations AS cs2', 'a.destination', '=', 'cs2.id')
+                ->leftJoin('waybill_manifests', 'a.id', '=', 'waybill_manifests.manifest')
+                ->groupBy(['a.id','cs.office_code','cs2.office_code','a.created_at','cs.office_name','cs2.office_name','u.name','a.status','ms.status'])
+                                ->select([
+                                        "a.id", DB::raw("CONCAT(CONCAT(CONCAT(cs.office_code,'-',cs2.office_code),'-','MANIFEST'),':',a.id) AS loading_manifest"), DB::raw("DATE_FORMAT(a.created_at,'%a %d/%m/%Y') AS created_at"), "cs.office_name AS origin", "cs2.office_name AS destination", "u.name AS created_by", DB::raw("COUNT(DISTINCT waybill_manifests.waybill) AS loaded"), "ms.status", "a.id AS X",DB::raw("a.id+1 AS Y"),
+                        ]))->toJson();
+        //return datatables(DB::select($sql))->toJson();
 
         $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
         //print_r($qcount);
@@ -246,7 +261,7 @@ class ManifestsController extends Controller {
                     DB::table('waybills')->where('id', $id)->update($data);
 
                     $waybill = \App\Waybill::find($id);
-                    
+
                     array_push($waybills, $waybill);
                 }
             } catch (\Exception $e) {

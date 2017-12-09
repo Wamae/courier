@@ -54,46 +54,35 @@
                 "ordering": true,
                 "responsive": true,
                 "ajax": "{{url('manifests/grid')}}",
-                "columnDefs": [
-                    {
-                        "render": function ( data, type, row ) {
-                            return '<a href="{{ url('/manifests') }}/'+row[0]+'">'+data+'</a>';
-                        },
-                        "targets": 1
+                "columns": [
+                    { "data": "id","name": "a.id"},
+                    { "data": "loading_manifest","name": "a.manifest_no","targets": 1,"render": function ( data, type, row ) {
+                            return "<a href='{{ url('manifests') }}/'"+row[0]+"'>"+data+"</a>";
+                        }
                     },
-                    {
-                        "render": function ( data, type, row ) {
-                            return '<a class="btn btn-info btn-xs" href="{{ url('/waybill_manifests') }}/'+row[0]+'">'+data+' items</a>';
-                            //return '';
+                    { "data": "created_at","name": "a.created_at"},
+                    { "data": "origin","name": "cs.office_name"},
+                    { "data": "destination","name": "cs2.office_name"},
+                    { "data": "created_by","name": "u.name"},
+                    { "data": "loaded","render": function ( data, type, row ) {
+                            return `<a class="btn btn-info btn-xs" href="{{ url('waybill_manifests') }}/${row['id']}"> ${data} items</a>`;
                         },
-                        "targets": 6
+                        "targets": 6, "searchable": false},
+                    { "data": "status","targets": 7,"name": "ms.status"},
+                    { "data": "X",
+                        "targets": 8 ,"render": function ( data, type, row ) {
+                                    return `<a href="{{ url('manifests') }}/print_manifest/pdf?id=${row['id']} " class="btn btn-status btn-xs btn-success"><span class="glyphicon glyphicon-print"></span> Print</a>`;
+                        }, "searchable": false
                     },
-                    {
-                        "render": function ( data, type, row ) {
-                            @can('create waybill')
-                                if(row[7] == "ACTIVE"){
-                                    return '<a href="{{ url('manifests') }}/'+row[0]+'/edit" class="btn btn-default">Update</a>';
-                                }else{
-                                    return '<a href="{{ url('manifests') }}/print_manifest/pdf?id=' + row[0] + '" class="btn btn-status btn-xs btn-success"><span class="glyphicon glyphicon-print"></span> Print</a>';
-                                }
-                            @else
-                                return '';
-                            @endcan
-                        },
-                        "targets": 8                   },
-                    {
-                        "render": function ( data, type, row ) {
-                            //return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
-                            return '';
-                        },
-                        "targets": 8+1
-                    },
+                    { "data": "Y", "searchable": false}
+
                 ]
             });
         });
         function doDelete(id) {
             if(confirm('You really want to delete this record?')) {
-               $.ajax({ url: '{{ url('/manifests') }}/' + id, type: 'DELETE'}).success(function() {
+               $.ajax({ url: "{{ url('manifests') }}/" + id, type: 'DELETE'}).success(function() {
+
                 theGrid.ajax.reload();
                });
             }

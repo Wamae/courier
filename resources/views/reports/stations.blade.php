@@ -106,7 +106,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-heading" align="center">
-        SYSTEM USER WAYBIL REPORTS
+        SYSTEM USER WAYBILL REPORTS
     </div>
 
     <div class="panel-body">
