@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="icon" href="favicon.ico">
 
-        <title>Test</title>
+        <title>Tahmeed Courier System</title>
 
         <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -58,7 +58,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('', 'Tahmeed Courier System') }}
                     </a>
                 </div>
 
@@ -78,34 +78,52 @@
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                REPORTS <span class="caret"></span>
+                                Reports <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-large" role="menu">
                                 <li>
-                                    <a href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> STATION REPORTS</a>
+                                    <a href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> My Station Reports</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span>USER REPORTS</a>
+                                    <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span>User Reports</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span> ACCOUNT REPORTS</a>
+                                    <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span> Accounts Reports</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('invoices')}}"><span class="glyphicon glyphicon-calendar"></span> ACCOUNT INVOICES</a>
+                                    <a href="{{url('invoices')}}"><span class="glyphicon glyphicon-calendar"></span> Account Invoices</a>
                                 </li>
                             </ul>
                         </li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                MENUS <span class="caret"></span>
+                                Menu <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
                                 @role('admin')
-                                <li>
-                                    <a href="{{url('users')}}">Users</a>
+								 <li>
+                                    <a href="{{url('stations')}}"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Collection Stations</a>
+                                </li>
+								<li>
+                                    <a href="{{url('users')}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Courier System Users</a>
+                                </li>
+								<li>
+                                    <a href="{{url('package_types')}}"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Package Type Setup</a>
+                                </li>
+								<li>
+                                    <a href="{{url('clients')}}"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Registered Clients</a>
+                                </li>
+								<li>
+                                    <a href="{{url('manifests')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-compressed"></span> Loading Manifest</a>
+                                </li>
+								 <li>
+                                    <a href="{{url('main_offices')}}">Main Offices</a>
+                                </li>
+								<li>
+                                    <a href="{{url('payment_modes')}}">Payment Modes</a>
                                 </li>
                                 <li>
                                     <a href="{{url('roles')}}">Roles</a>
@@ -113,28 +131,11 @@
                                 <li>
                                     <a href="{{url('permissions')}}">Permissions</a>
                                 </li>
-                                <li>
-                                    <a href="{{url('package_types')}}">Package Types</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('clients')}}">Clients</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('main_offices')}}">Main Offices</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('payment_modes')}}">Payment Modes</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('stations')}}">Stations</a>
-                                </li>
+                                
                                 @endrole
                                 @role('staff')
                                 <li>
-                                    <a href="{{url('manifests')}}"><i class="icon-truck"></i>Manifests</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('waybills')}}"><i class="icon-truck"></i>Waybills</a>
+                                    <a href="{{url('waybills')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-th"></span> Waybill Entry</a>
                                 </li>
                                 @endrole
                             </ul>
@@ -150,7 +151,7 @@
                                     <a href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                document.getElementById('logout-form').submit();">
-                                        Logout
+                                        <span class="glyphicon glyphicon-log-out"></span> Exit System
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

@@ -55,7 +55,7 @@ class WaybillsController extends Controller {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
-        $select = "SELECT a.id,waybill_no,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination,weight, wbs.waybill_status,1";
+        $select = "SELECT a.id,waybill_no,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination, wbs.waybill_status,1";
         $presql = " FROM waybills a ";
         $presql .= " LEFT JOIN users u ON a.created_by = u.id ";
         $presql .= " LEFT JOIN waybill_statuses wbs ON a.status = wbs.id ";

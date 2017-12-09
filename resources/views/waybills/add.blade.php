@@ -118,9 +118,9 @@
                                 </div>
                             </div>
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="consignor_name">CONSIGNOR EMAIL:<sup>*</sup></label>
+                                <label class="col-lg-4 control-label" for="consignor_name">CONSIGNOR EMAIL:</label>
                                 <div class="col-lg-8">
-                                    <input type="text" id="consignor_email" name="consignor_email" required placeholder="e.g. name@gmail.com" class="form-control" value="{{$model['consignor_email'] or ''}}">
+                                    <input type="text" id="consignor_email" name="consignor_email" placeholder="e.g. name@gmail.com" class="form-control" value="{{$model['consignor_email'] or ''}}">
                                 </div>
                             </div>
                             <div class="control-group form-group">
