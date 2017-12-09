@@ -288,21 +288,26 @@ class ManifestsController extends Controller {
 
     public function autocomplete(Request $request) {
         $term = $request->term;
-        $data = Manifest::where('manifest_no', 'LIKE', '%' . $term . '%')
+        $data = Manifest::select(['*','manifests.id',DB::raw('COUNT(distinct waybill_manifests.waybill) AS items')])->where('manifest_no', 'LIKE', '%' . $term . '%')
                 ->where('origin', Auth::user()->station)
+                ->leftJoin('waybill_manifests', 'manifests.id', '=', 'waybill_manifests.manifest')
                 //->where('created',Auth::user()->station)
-                ->where('status', DISPATCHED)
+                ->where('manifests.status', DISPATCHED)
+                ->groupBy('manifests.id')
                 ->get();
+        //dd($data);
         $result = array();
 
         foreach ($data as $key => $v) {
+            //dd($v->items);
             $result[] = [
                 'value' => $v->manifest_no,
                 'id' => $v->id,
                 'registration_no' => $v->registration_no,
                 'driver' => $v->driver,
                 'conductor' => $v->conductor,
-                'destination' => $v->destinations->office_name];
+                'destination' => $v->destinations->office_name,
+                'items' => $v->items];
         }
 
         return response()->json($result);

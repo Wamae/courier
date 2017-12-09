@@ -101,6 +101,7 @@
             $("#registration-no").val(manifest.registration_no);
             $("#driver").val(manifest.driver);
             $("#conductor").val(manifest.conductor);
+            $("#loaded-items").val(manifest.items);
         }
     });
     
