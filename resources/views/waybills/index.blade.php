@@ -125,7 +125,7 @@
     $(document).ready(function () {
         theGrid = $('#thegrid').DataTable({
             "processing": true,
-            //"dom": "t",
+            "bFilter": false,
             "serverSide": true,
             "ordering": true,
             "responsive": true,
@@ -138,7 +138,8 @@
                 {"data": "id", "name": "a.id", "targets": 0},
                 {"data": "waybill_no", "name": "a.waybill_no", "targets": 1,"render": function (data, type, row) {
                         return "<a href='{{ url('waybills') }}/" + row['id'] + "'>" + data + "</a>";
-                    }},
+                    }
+                },
                 {"data": "created_at", "name": "a.created_at", "targets": 2},
                 {"data": "consignor", "name": "a.consignor", "targets": 3},
                 {"data": "consignee", "name": "a.consignee", "targets": 4},
@@ -205,7 +206,7 @@
     });
     function doDelete(id) {
         if (confirm('You really want to delete this record?')) {
-            $.ajax({url: '{{ url('waybills') }}/' + id, type: 'DELETE'}).success(function () {
+            $.ajax({url: "{{ url('waybills') }}/" + id, type: 'DELETE'}).success(function () {
                 theGrid.ajax.reload();
             });
         }
