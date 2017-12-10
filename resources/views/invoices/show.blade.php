@@ -14,7 +14,17 @@
             <div class="col-lg-12">
                 <div class="capsule">
                     <div class="row">
-                        <div class="col-lg-2">INVOICE REF #:</div><div class="col-lg-2">{{$invoice->id}}</div>
+                        <div class="col-lg-2">INVOICE REF #:</div><div class="col-lg-2">
+                            <?php 
+                            if(strlen($invoice->id) == 1){
+                                echo "C-INV-00".$invoice->id;
+                            }else if(strlen($invoice->id) == 2){
+                                echo "C-INV-00".$invoice->id;
+                            }else{
+                                echo "C-INV-".$invoice->id;
+                            }
+                            ?>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-2">INVOICE DATE:</div><div class="col-lg-2">{{strtoupper($invoice->created_at->format('D d/m/Y'))}}</div>
@@ -192,7 +202,7 @@
                 {"data": "ref", "name": "ref", "targets": 2},
                 {"data": "created_by", "name": "transactions.created_by", "targets": 3},
                 {"data": "amount", "name": "amount", "targets": 4}
-                ],
+            ],
             "sEmptyTable": "No data available"
         });
 
