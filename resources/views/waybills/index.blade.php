@@ -125,14 +125,13 @@
     $(document).ready(function () {
         theGrid = $('#thegrid').DataTable({
             "processing": true,
-            "dom": "t",
+            //"dom": "t",
             "serverSide": true,
             "ordering": true,
             "responsive": true,
             "language": {
                 "sLoadingRecords": "LOADING"
             },
-            "processing": true,
             "ajax": "{{url('waybills/grid')}}",
             "sEmptyTable": "No data available",
             "columns": [
@@ -153,7 +152,8 @@
                          return "<a href='{{ url('waybills') }}/print_waybill/pdf?id=" + row['id'] + "' class='btn btn-status btn-xs btn-success'><span class='glyphicon glyphicon-print'></span> Print</a>";
                          
                          },
-                         "targets": 10}
+                         "targets": 10
+                 }
             ]
         });
         $("#keywords").keyup(function () {
