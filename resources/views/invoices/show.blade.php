@@ -101,47 +101,47 @@
                 <h4 style="">ADD TRANSACTION</h4>
             </div>
             <form action="{{ url('transactions/') }}" method="POST" class="form-horizontal" id="add-transaction">
-            {{ csrf_field() }}
-            <div class="modal-body">
-                <div class="form-group row">
-                    <label for="usrname" class="control-label col-md-4">Transaction Date:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" disabled value="{{date('D d/m/Y')}}">  
+                {{ csrf_field() }}
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="usrname" class="control-label col-md-4">Transaction Date:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" disabled value="{{date('D d/m/Y')}}">  
+                        </div>
                     </div>
-                </div>
-                <input type="hidden" name="invoice_id" value="{{$invoice->id}}"/>
-                <div class="form-group row">
-                    <label for="transaction_type" class="control-label col-md-4">Transaction Type*:</label>
-                    <div class="col-sm-8">
-                        <select name="transaction_type_id" id="transaction-type-id" class="form-control">
-                            @foreach($transactionTypes as $transactionType)
-                            <option value="{{$transactionType->id}}">{{$transactionType->transaction_type}}</option>   
-                            @endforeach
-                        </select>
+                    <input type="hidden" name="invoice_id" value="{{$invoice->id}}"/>
+                    <div class="form-group row">
+                        <label for="transaction_type" class="control-label col-md-4">Transaction Type*:</label>
+                        <div class="col-sm-8">
+                            <select name="transaction_type_id" id="transaction-type-id" class="form-control">
+                                @foreach($transactionTypes as $transactionType)
+                                <option value="{{$transactionType->id}}">{{$transactionType->transaction_type}}</option>   
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row">
-                    <label for="transaction_ref" class="control-label col-md-4">Transaction REF*:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" name="ref" id="transaction-ref" placeholder="e.g. Deposit slip number,Cheque number e.t.c." required/>      
+                    <div class="form-group row">
+                        <label for="transaction_ref" class="control-label col-md-4">Transaction REF*:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="ref" id="transaction-ref" placeholder="e.g. Deposit slip number,Cheque number e.t.c." required/>      
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="amount" class="control-label col-lg-4">Amount*:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" disabled value="{{$invoice->currency->currency}}"/> 
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="amount" id="amount" placeholder="e.g. 1200.00" required/>   
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="amount" class="control-label col-lg-4">Amount*:</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" disabled value="{{$invoice->currency->currency}}"/> 
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="amount" id="amount" placeholder="e.g. 1200.00" required/>   
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-warning" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                    <button type="submit" id="" class="btn btn-default btn-info">ADD TRANSACTION</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-warning" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
-                <button type="submit" id="" class="btn btn-default btn-info">ADD TRANSACTION</button>
-            </div>
-        </form>
+            </form>
         </div>
     </div>
 </div>
@@ -156,20 +156,27 @@
     $(document).ready(function () {
         theGrid = $('#thegrid').DataTable({
             "processing": true,
-            "dom": "t",
+            //"dom": "t",
+            "bFilter": false,
             "serverSide": true,
             "ordering": true,
             "responsive": true,
             "ajax": "{{url('invoices/get_waybills')}}/{{$invoice->id}}",
-            "sEmptyTable": "Loading data from server",
-            "columnDefs": [
-                {"searchable": false, "orderable": false, "targets": 0},
-                {
+            "sEmptyTable": "No data available",
+            "columns": [
+                {"data": "id", "name": "id", "searchable": false, "orderable": false,
                     "render": function (data, type, row) {
-                        return '<input type="checkbox" class="check-item" name="waybills[]" value="' + row[0] + '"/>';
+                        return "<input type='checkbox' class='check-item' name='waybills[]' value='" + row['id'] + "'/>";
                     },
                     "targets": 0
                 },
+                {"data": "waybill", "name": "a.waybill", "targets": 1},
+                {"data": "created_at", "name": "created_at", "targets": 2},
+                {"data": "package_type", "name": "package_type", "targets": 3},
+                {"data": "consignee", "name": "consignee", "targets": 4},
+                {"data": "amount", "name": "amount", "targets": 4},
+                {"data": "vat", "name": "vat", "targets": 5},
+                {"data": "total", "name": "total", "targets": 5}
             ]
         });
 
@@ -186,25 +193,25 @@
         $("#modal-transaction").click(function () {
             $("#transaction-modal").modal('show');
         });
-        
+
         $("#add-transaction").submit(function (event) {
             event.preventDefault();
-            
+
             transactionTypeId = $("#transaction-type-id").val();
             transactionREF = $("#transaction-ref").val().trim();
             amount = $("#amount").val().trim();
-            
-            if(amount.length ==0 || amount.length == 0){
+
+            if (amount.length == 0 || amount.length == 0) {
                 alert("Fill in all required fields!");
                 return false;
             }
-            
+
             $.ajax({
-                url:"{{url('transactions')}}",
-                type:"POST",
-                data:{transaction_type_id:transactionTypeId, ref: transactionREF,amount:amount,invoice_id:"{{$invoice->id}}"},
-                success: function(response){
-                    if(response == "1"){
+                url: "{{url('transactions')}}",
+                type: "POST",
+                data: {transaction_type_id: transactionTypeId, ref: transactionREF, amount: amount, invoice_id: "{{$invoice->id}}"},
+                success: function (response) {
+                    if (response == "1") {
                         transactionsGrid.ajax.reload();
                         alert("Transaction has been added!");
                     }
