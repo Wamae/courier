@@ -147,7 +147,7 @@
                 {"data": "quantity", "name": "a.quantity", "targets": 6},
                 {"data": "origin", "name": "a.origin", "targets": 7},
                 {"data": "destination", "name": "a.destination", "targets": 8},
-                {"data": "status", "name": "a.status", "targets": 9},
+                {"data": "waybill_status", "name": "a.status", "targets": 9},
                 { "data": "X", "searchable": false,"render": function (data, type, row) {  
                         
                          return "<a href='{{ url('waybills') }}/print_waybill/pdf?id=" + row['id'] + "' class='btn btn-status btn-xs btn-success'><span class='glyphicon glyphicon-print'></span> Print</a>";
