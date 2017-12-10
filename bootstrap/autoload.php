@@ -21,6 +21,10 @@ define('CASH_ON_DELIVERY', 2);
 define('CASH_PAYMENT', 3);
 define('ACCOUNT_PAYMENT', 4);
 
+/*Ajax responses*/
+define('OK',1);
+define('FAILED',FALSE);
+
 /*
 |--------------------------------------------------------------------------
 | Register The Composer Auto Loader
