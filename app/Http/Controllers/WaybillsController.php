@@ -62,7 +62,7 @@ class WaybillsController extends Controller {
                 ->leftJoin('package_types', 'a.package_type', '=', 'package_types.id')
                 //->groupBy(['a.id','cs.office_code','cs2.office_code','a.created_at','cs.office_name','cs2.office_name','u.name','a.status','ms.status'])
                                 ->select(["a.id","waybill_no",DB::raw("DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at"),"consignor","consignee","package_types.package_type","quantity","stations.office_name as origin","stations2.office_name AS destination", "wbs.waybill_status", "a.id AS X"
-                        ])->orderBy('a.id','DESC'))->toJson();
+                        ])->orderBy('a.id','DESC')->groupBy('a.id'))->toJson();
     }
 
     public function update(Request $request) {
@@ -71,14 +71,14 @@ class WaybillsController extends Controller {
           'name' => 'required|max:255',
           ]); */
         $waybill = null;
-        $user_id = Auth::user()->id;
+        $userId = Auth::user()->id;
 
         if ($request->id > 0) {
             $waybill = Waybill::findOrFail($request->id);
-            $waybill->updated_by = $user_id;
+            $waybill->updated_by = $userId;
         } else {
             $waybill = new Waybill;
-            $waybill->created_by = $user_id;
+            $waybill->created_by = $userId;
         }
 
 
@@ -134,8 +134,19 @@ class WaybillsController extends Controller {
         $waybill->status = ACTIVE;
 
         $waybill->save();
-
+        
+        $this->sendCreateWaybillSMS($waybill);
+        
         return redirect('/waybills');
+    }
+    
+    function sendCreateWaybillSMS($waybill){
+        $message = "Dear customer,
+A parcel has been sent to you from ".$waybill->origins->office_name." "
+                . "Kindly use your tracking no (".$waybill->waybill_no.") to know the status of your parcel.";
+                //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);
+
+                dispatch(new \App\Jobs\SendSMS($waybill->consignee_tel, $message));
     }
 
     public function create_waybill_no($o_office_code, $d_office_code) {
