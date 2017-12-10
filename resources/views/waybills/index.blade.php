@@ -168,7 +168,7 @@
         $("#package_type_search").change(function () {
             var packageType = $(this).val();
             if (packageType == "0") {
-                theGrid.columns(5).search(packageType).draw();
+                theGrid.columns(5).search("").draw();
             } else {
 
                 console.log("Packgage type: ", packageType);
@@ -178,7 +178,7 @@
         $("#origin_search").change(function () {
             var origin = $(this).val();
             if (origin == "0") {
-                theGrid.columns(7).search(origin).draw();
+                theGrid.columns(7).search("").draw();
             } else {
                 console.log("Origin: ", origin);
                 theGrid.columns(7).search(origin, false, true, true).draw();
@@ -187,7 +187,7 @@
         $("#destination_search").change(function () {
             var destination = $(this).val();
             if (destination == "0") {
-                theGrid.columns(8).search(destination).draw();
+                theGrid.columns(8).search("").draw();
             } else {
                 console.log("Destination: ", destination);
                 theGrid.columns(8).search(destination, false, true, true).draw();
@@ -196,7 +196,7 @@
         $("#status_search").change(function () {
             var status = $(this).val();
             if (status == "0") {
-                theGrid.columns(9).search(status).draw();
+                theGrid.columns(9).search("").draw();
             } else {
                 console.log("status: ", status);
                 theGrid.columns(9).search(status, false, true, true).draw();
