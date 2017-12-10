@@ -28,7 +28,7 @@ class WaybillsController extends Controller {
     }
 
     public function create(Request $request) {
-        $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
+        $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->whereNotIn('id',[Auth::user()->station])->get();
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
         $payment_modes = payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
 
