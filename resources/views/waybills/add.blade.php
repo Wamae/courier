@@ -8,7 +8,7 @@
 
     <div class="panel-body">
 
-        <form action="{{ url('/waybills'.( isset($model) ? "/" . $model->id : "")) }}" method="POST" class="form-horizontal">
+        <form id="form-add-waybill" action="{{ url('/waybills'.( isset($model) ? "/" . $model->id : "")) }}" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
             @if (isset($model))
@@ -67,13 +67,14 @@
                             </div>
 
                             <div class="control-group form-group">
-                                <label class="col-lg-4 control-label" for="origin">ORIGIN:<sup>*</sup></label>
+                                <!--<label class="col-lg-4 control-label" for="origin">ORIGIN:<sup>*</sup></label>-->
                                 <div class="col-lg-8">
-                                    <select name="origin" class="form-control">
+                                    <!--<select name="origin" class="form-control">
                                         @foreach($stations as $station)
                                         <option {{(isset($model))?($model['origin'] == $station->id)?'selected':'':''}} value="{{$station->id}}">{{$station->office_name}}</option>   
                                         @endforeach
-                                    </select>
+                                    </select>-->
+                                    <input type="hidden" name="origin" required id="origin" class="form-control" value="{{isset($model['origin'])?$model['origin']:Auth::user()->station}}">
                                 </div>
                             </div>
 
@@ -183,7 +184,7 @@
             <div class="modal-footer">
                 <div class="btn-group">
                     <a class="btn btn-warning cancel-btn receiver-info" href="{{ url('/waybills') }}"><i class=""></i>BACK</a>
-                    <button type="submit" class="btn btn-primary add-waybil-btn receiver-info">
+                    <button id="create-waybill" type="submit" class="btn btn-primary add-waybil-btn receiver-info">
                         <i class="fa fa-plus"></i>{{(isset($model)?"UPDATE WAYBILL":"CREATE WAYBILL")}}
                     </button> 
                 </div>
@@ -197,6 +198,26 @@
 @section('scripts')
 <script>
     $(function () {
+        $("#form-add-waybill").submit(function(event){
+            event.preventDefault();
+            
+            amount = $("#amount_per_item").val();
+            consignor = $("#consignor").val();
+
+            swal({
+                title: 'PLEASE CONFIRM THAT YOU HAVE RECEIVED KSH'+amount+' FROM '+consignor,
+                text: "ARE YOU SURE THAT YOU WANT TO CONTINUE?!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00FF7F',
+                cancelButtonColor: '#D33',
+                confirmButtonText: 'Recieved'
+              }).then((result) => {
+                if (result.value) {
+                     $(this).unbind('submit').submit();
+                }
+              });
+        });
         $("#amount_per_item").keyup(function () {
             vatPer = $("#vat-per").val();
 

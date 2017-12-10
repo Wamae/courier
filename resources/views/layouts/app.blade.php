@@ -188,7 +188,7 @@
         <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
         <script src="{{asset('js/jquery-ui.js')}}"></script>
         <script src="{{asset('js/range_dates.js')}}"></script>
-
+        <script src="https://unpkg.com/sweetalert2@7.0.9/dist/sweetalert2.all.js"></script>
         <script>
                                            $.ajaxSetup({
                                                headers: {
