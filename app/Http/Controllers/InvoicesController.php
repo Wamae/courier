@@ -123,22 +123,6 @@ class InvoicesController extends Controller {
     }
 
     public function getWaybills(Request $request, $invoice_id) {
-        $len = $_GET['length'];
-        $start = $_GET['start'];
-
-        $select = "SELECT waybills.id,"
-                . "CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',UCASE(DATE_FORMAT(a.created_at,'%a'))),'-',a.id) AS waybill,"
-                . "DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,"
-                . "package_types.package_type,consignee,FORMAT(amount,2),FORMAT(vat,2),"
-                . "FORMAT(SUM(amount+ vat),2)";
-        $presql = " FROM invoice_waybills a ";
-        $presql .= " LEFT JOIN waybills ON waybills.id = a.waybill_id";
-        $presql .= " LEFT JOIN invoices ON invoices.id = a.invoice_id";
-        $presql .= " LEFT JOIN currencies ON currencies.id = invoices.currency_id";
-        $presql .= " LEFT JOIN stations ON waybills.origin = stations.id ";
-        $presql .= " LEFT JOIN stations AS stations2 ON waybills.destination = stations2.id ";
-        $presql .= " LEFT JOIN package_types ON waybills.package_type = package_types.id ";
-        $presql .= " WHERE a.invoice_id = " . $invoice_id;
 
         return datatables(
                         DB::table('invoice_waybills AS a')
@@ -148,56 +132,31 @@ class InvoicesController extends Controller {
                                 ->leftJoin('stations', 'stations.id', '=', 'waybills.origin')
                                 ->leftJoin('stations AS stations2', 'stations2.id', '=', 'waybills.destination')
                                 ->leftJoin('package_types', 'package_types.id', '=', 'waybills.package_type')
-                                //->groupBy(['a.id','cs.office_code','cs2.office_code','a.created_at','cs.office_name','cs2.office_name','u.name','a.status','ms.status'])
                                 ->select([
                                     "waybills.id",
                                     DB::raw("CONCAT(CONCAT(CONCAT(stations.office_code,'-',stations2.office_code),'-',UCASE(DATE_FORMAT(a.created_at,'%a'))),'-',a.id) AS waybill"),
                                     DB::raw("DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at"),
                                     "package_types.package_type",
                                     "consignee",
-                                    DB::raw("FORMAT(amount,2) AS amount"), 
+                                    DB::raw("FORMAT(amount,2) AS amount"),
                                     DB::raw("FORMAT(vat,2) AS vat"),
-                                            DB::raw("FORMAT(SUM( amount + vat),2) AS total")
-                                ])->where('a.invoice_id',$invoice_id)->orderBy('a.id', 'DESC')->groupBy('a.id'))->toJson();
+                                    DB::raw("FORMAT(SUM( amount + vat),2) AS total")
+                                ])->where('a.invoice_id', $invoice_id)->orderBy('waybills.id', 'DESC')->groupBy('waybills.id'))->toJson();
     }
 
     public function getTransactions(Request $request, $invoice_id) {
-        $len = $_GET['length'];
-        $start = $_GET['start'];
 
-        $select = "SELECT DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,"
-                . "transaction_type,ref,name AS created_by,FORMAT(amount,2)";
-        $presql = " FROM transactions a ";
-        $presql .= " LEFT JOIN users ON users.id = a.created_by";
-        $presql .= " LEFT JOIN transaction_types ON transaction_types.id = a.transaction_type_id";
-        $presql .= " WHERE a.invoice_id = " . $invoice_id;
-
-        $presql .= "  ";
-
-        $sql = $select . $presql . "LIMIT " . $start . "," . $len;
-
-
-        $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
-        $count = $qcount[0]->c;
-
-        $results = DB::select($sql);
-        $ret = [];
-        foreach ($results as $row) {
-            $r = [];
-            foreach ($row as $value) {
-                $r[] = $value;
-            }
-            $ret[] = $r;
-        }
-
-        $ret['data'] = $ret;
-        $ret['recordsTotal'] = $count;
-        $ret['iTotalDisplayRecords'] = $count;
-
-        $ret['recordsFiltered'] = count($ret);
-        $ret['draw'] = $_GET['draw'];
-
-        echo json_encode($ret);
+        return datatables(
+                        DB::table('transactions')
+                                ->leftJoin('users', 'users.id', '=', 'transactions.created_by')
+                                ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transactions.transaction_type_id')
+                                ->select([
+                                    DB::raw("DATE_FORMAT(transactions.created_at,'%a %d/%m/%2017') AS created_at"),
+                                    "transaction_type",
+                                    "ref",
+                                    "name AS created_by",
+                                    DB::raw("FORMAT(amount,2) AS amount")
+                                ])->where('transactions.invoice_id', $invoice_id)->orderBy('transactions.id', 'ASC'))->toJson();
     }
 
 }

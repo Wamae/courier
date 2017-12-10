@@ -156,11 +156,10 @@
     $(document).ready(function () {
         theGrid = $('#thegrid').DataTable({
             "processing": true,
-            //"dom": "t",
             "bFilter": false,
             "serverSide": true,
             "ordering": true,
-            "responsive": true,
+            //"responsive": true,
             "ajax": "{{url('invoices/get_waybills')}}/{{$invoice->id}}",
             "sEmptyTable": "No data available",
             "columns": [
@@ -187,7 +186,14 @@
             "ordering": true,
             "responsive": true,
             "ajax": "{{url('invoices/get_transactions')}}/{{$invoice->id}}",
-            "sEmptyTable": "Loading data from server",
+            "columns": [
+                {"data": "created_at", "name": "transactions.created_at", "targets": 0},
+                {"data": "transaction_type", "name": "transactions.transaction_type", "targets": 1},
+                {"data": "ref", "name": "ref", "targets": 2},
+                {"data": "created_by", "name": "transactions.created_by", "targets": 3},
+                {"data": "amount", "name": "amount", "targets": 4}
+                ],
+            "sEmptyTable": "No data available"
         });
 
         $("#modal-transaction").click(function () {
