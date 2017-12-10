@@ -68,96 +68,74 @@
             "ordering": true,
             "responsive": true,
             "ajax": "{{url('invoices/grid')}}",
-            "columnDefs": [
-                {"searchable": false, "orderable": false, "targets": 0},
-                {"searchable": false, "orderable": false, "targets": 1},
-                {"name": "client_name", "targets": 4},
-                {"name": "paid", "targets": 9},
-                {"name": "balance", "targets": 10},
-                {
-                    "render": function (data, type, row) {
-                        return '';
+            "columns": [
+                {"data": "X", "name": "X", "searchable": false, "orderable": false, "render": function (data, type, row) {
+                        return " ";
+                    }, "targets": 0},
+                {"data": "Y", "name": "Y", "searchable": false, "orderable": false, "render": function (data, type, row) {
+                        return `<input type='checkbox' class='check-item' name='invoices[]' value='${row['id']}'/>`;
                     },
-                    "targets": 0
-                },
-                {
-                    "render": function (data, type, row) {
-                        return '<input type="checkbox" class="check-item" name="invoices[]" value="' + row[2] + '"/>';
-                    },
-                    "targets": 1
-                },
-                {
-                    "render": function (data, type, row) {
-                        var id = row[2].toString();
-                        //alert(id);
-                        if (id.length == 1) {
-                            return invoicePrefixOne + '00' + id;
-                        } else if (id.length == 2) {
-                            return invoicePrefixOne + '0' + id;
+                    "targets": 1},
+                {"data": "id", "name": "a.id", "render": function (data, type, row) {
+                        var id = row['id'].toString();
+                        if (id.length === 1) {
+                            return invoicePrefixOne + "00" + id;
+                        } else if (id.length === 2) {
+                            return invoicePrefixOne + "0" + id;
                         } else {
                             return invoicePrefixOne + id;
                         }
-                    },
-                    "targets": 2
-                },
-                 {
-                    "render": function (data, type, row) {
-                        return '<a href="{{url("invoices")}}/'+row[2]+'" class="btn btn-info">' + row[5] + ' ITEMS</a>';
-                    },
-                    "targets": 5
-                },
-                {
-                    "render": function (data, type, row) {
-                        if (row[10] == 0) {
-                            return '<button class="btn btn-info"><span class="glyphicon glyphicon-print"></span> PAID</button>';
-                        } else if (row[10] > 0 && row[9] == 0) {
-                            return '<button class="btn btn-danger"><span class="glyphicon glyphicon-print"></span> UNPAID</button>';
-                        } else if (row[10] > 0 && row[9] > 0) {
-                            return '<button class="btn btn-warning"><span class="glyphicon glyphicon-print"></span> PARTIAL</button>';
+                    }, "targets": 2},
+                {"data": "created_at", "name": "a.created_at", "targets": 3},
+                {"data": "client_name", "name": "client_name", "targets": 4},
+                {"data": "items", "name": "items", "searchable": false, "render": function (data, type, row) {
+                        return `<a href='{{url("invoices")}}/${row['id']}' class='btn btn-info'>${row['items']} ITEMS</a>`;
+                    }, "targets": 5},
+                {"data": "amount", "name": "amount", "searchable": false, "targets": 6},
+                {"data": "vat", "name": "vat", "searchable": false, "targets": 7},
+                {"data": "total", "name": "amount", "searchable": false, "targets": 8},
+                {"data": "paid", "name": "paid", "searchable": false, "targets": 9},
+                {"data": "balance", "name": "balance", "searchable": false, "targets": 10},
+                {"data": "stats", "name": "stats", "searchable": false, "render": function (data, type, row) {
+                        if (row['balance'] === 0) {
+                            return "<button class='btn btn-info'><span class='glyphicon glyphicon-print'></span> PAID</button>";
+                        } else if (row['balance'] > 0 && row['paid'] === 0) {
+                            return "<button class='btn btn-danger'><span class='glyphicon glyphicon-print'></span> UNPAID</button>";
+                        } else if (row['balance'] > 0 && row['paid'] > 0) {
+                            return "<button class='btn btn-warning'><span class='glyphicon glyphicon-print'></span> PARTIAL</button>";
                         }
-                    },
-                    "targets": 11
-                },
-                        /*{
-                         "render": function (data, type, row) {
-                         return '<a href="{{ url('payment_modes') }}/' + row[0] + '/edit" class="btn btn-default">Update</a>';
-                         },
-                         "targets": 7                    },
-                         {
-                         "render": function (data, type, row) {
-                         //return '<a href="#" onclick="return doDelete('+row[0]+')" class="btn btn-danger">Delete</a>';
-                         return '';
-                         },
-                         "targets": 7 + 1
-                         },*/
+                    }, "targets": 11
+                }
             ]
         });
-        
-        $("#cancel-invoices").click(function(){
+
+        $("#cancel-invoices").click(function () {
             invoiceIds = [];
-             $(".check-item:checked").each(function () {
+            $(".check-item:checked").each(function () {
 
                 invoiceIds.push($(this).val());
             });
             console.log(invoiceIds);
-            
+
             if (invoiceIds.length > 0) {
                 $.ajax(
                         {url: "{{url('invoices/cancel_invoices/')}}",
                             data: {"invoice_ids": invoiceIds},
                             type: "POST",
-                            success: function (data) {
-                                if (data === "1") {
+                            success: function (response) {
+                                if (response === '{{OK}}') {
                                     theGrid.ajax.reload();
                                     alert("Invoice has been cancelled");
                                 }
-                            }});
+                            }
+                        }
+                );
             } else {
                 alert("Select waybills first");
             }
-            
+
         });
-        
+
     });
 </script>
 @endsection

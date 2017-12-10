@@ -46,51 +46,31 @@ class InvoicesController extends Controller {
     public function show(Request $request, $id) {
         $invoice = Invoice::find($id);
         $transactionTypes = TransactionType::all();
-        
-        return view('invoices.show', compact(['invoice','transactionTypes']));
+
+        return view('invoices.show', compact(['invoice', 'transactionTypes']));
     }
 
     public function grid(Request $request) {
-        $len = $_GET['length'];
-        $start = $_GET['start'];
-
-        $select = "SELECT '1','2', a.id,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,"
-                . "client_name,COUNT(DISTINCT invoice_waybills.waybill_id) AS items,SUM(waybills.amount) AS amount, SUM(vat) AS vat,"
-                . "SUM(waybills.amount + waybills.vat) AS total,SUM(transactions.amount) AS paid,"
-                . "(SUM(waybills.amount + waybills.vat) - SUM(transactions.amount)) AS balance,'status' AS status";
-
-        $presql = " FROM invoices a ";
-        $presql .= " LEFT JOIN clients ON clients.id = a.client_id";
-        $presql .= " LEFT JOIN invoice_waybills ON invoice_waybills.invoice_id = a.id";
-        $presql .= " LEFT JOIN waybills ON waybills.id = invoice_waybills.waybill_id";
-        $presql .= " LEFT JOIN transactions ON transactions.invoice_id = a.id";
-
-        $presql .= " GROUP BY a.id ";
-
-        $sql = $select . $presql . "LIMIT " . $start . "," . $len;
-
-        $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
-
-        $count = $qcount[0]->c;
-        //dd($sql);
-        $results = DB::select($sql);
-        $ret = [];
-        foreach ($results as $row) {
-            $r = [];
-            foreach ($row as $value) {
-                $r[] = $value;
-            }
-            $ret[] = $r;
-        }
-
-        $ret['data'] = $ret;
-        $ret['recordsTotal'] = $count;
-        $ret['iTotalDisplayRecords'] = $count;
-
-        $ret['recordsFiltered'] = count($ret);
-        $ret['draw'] = $_GET['draw'];
-
-        echo json_encode($ret);
+        return datatables(
+                                DB::table('invoices AS a')
+                                ->leftJoin('clients', 'a.client_id', '=', 'clients.id')
+                                ->leftJoin('invoice_waybills', 'a.id', '=', 'invoice_waybills.invoice_id')
+                                ->leftJoin('waybills', 'invoice_waybills.waybill_id', '=', 'waybills.id')
+                                ->leftJoin('transactions', 'a.id', '=', 'transactions.invoice_id')
+                                ->groupBy(['a.id'])
+                                ->select(["a.id AS X",
+                                    DB::raw("a.id +1 AS Y"),
+                                    "a.id",
+                                    DB::raw("DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at"),
+                                    "client_name",
+                                    DB::raw("COUNT(DISTINCT invoice_waybills.waybill_id) AS items"),
+                                    DB::raw("SUM(waybills.amount) AS amount"),
+                                    DB::raw("SUM(vat) AS vat"),
+                                    DB::raw("SUM(waybills.amount + waybills.vat) AS total"),
+                                    DB::raw("SUM(transactions.amount) AS paid"),
+                                    DB::raw("(SUM(waybills.amount + waybills.vat) - SUM(transactions.amount)) AS balance"),
+                                    DB::raw("a.id + 2 AS stats")
+                                ])->where('a.status',ACTIVE)->orderBy('a.id', 'DESC'))->toJson();
     }
 
     public function update(Request $request) {
@@ -118,7 +98,7 @@ class InvoicesController extends Controller {
         $invoice->currency_id = $request->currency_id;
 
         $invoice->due_date = $request->due_date;
-        
+
         $invoice->save();
 
         return redirect('/invoices');
@@ -139,10 +119,10 @@ class InvoicesController extends Controller {
     public function cancelInvoices(Request $request) {
         $invoiceIds = $request["invoice_ids"];
 
-        echo Invoice::whereIn("id", $invoiceIds)->update(['status'=>0,'updated_by'=>Auth::user()->id,'updated_at'=>date('Y-m-d H:i:s')]);
+        echo Invoice::whereIn("id", $invoiceIds)->update(['status' => 0, 'updated_by' => Auth::user()->id, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 
-    public function getWaybills(Request $request,$invoice_id) {
+    public function getWaybills(Request $request, $invoice_id) {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
@@ -158,7 +138,7 @@ class InvoicesController extends Controller {
         $presql .= " LEFT JOIN stations ON waybills.origin = stations.id ";
         $presql .= " LEFT JOIN stations AS stations2 ON waybills.destination = stations2.id ";
         $presql .= " LEFT JOIN package_types ON waybills.package_type = package_types.id ";
-        $presql .= " WHERE a.invoice_id = ".$invoice_id;
+        $presql .= " WHERE a.invoice_id = " . $invoice_id;
 
         $presql .= "  ";
 
@@ -187,8 +167,8 @@ class InvoicesController extends Controller {
 
         echo json_encode($ret);
     }
-    
-        public function getTransactions(Request $request,$invoice_id) {
+
+    public function getTransactions(Request $request, $invoice_id) {
         $len = $_GET['length'];
         $start = $_GET['start'];
 
@@ -197,7 +177,7 @@ class InvoicesController extends Controller {
         $presql = " FROM transactions a ";
         $presql .= " LEFT JOIN users ON users.id = a.created_by";
         $presql .= " LEFT JOIN transaction_types ON transaction_types.id = a.transaction_type_id";
-        $presql .= " WHERE a.invoice_id = ".$invoice_id;
+        $presql .= " WHERE a.invoice_id = " . $invoice_id;
 
         $presql .= "  ";
 
@@ -226,4 +206,5 @@ class InvoicesController extends Controller {
 
         echo json_encode($ret);
     }
+
 }
