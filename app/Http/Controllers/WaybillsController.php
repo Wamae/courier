@@ -52,68 +52,17 @@ class WaybillsController extends Controller {
     }
 
     public function grid(Request $request) {
-        $len = $_GET['length'];
-        $start = $_GET['start'];
-
-        $select = "SELECT a.id,waybill_no,DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at,consignor,consignee,package_types.package_type,quantity,stations.office_name as origin,stations2.office_name AS destination, wbs.waybill_status,1";
-        $presql = " FROM waybills a ";
-        $presql .= " LEFT JOIN users u ON a.created_by = u.id ";
-        $presql .= " LEFT JOIN waybill_statuses wbs ON a.status = wbs.id ";
-        $presql .= " LEFT JOIN stations ON a.origin = stations.id ";
-        $presql .= " LEFT JOIN stations AS stations2 ON a.destination = stations2.id ";
-        $presql .= " LEFT JOIN package_types ON a.package_type = package_types.id ";
-
-        $presql .= "  ";
-
-        if ($_GET["columns"]) {
-            $first = true;
-            for ($i = 0; $i < count($_GET["columns"]); $i++) {
-                $name = $_GET["columns"][$i]["name"];
-                $search_value = $_GET["columns"][$i]["search"]["value"];
-                if ($search_value && $name) {
-                    if ($first) {
-                        $presql .= " WHERE {$name} = '" . $search_value . "' ";
-                        $first = false;
-                    } else {
-                        $presql .= " AND {$name} = '" . $search_value . "' ";
-                    }
-                }
-            }
-        }
-
-        if ($_GET['search']['value']) {
-            $presql .= " WHERE consignor LIKE '%" . $_GET['search']['value'] . "%' "
-//                            . "OR consignee LIKE '%".$_GET['search']['value']."%' "
-//                            . "OR stations.office_name LIKE '%".$_GET['search']['value']."%' "
-//                            . "OR stations2.office_name LIKE '%".$_GET['search']['value']."%' "
-//                            . "OR consignee_tel LIKE '%".$_GET['search']['value']."%' "
-            ;
-        }
-
-        $sql = $select . $presql . " LIMIT " . $start . "," . $len;
-
-        $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
-        //print_r($qcount);
-        $count = $qcount[0]->c;
-
-        $results = DB::select($sql);
-        $ret = [];
-        foreach ($results as $row) {
-            $r = [];
-            foreach ($row as $value) {
-                $r[] = $value;
-            }
-            $ret[] = $r;
-        }
-
-        $ret['data'] = $ret;
-        $ret['recordsTotal'] = $count;
-        $ret['iTotalDisplayRecords'] = $count;
-
-        $ret['recordsFiltered'] = count($ret);
-        $ret['draw'] = $_GET['draw'];
-        //dd($sql);
-        echo json_encode($ret);
+        
+        return datatables(
+                        DB::table('waybills AS a')
+                ->leftJoin('users AS u', 'a.created_by', '=', 'u.id')
+                ->leftJoin('stations', 'a.origin', '=', 'stations.id')
+                ->leftJoin('waybill_statuses AS wbs', 'a.status', '=', 'wbs.id')
+                ->leftJoin('stations AS stations2', 'a.destination', '=', 'stations2.id')
+                ->leftJoin('package_types', 'a.package_type', '=', 'package_types.id')
+                //->groupBy(['a.id','cs.office_code','cs2.office_code','a.created_at','cs.office_name','cs2.office_name','u.name','a.status','ms.status'])
+                                ->select(["a.id","waybill_no",DB::raw("DATE_FORMAT(a.created_at,'%a %d/%m/%2017') AS created_at"),"consignor","consignee","package_types.package_type","quantity","stations.office_name as origin","stations2.office_name AS destination", "wbs.waybill_status", "a.id AS X"
+                        ])->orderBy('a.id','DESC'))->toJson();
     }
 
     public function update(Request $request) {
