@@ -133,11 +133,11 @@
                                 </li>
                                 
                                 @endrole
-                                @role('staff')
+                                @can('view waybills')
                                 <li>
                                     <a href="{{url('waybills')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-th"></span> Waybill Entry</a>
                                 </li>
-                                @endrole
+                                @endcan
                             </ul>
                         </li>
 
