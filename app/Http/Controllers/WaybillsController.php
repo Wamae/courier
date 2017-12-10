@@ -141,10 +141,13 @@ class WaybillsController extends Controller {
     }
     
     function sendCreateWaybillSMS($waybill){
-        $message = "Dear customer,
+		
+	$message = "Package: {$waybill->waybill_no} from {$waybill->consignor} received at {$waybill->origins->office_name}. We'll deliver it to {$waybill->destinations->office_name} in 24Hrs.Tahmeed Courier";
+		
+        /*$message = "Dear customer,
 A parcel has been sent to you from ".$waybill->origins->office_name." "
                 . "Kindly use your tracking no (".$waybill->waybill_no.") to know the status of your parcel.";
-                //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);
+                //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);*/
 
                 dispatch(new \App\Jobs\SendSMS($waybill->consignee_tel, $message));
     }
