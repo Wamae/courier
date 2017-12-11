@@ -48,7 +48,7 @@
                                 <label class="col-lg-4 control-label" for="consignor_name">CONSIGNOR TEL:<sup>*</sup></label>
 
                                 <div class="col-lg-8 non-acc" id="consignor-tel-div">
-                                    <input type="text" name="consignor_tel" required id="consignor-tel" class="form-control" value="{{$model['consignor_tel'] or ''}}">
+                                    <input placeholder="+(254) 712-345-678" type="text" name="consignor_tel" required id="consignor-tel" class="form-control phone" value="{{$model['consignor_tel'] or ''}}">
                                 </div>
                             </div>
 
@@ -62,7 +62,7 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="consignor_name">CONSIGNEE TEL:<sup>*</sup></label>
                                 <div class="col-lg-8">
-                                    <input type="text" name="consignee_tel" required id="consignee-tel" class="form-control" value="{{$model['consignee_tel'] or ''}}">
+                                    <input placeholder="+(254) 712-345-678" type="text" name="consignee_tel" required id="consignee-tel" class="form-control phone" value="{{$model['consignee_tel'] or ''}}">
                                 </div>
                             </div>
 
@@ -198,6 +198,8 @@
 @section('scripts')
 <script>
     $(function () {
+        $('.phone').mask("+(999) 999-999-999");
+        
         $("#form-add-waybill").submit(function(event){
             event.preventDefault();
             
