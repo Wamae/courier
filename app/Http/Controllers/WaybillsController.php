@@ -186,8 +186,11 @@ A parcel has been sent to you from ".$waybill->origins->office_name." "
     }
     
     public function trackWaybill($waybillNo){
-        $waybill = Waybill::select(['waybill_no','waybill_status'])
-                ->join('waybill_statuses','waybill_statuses.id','=','waybills.status')
+        $waybill = Waybill::select(['waybill_no','waybill_status','package_types.package_type','stations.office_name AS origin','s2.office_name AS destination'])
+                ->leftJoin('waybill_statuses','waybill_statuses.id','=','waybills.status')
+				->leftJoin('package_types','package_types.id','=','waybills.package_type')
+				->leftJoin('stations','stations.id','=','waybills.origin')
+				->leftJoin('stations AS s2','stations.id','=','waybills.destination')
                 ->where('waybill_no',$waybillNo)->get()->first();
         echo json_encode($waybill);
     }
