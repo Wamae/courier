@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Waybill;
 use App\Station;
 use App\Package_type;
-use App\payment_mode;
+use App\Payment_mode;
 use App\Waybill_status;
 use DB;
 use Auth;
@@ -30,7 +30,7 @@ class WaybillsController extends Controller {
     public function create(Request $request) {
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->whereNotIn('id',[Auth::user()->station])->get();
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
-        $payment_modes = payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
+        $payment_modes = Payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
 
         return view('waybills.add', compact('stations', 'package_types', 'payment_modes'));
     }
@@ -40,7 +40,7 @@ class WaybillsController extends Controller {
 
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
-        $payment_modes = payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
+        $payment_modes = Payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
 
         return view('waybills.add', compact('model', 'stations', 'package_types', 'payment_modes'));
     }
