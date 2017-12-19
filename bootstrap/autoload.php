@@ -20,6 +20,7 @@ define('KSH', 1);
 define('CASH_ON_DELIVERY', 2);
 define('CASH_PAYMENT', 3);
 define('ACCOUNT_PAYMENT', 4);
+define('FREE_OF_CHARGE', 5);
 
 /*Ajax responses*/
 define('OK',1);
