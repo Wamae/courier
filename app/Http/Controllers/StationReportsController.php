@@ -175,7 +175,7 @@ class StationReportsController extends Controller {
                 if ($cash[$i]["destination"] == $allStations[$j]["id"]) {
                     if ($cash[$i]["payment_mode"] == CASH_PAYMENT) {
                         $allStations[$j]["cash_amount"] += $cash[$i]["amount"];
-                        $allStations[$j]["cash_vat"] += $cash[$i]["vat"];
+                        $allStations[$j]["cash_vat"] += round($cash[$i]["vat"]);
                     } else if ($cash[$i]["payment_mode"] == ACCOUNT_PAYMENT) {
                         $allStations[$j]["acc_amount"] += $cash[$i]["amount"];
                         $allStations[$j]["acc_vat"] += $cash[$i]["vat"];
