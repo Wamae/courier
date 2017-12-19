@@ -48,7 +48,7 @@
                                 <label class="col-lg-4 control-label" for="consignor_name">CONSIGNOR TEL:<sup>*</sup></label>
 
                                 <div class="col-lg-8 non-acc" id="consignor-tel-div">
-                                    <input placeholder="+(254) 712-345-678" type="text" name="consignor_tel" required id="consignor-tel" class="form-control phone" value="{{$model['consignor_tel'] or ''}}">
+                                    <input placeholder="+(254) 712-345-678" type="text" name="consignor_tel" required id="consignor-tel" class="form-control phone" value="">
                                 </div>
                             </div>
 
@@ -198,7 +198,7 @@
 @section('scripts')
 <script>
     $(function () {
-        $('.phone').mask("+(999) 999-999-999");
+        $('.phone').mask("+999999999999");
         
         $("#form-add-waybill").submit(function(event){
             event.preventDefault();
@@ -234,12 +234,31 @@
         $("#payment-mode").change(function () {
             paymentMode = $(this).val();
             //if(paymentMode == 4){
-            changeConsignorDetails(paymentMode);
+			consignorName = $("#consignor").val();
+			if(consignorName.length < 3){
+				consignorName = "";
+			}
+            changeConsignorDetails(paymentMode,consignorName);
+			
+			if(paymentMode == "{{FREE_OF_CHARGE}}" ){
+				$("#amount_per_item").attr("min", "0");
+				$("#amount_per_item").val("0");
+				$("#vat").val("0");
+				$("#amount").val("0");
+				$("#amount_per_item").attr("readonly", true);
+				
+			}else{
+				$("#amount_per_item").attr("min", "100");
+				$("#amount_per_item").val("0");
+				$("#vat").val("0");
+				$("#amount").val("0");
+				$("#amount_per_item").attr("readonly", false);
+			}
             //}
         });
 
-        function changeConsignorDetails(paymentMode) {
-            if (paymentMode == 4) {
+        function changeConsignorDetails(paymentMode,consignorName) {
+            if (paymentMode == "{{ACCOUNT_PAYMENT}}") {
                 $.ajax({
                     url: "{{url('clients/getClients/all')}}",
                     dataType: "JSON",
@@ -252,17 +271,18 @@
                         $("#consignor-div").html(clientOptions);
                         
                         $("#consignor-tel").val(clients[0].client_telephone);
-                         $("#consignor-tel").attr("readonly", true);
+                        $("#consignor-tel").attr("readonly", true);
 
                     }
                 });
 
             } else {
             
-                htmlString = '<input type="text" name="consignor_tel" required id="consignor_tel" class="form-control" value="{{$model["consignor_tel"] or ""}}">';
-                $("#consignor-tel-div").html(htmlString);
+                /*htmlString = '<input type="text" name="consignor_tel" required id="consignor_tel"  placeholder="+(254) 712-345-678" class="form-control" value="{{$model["consignor_tel"] or ""}}">';
+                $("#consignor-tel-div").html(htmlString);*/
+				$("#consignor-tel").attr("readonly", false);
                 
-                $("#consignor-div").html('<input type="text" name="consignor" required id="consignor" class="form-control" value="{{$model['consignor'] or ''}}">');
+                $("#consignor-div").html('<input type="text" name="consignor" required id="consignor" class="form-control" value="'+consignorName+'">');
             }
         }
     });
