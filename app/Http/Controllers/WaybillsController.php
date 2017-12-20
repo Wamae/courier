@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Waybill;
 use App\Station;
 use App\Package_type;
-use App\payment_mode;
+use App\Payment_mode;
 use App\Waybill_status;
 use DB;
 use Auth;
@@ -30,7 +30,7 @@ class WaybillsController extends Controller {
     public function create(Request $request) {
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->whereNotIn('id',[Auth::user()->station])->get();
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
-        $payment_modes = payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
+        $payment_modes = Payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
 
         return view('waybills.add', compact('stations', 'package_types', 'payment_modes'));
     }
@@ -40,7 +40,7 @@ class WaybillsController extends Controller {
 
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
-        $payment_modes = payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
+        $payment_modes = Payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
 
         return view('waybills.add', compact('model', 'stations', 'package_types', 'payment_modes'));
     }
@@ -141,10 +141,13 @@ class WaybillsController extends Controller {
     }
     
     function sendCreateWaybillSMS($waybill){
-        $message = "Dear customer,
+		
+	$message = "Package: {$waybill->waybill_no} from {$waybill->consignor} received at {$waybill->origins->office_name}. We'll deliver it to {$waybill->destinations->office_name} in 24Hrs.Tahmeed Courier";
+		
+        /*$message = "Dear customer,
 A parcel has been sent to you from ".$waybill->origins->office_name." "
                 . "Kindly use your tracking no (".$waybill->waybill_no.") to know the status of your parcel.";
-                //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);
+                //\Illuminate\Support\Facades\Log::info('SMS: "'.$message.'" | Phone: '.$waybill->consignee_tel);*/
 
                 dispatch(new \App\Jobs\SendSMS($waybill->consignee_tel, $message));
     }
@@ -183,8 +186,11 @@ A parcel has been sent to you from ".$waybill->origins->office_name." "
     }
     
     public function trackWaybill($waybillNo){
-        $waybill = Waybill::select(['waybill_no','waybill_status'])
-                ->join('waybill_statuses','waybill_statuses.id','=','waybills.status')
+        $waybill = Waybill::select(['waybill_no','waybill_status','package_types.package_type','stations.office_name AS origin','s2.office_name AS destination'])
+                ->leftJoin('waybill_statuses','waybill_statuses.id','=','waybills.status')
+				->leftJoin('package_types','package_types.id','=','waybills.package_type')
+				->leftJoin('stations','stations.id','=','waybills.origin')
+				->leftJoin('stations AS s2','stations.id','=','waybills.destination')
                 ->where('waybill_no',$waybillNo)->get()->first();
         echo json_encode($waybill);
     }

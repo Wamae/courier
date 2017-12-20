@@ -32,8 +32,26 @@
                 <h4 style="">WAYBILL STATUS</h4>
             </div>
             <div class="modal-body">
+				<div class="form-group row">
+                    <label for="origin" class="control-label col-md-4">ORIGIN:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="origin" value="" disabled>  
+                    </div>
+                </div>
+				<div class="form-group row">
+                    <label for="destination" class="control-label col-md-4">DESTINATION:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="destination" value="" disabled>  
+                    </div>
+                </div>
+				<div class="form-group row">
+                    <label for="package_type" class="control-label col-md-4">PACKAGE TYPE:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="package_type" value="" disabled>  
+                    </div>
+                </div>
                 <div class="form-group row">
-                    <label for="usrname" class="control-label col-md-4">STATUS:</label>
+                    <label for="status" class="control-label col-md-4">STATUS:</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" id="status" value="" disabled>  
                     </div>
@@ -68,6 +86,9 @@
                         if (response != 'null') {
                             $("#waybill-no-2").val(response.waybill_no);
                             $("#status").val(response.waybill_status);
+							$("#origin").val(response.origin);
+							$("#destination").val(response.destination);
+							$("#package_type").val(response.package_type);
                             $("#waybill-modal").modal('show');
                         }
                     }
