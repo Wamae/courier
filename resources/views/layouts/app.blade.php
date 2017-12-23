@@ -202,6 +202,9 @@
                  </script>    
 
                  @yield('scripts')
+                 
+                 </body>
+                 <br>
                  <footer>
                  @if (Auth::guest())
                  @else
@@ -216,6 +219,4 @@
                  </div>
                  @endif
                  </footer>
-                 
-                 </body>
                  </html>

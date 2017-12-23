@@ -40,7 +40,7 @@ class UserController extends Controller {
     public function create() {
     //Get all roles and pass it to the view
         $roles = Role::get();
-        $stations = Station::where('status',ACTIVE)->pluck('office_name','id');
+        //$stations = Station::where('status',ACTIVE)->pluck('office_name','id');
         
         return view('users.create', compact('roles','stations'));
     }
@@ -62,7 +62,7 @@ class UserController extends Controller {
         $user = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
-            'station'=>$request['station'],
+            'station'=>Auth::user()->station,
             'password' => bcrypt($request['password']),
         ]); //Retrieving only the email and password data
 
