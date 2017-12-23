@@ -147,7 +147,8 @@
             $('.check-item').prop('checked', this.checked);
         });
         $("#back").click(function () {
-            theGrid.ajax.reload();
+            //theGrid.ajax.reload();
+            location.reload();
             $("#bottom-buttons-two").addClass("hidden");
             $("#bottom-buttons-one").removeClass("hidden");
         });
