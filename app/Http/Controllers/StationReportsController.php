@@ -149,9 +149,7 @@ class StationReportsController extends Controller {
         $cash = array_map(function($item) {
             return (array) $item;
         }, $cash);
-        
-        $result = array();
-                
+                        
         $query = Station::select(['id', 'office_name', DB::raw('0 AS cod_amount'),
                     DB::raw('0 AS cod_vat'),
                     //DB::raw('0 AS cod_total'),
