@@ -62,7 +62,7 @@ class ManifestsController extends Controller {
                 ->leftJoin('manifest_statuses AS ms', 'a.status', '=', 'ms.id')
                 ->leftJoin('stations AS cs2', 'a.destination', '=', 'cs2.id')
                 ->leftJoin('waybill_manifests', 'a.id', '=', 'waybill_manifests.manifest')
-                ->groupBy(['a.id','cs.office_code','cs2.office_code','a.created_at','cs.office_name','cs2.office_name','u.name','a.status','ms.status'])
+                ->groupBy(['a.id'])
                                 ->select([
                                         "a.id", DB::raw("CONCAT(CONCAT(CONCAT(cs.office_code,'-',cs2.office_code),'-','MANIFEST'),':',a.id) AS loading_manifest"), DB::raw("DATE_FORMAT(a.created_at,'%a %d/%m/%Y') AS created_at"), "cs.office_name AS origin", "cs2.office_name AS destination", "u.name AS created_by", DB::raw("COUNT(DISTINCT waybill_manifests.waybill) AS loaded"), "ms.status", "a.id AS X",DB::raw("a.id+1 AS Y"),
                         ])->orderBy('a.id','DESC'))->toJson();
