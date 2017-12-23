@@ -103,6 +103,8 @@ class WaybillManifestsController extends Controller {
         $presql .= " AND a.manifest = ".$manifest_id;
 
         $presql .= "  ";
+        
+        $presql .=" ORDER BY a.id DESC ";
 
         $sql = $select . $presql . "LIMIT " . $start . "," . $len;
 
@@ -209,7 +211,7 @@ class WaybillManifestsController extends Controller {
         $presql .= " LEFT JOIN package_types ON a.package_type = package_types.id ";
         $presql .= " WHERE waybill_manifests.waybill IS NULL";
 
-        $presql .= "  ";
+        $presql .= " ";
 
         if ($_GET["columns"]) {
             $first = true;
@@ -231,7 +233,9 @@ class WaybillManifestsController extends Controller {
             ;
         }
 
+        $presql .=" ORDER BY a.id DESC ";
         $sql = $select . $presql . " LIMIT " . $start . "," . $len;
+        
 
         $qcount = DB::select("SELECT COUNT(a.id) c" . $presql);
         //dd($sql);
