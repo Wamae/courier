@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="{{asset('css/bootstrap-datetimepicker-standalone.css')}}">
         <link rel="stylesheet" href="{{asset('css/bootstrap-datetimepicker.css')}}">
         <link rel="stylesheet" href="{{asset('css/jquery-ui.css')}}">
+        <link rel="stylesheet" href="{{asset('css/jquery.auto-complete.min.css')}}">
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -73,7 +74,6 @@
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                         <li><a href="{{ route('login') }}">Login</a></li>
-                        <li><a href="{{ route('register') }}">Register</a></li>
                         @else
 
                         <li class="dropdown">
@@ -190,6 +190,8 @@
         <script src="{{asset('js/range_dates.js')}}"></script>
         <script src="https://unpkg.com/sweetalert2@7.0.9/dist/sweetalert2.all.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
+        <script src="{{asset('js/jquery.auto-complete.min.js')}}"></script>
+		
         <script>
                                            $.ajaxSetup({
                                                headers: {

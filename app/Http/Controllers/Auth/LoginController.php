@@ -54,7 +54,7 @@ use AuthenticatesUsers;
 
     protected function redirectTo() {
         if (Auth::user()->hasRole('admin')) {
-            return '/package_types';
+            return '/waybills';
         } else if(Auth::user()->hasRole('staff')){
             return '/waybills';
         }
