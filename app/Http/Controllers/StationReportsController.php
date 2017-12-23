@@ -149,10 +149,10 @@ class StationReportsController extends Controller {
         $cash = array_map(function($item) {
             return (array) $item;
         }, $cash);
-        //dd($cash);
+        
         $result = array();
-
-        $allStations = Station::select(['id', 'office_name', DB::raw('0 AS cod_amount'),
+                
+        $query = Station::select(['id', 'office_name', DB::raw('0 AS cod_amount'),
                     DB::raw('0 AS cod_vat'),
                     //DB::raw('0 AS cod_total'),
                     DB::raw('0 AS acc_amount'),
@@ -161,7 +161,13 @@ class StationReportsController extends Controller {
                     DB::raw('0 AS cash_amount'),
                     DB::raw('0 AS cash_vat'),
                         //DB::raw('0 AS cash_total')
-                ])->get()->toArray();
+                ]);
+        
+        if ($stationId != "0") {
+            $query->where('id', $stationId);
+        }
+        
+        $allStations = $query->get()->toArray();
 
         $allStations = array_map(function($item) {
             return (array) $item;
