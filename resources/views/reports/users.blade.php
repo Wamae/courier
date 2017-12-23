@@ -30,8 +30,11 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="status_search">System User:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="status_search" id="user-search" class="form-control">
+                                    <select name="user_search" id="user-search" class="form-control">
                                         <option value="0" selected="selected">ALL SYSTEM USERS</option>
+                                        @foreach($staff as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>   
+                                        @endforeach
                                     </select>	
                                 </div>
                             </div>
@@ -216,11 +219,22 @@
         $("#station-search").change(function () {
             var station = $(this).val();
             if (station == "0") {
-                theGrid.columns(5).search(station).draw();
+                theGrid.columns("").search(station).draw();
             } else {
 
                 console.log("Station: ", station);
                 theGrid.columns(5).search(station, false, true, true).draw();
+            }
+        });
+        
+        $("#user-search").change(function () {
+            var userId = $(this).val();
+            if (userId == "0") {
+                theGrid.columns("").search(userId).draw();
+            } else {
+
+                console.log("user: ", userId);
+                theGrid.columns(8).search(userId, false, true, true).draw();
             }
         });
 

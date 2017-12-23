@@ -30,8 +30,11 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="status_search">System User:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="status_search" id="user-search" class="form-control">
+                                    <select name="user_search" id="user-search" class="form-control">
                                         <option value="0" selected="selected">ALL SYSTEM USERS</option>
+                                        @foreach($staff as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>   
+                                        @endforeach
                                     </select>	
                                 </div>
                             </div>
@@ -179,6 +182,11 @@
             getData(stationId, userId, orientation, currencyId, startDate, endDate);
         });
 
+        $("#user-search").change(function () {
+            var userId = $(this).val();
+            getData(stationId, userId, orientation, currencyId, startDate, endDate);
+        });
+
         $("#station-search").change(function () {
             var stationId = $(this).val();
             getData(stationId, userId, orientation, currencyId, startDate, endDate);
@@ -205,8 +213,8 @@
         function makeTableContent(data) {
             content = "";
             for (i = 0; i < data.length; i++) {
-                total = data[i].cod_amount+data[i].cash_amount+data[i].acc_amount+data[i].cod_vat+data[i].cash_vat+data[i].acc_vat;
-               content += `<tr>
+                total = data[i].cod_amount + data[i].cash_amount + data[i].acc_amount + data[i].cod_vat + data[i].cash_vat + data[i].acc_vat;
+                content += `<tr>
     <td>${data[i].office_name}</td>
         <td>${data[i].cod_amount}</td>
             <td>${data[i].cod_vat}</td>

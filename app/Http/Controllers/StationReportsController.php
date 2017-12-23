@@ -11,6 +11,7 @@ use App\Package_type;
 use App\payment_mode;
 use App\Currency;
 use App\Waybill_status;
+use App\User;
 use DB;
 use Auth;
 
@@ -26,8 +27,16 @@ class StationReportsController extends Controller {
         $waybill_statuses = Waybill_status::select('id', 'waybill_status')->get();
         $payment_modes = Payment_mode::select('id', 'payment_mode')->get();
         $currencies = Currency::select('id', 'currency')->get();
+        
+        // get all users with all roles
+        $users = User::with('roles')->get();
 
-        return view('reports.stations', compact('package_types', 'stations', 'waybill_statuses', 'payment_modes', 'currencies'));
+        // filter to list those without the "Member" role
+        $staff = $users->reject(function ($user, $key) {
+            return $user->hasRole('admin');
+        });
+
+        return view('reports.stations', compact('package_types', 'stations', 'waybill_statuses', 'payment_modes', 'currencies','staff'));
     }
 
     public function grid(Request $request) {
