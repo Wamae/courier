@@ -6,15 +6,14 @@ use Illuminate\Http\Request;
 use App\Transaction;
 use Auth;
 
-class TransactionsController extends Controller
-{
+class TransactionsController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //$this->middleware('auth');
     }
 
@@ -23,8 +22,7 @@ class TransactionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -34,9 +32,23 @@ class TransactionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        return $this->update($request);
+    public function store(Request $request) {
+        $userId = Auth::user()->id;
+
+        $transaction = new Transaction;
+        $transaction->created_by = $userId;
+
+        $transaction->id = $request->id ?: 0;
+
+        $transaction->ref = $request->ref;
+
+        $transaction->amount = $request->amount;
+
+        $transaction->invoice_id = $request->invoice_id;
+
+        $transaction->transaction_type_id = $request->transaction_type_id;
+
+        echo $transaction->save() ? "1" : "0";
     }
 
     /**
@@ -45,8 +57,7 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -56,8 +67,7 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
 
@@ -68,30 +78,9 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id = null)
-    {
+    public function update(Request $request, $id = null) {
         $transaction = null;
-        $userId = Auth::user()->id;
-
-        if ($request->id > 0) {
-            $transaction = Transaction::findOrFail($request->id);
-            $transaction->updated_by = $userId;
-        } else {
-            $transaction = new Transaction;
-            $transaction->created_by = $userId;
-        }
-
-        $transaction->id = $request->id ?: 0;
         
-        $transaction->ref = $request->ref;
-
-        $transaction->amount = $request->amount;
-        
-        $transaction->invoice_id = $request->invoice_id;
-        
-        $transaction->transaction_type_id = $request->transaction_type_id;
-
-        echo $transaction->save()?"1":"0";
 
         //return redirect('/transactions');
     }
@@ -102,8 +91,8 @@ class TransactionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
+
 }

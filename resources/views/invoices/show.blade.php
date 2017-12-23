@@ -143,7 +143,7 @@
                             <input type="text" class="form-control" disabled value="{{$invoice->currency->currency}}"/> 
                         </div>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" name="amount" id="amount" placeholder="e.g. 1200.00" required/>   
+                            <input type="number" min="1" class="form-control" name="amount" id="amount" placeholder="e.g. 1200.00" required/>   
                         </div>
                     </div>
                 </div>
@@ -229,6 +229,7 @@
                 success: function (response) {
                     if (response == "1") {
                         transactionsGrid.ajax.reload();
+                        $("#transaction-modal").modal('hide');
                         alert("Transaction has been added!");
                     }
                 }
