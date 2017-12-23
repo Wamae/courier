@@ -13,32 +13,37 @@
     {{ Form::open(array('url' => 'users')) }}
 
     <div class="form-group">
+        {{ Form::label('station', 'Station') }}<br>
+        {{Form::select('station', $stations,null, array('class' => 'form-control', 'required'))}}
+
+    </div>
+
+    <div class="form-group">
         {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', '', array('class' => 'form-control')) }}
+        {{ Form::text('name', '', array('class' => 'form-control', 'required')) }}
     </div>
 
     <div class="form-group">
         {{ Form::label('email', 'Email') }}
-        {{ Form::email('email', '', array('class' => 'form-control')) }}
+        {{ Form::email('email', '', array('class' => 'form-control', 'required')) }}
     </div>
 
     <div class='form-group'>
         @foreach ($roles as $role)
-            {{ Form::checkbox('roles[]',  $role->id ) }}
-            {{ Form::label($role->name, ucfirst($role->name)) }}<br>
-
+        {{ Form::checkbox('roles[]',  $role->id ) }}
+        {{ Form::label($role->name, ucfirst($role->name)) }}<br>
         @endforeach
     </div>
 
     <div class="form-group">
         {{ Form::label('password', 'Password') }}<br>
-        {{ Form::password('password', array('class' => 'form-control')) }}
+        {{ Form::password('password', array('class' => 'form-control', 'required')) }}
 
     </div>
 
     <div class="form-group">
         {{ Form::label('password', 'Confirm Password') }}<br>
-        {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
+        {{ Form::password('password_confirmation', array('class' => 'form-control', 'required')) }}
 
     </div>
 

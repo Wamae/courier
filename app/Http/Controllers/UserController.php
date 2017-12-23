@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Station;
 use Auth;
 
 //Importing laravel-permission models
@@ -39,7 +40,9 @@ class UserController extends Controller {
     public function create() {
     //Get all roles and pass it to the view
         $roles = Role::get();
-        return view('users.create', ['roles'=>$roles]);
+        $stations = Station::where('status',ACTIVE)->pluck('office_name','id');
+        
+        return view('users.create', compact('roles','stations'));
     }
 
     /**
