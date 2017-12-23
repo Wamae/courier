@@ -168,9 +168,8 @@ class ManifestsController extends Controller {
 
     public function print_manifest(Request $request) {
         $id = $request["id"];
-        $manifest = Manifest::where('id', $id)->with('waybill_manifest.waybills')->get()->first();
+        $manifest = Manifest::where('id', $id)->with('waybills')->get()->first();
         $pdf = \App::make('dompdf.wrapper');
-
         $pdf->loadView('pdf.manifest', compact('manifest'));
         return $pdf->stream();
     }

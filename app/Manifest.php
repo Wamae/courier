@@ -28,6 +28,6 @@ class Manifest extends Model
     }
     
     public function waybills(){
-        return $this->hasManyThrough(Waybill::class, Waybill_manifest::class, 'waybill', 'id');
+        return $this->hasManyThrough(Waybill::class, Waybill_manifest::class,'manifest','id');
     }
 }
