@@ -83,20 +83,20 @@
 
 <div id="bottom-buttons-one" class="clearfix non-print" style="padding: 2px 0;">
     <div class="btn-group pull-left waybil-l-btn-b  ">
-        <a class="btn btn-small btn-default print-manifes-btn" href="#"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
+        <a class="btn btn-small btn-info print-manifes-btn" href="#"><i class="icon-print"></i> PRINTABLE MANIFEST</a>
         @if ($manifest->status === ACTIVE)
         @can('load waybills')
-        <a class="btn btn-default load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>
+        <a class="btn btn-primary load-waybils-btn" id="load-waybills" href="javascript:;"><i class="icon-arrow-up"></i> LOAD WAYBILLS</a>
         @endcan
         @endif
         @if ($manifest->status === ACTIVE)
         @can('remove waybills')
-        <a class="btn btn-default remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>
+        <a class="btn btn-danger remove-waybil-btn" id="remove-waybills" href="javascript:;"><i class="icon-arrow-down"></i> REMOVE WAYBILLS</a>
         @endcan
         @endif
         @if ($manifest->status === ACTIVE)
         @can('dispatch manifest')
-        <a id="dispatch-manifest" class="btn btn-default dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>
+        <a id="dispatch-manifest" class="btn btn-success dispatch-manifest-btn" href="javascript:;"><i class="icon-truck"></i> DISPATCH MANIFEST</a>
         @endcan
         @endif
     </div>
