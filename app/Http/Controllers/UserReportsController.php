@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Waybill;
 use App\Station;
 use App\Package_type;
-use App\payment_mode;
+use App\Payment_mode;
 use App\Currency;
 use App\Waybill_status;
 use App\User;
