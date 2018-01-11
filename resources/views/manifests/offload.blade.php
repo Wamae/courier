@@ -91,7 +91,7 @@
 @section('scripts')
 <script>
     $('#manifest-no').autocomplete({
-        source: '{{url('manifests/manifest_no/autocomplete')}}',
+        source: "{{url('manifests/manifest_no/autocomplete')}}",
         minlenght: 1,
         autoFocus: true,
         select: function (e, data) {
