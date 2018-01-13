@@ -65,158 +65,161 @@
                 </div>
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                            <ul class="nav navbar-nav">                                
-                         &nbsp                        ;
-                 </ul>
+                    <ul class="nav navbar-nav">                                
+                        &nbsp                        ;
+                    </ul>
 
-<!-- Right Side Of Navbar -->
+                    <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-                             <!-- Authentication Links -->
+                        <!-- Authentication Links -->
                         @if (Auth::guest())
                         <li><a href="{{ route('login') }}">Login</a></li>
                         @else
 
-   <li class="dropdown">
+                        <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Reports <span class="caret"></span>
-                 </a>
+                            </a>
 
-                 <ul class="dropdown-menu dropdown-menu-large" role="menu">
-                     <li>
-                         <a href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> My Station Reports</a>
-                     </li>
-                     <li>
-                         <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span>User Reports</a>
-                     </li>
-                     <li>
-                         <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span> Accounts Reports</a>
-                     </li>
-                     <li>
-                         <a href="{{url('invoices')}}"><span class="glyphicon glyphicon-calendar"></span> Account Invoices</a>
-                     </li>
-                 </ul>
-                 </li>
+                            <ul class="dropdown-menu dropdown-menu-large" role="menu">
+                                <li>
+                                    <a href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> My Station Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('user_reports')}}"><span class="glyphicon glyphicon-user"></span>User Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('client_reports')}}"><span class="glyphicon glyphicon-usd"></span> Accounts Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('invoices')}}"><span class="glyphicon glyphicon-calendar"></span> Account Invoices</a>
+                                </li>
+                            </ul>
+                        </li>
 
-                 <li class="dropdown">
-                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                         Menu <span class="caret"></span>
-                     </a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Menu <span class="caret"></span>
+                            </a>
 
-                     <ul class="dropdown-menu" role="menu">
-                         @role('admin')
-                         <li>
-                             <a href="{{url('stations')}}"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Collection Stations</a>
-                         </li>
-                         <li>
-                             <a href="{{url('users')}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Courier System Users</a>
-                         </li>
-                         <li>
-                             <a href="{{url('package_types')}}"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Package Type Setup</a>
-                         </li>
-                         <li>
-                             <a href="{{url('clients')}}"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Registered Clients</a>
-                         </li>
-                         <li>
-                             <a href="{{url('manifests')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-compressed"></span> Loading Manifest</a>
-                         </li>
-                         <li>
-                             <a href="{{url('main_offices')}}">Main Offices</a>
-                         </li>
-                         <li>
-                             <a href="{{url('payment_modes')}}">Payment Modes</a>
-                         </li>
-                         <li>
-                             <a href="{{url('roles')}}">Roles</a>
-                         </li>
-                         <li>
-                             <a href="{{url('permissions')}}">Permissions</a>
-                         </li>
+                            <ul class="dropdown-menu" role="menu">
+                                @role('admin')
+                                <li>
+                                    <a href="{{url('stations')}}"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Collection Stations</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('users')}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Courier System Users</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('package_types')}}"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Package Type Setup</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('clients')}}"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Registered Clients</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('manifests')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-compressed"></span> Loading Manifest</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('main_offices')}}">Main Offices</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('payment_modes')}}">Payment Modes</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('roles')}}">Roles</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('permissions')}}">Permissions</a>
+                                </li>
 
-                         @endrole
-                         @can('view waybill')
-                         <li>
-                             <a href="{{url('waybills')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-th"></span> Waybill Entry</a>
-                         </li>
-                         @endcan
-                     </ul>
-                 </li>
+                                @endrole
+                                @can('view waybill')
+                                <li>
+                                    <a href="{{url('waybills')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-th"></span> Waybill Entry</a>
+                                </li>
+                                @endcan
+                            </ul>
+                        </li>
 
-                 <li class="dropdown">
-                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                         {{ Auth::user()->name }} <span class="caret"></span>
-                     </a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
 
-                     <ul class="dropdown-menu" role="menu">
-                         <li>
-                             <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                                 <span class="glyphicon glyphicon-log-out"></span> Exit System
-                             </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="{{url('update_password')}}"><i class="icon-truck"></i><span class="fa fa-key"></span> Change Password</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                               document.getElementById('logout-form').submit();">
+                                        <span class="glyphicon glyphicon-log-out"></span> Exit System
+                                    </a>
 
-                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                 {{ csrf_field() }}
-                             </form>
-                         </li>
-                     </ul>
-                 </li>
-                 @endif
-                 </ul>
-                 </div>
-                 </div>
-                 </nav>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
-                 <div class="container-fluid">
-                     <div class="row">
-                         <div class="col-lg-12">
-                             @yield('content')
-                         </div>
-                     </div>
-                 </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    @yield('content')
+                </div>
+            </div>
+        </div>
 
-                 <!-- Bootstrap core JavaScript
-                 ================================================== -->
-                 <!-- Placed at the end of the document so the pages load faster -->
-                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-                 <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
-                 <script src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
-                 <script src="https://cdn.datatables.net/responsive/2.0.0/js/dataTables.responsive.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.9/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.0.0/js/dataTables.responsive.min.js"></script>
 
-                 <script src="{{asset('js/moment.js')}}"></script>
-                 <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
-                 <script src="{{asset('js/jquery-ui.js')}}"></script>
-                 <script src="{{asset('js/range_dates.js')}}"></script>
-                 <script src="https://unpkg.com/sweetalert2@7.0.9/dist/sweetalert2.all.js"></script>
-                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
-                 <script src="{{asset('js/jquery.auto-complete.min.js')}}"></script>
-                 <script src="{{asset('js/font_awesome/fontawesome-all.min.js')}}"></script>
+        <script src="{{asset('js/moment.js')}}"></script>
+        <script src="{{asset('js/bootstrap-datetimepicker.min.js')}}"></script>
+        <script src="{{asset('js/jquery-ui.js')}}"></script>
+        <script src="{{asset('js/range_dates.js')}}"></script>
+        <script src="https://unpkg.com/sweetalert2@7.0.9/dist/sweetalert2.all.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
+        <script src="{{asset('js/jquery.auto-complete.min.js')}}"></script>
+        <script src="{{asset('js/font_awesome/fontawesome-all.min.js')}}"></script>
 
-                 <script>
-                                    $.ajaxSetup({
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                        }
-                                    });
-                 </script>    
+        <script>
+                                           $.ajaxSetup({
+                                               headers: {
+                                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                               }
+                                           });
+        </script>    
 
-                 @yield('scripts')
-                 
-                 </body>
-                 <br>
-                 <footer>
-                 @if (Auth::guest())
-                 @else
-                 <div class="container-fluid bg-info clearfix navbar-fixed-bottom" style="position: relative; bottom: 0px; z-index: 100">
-                     <ul class="nav navbar-nav">
-                         <li><a href="http://imediaafrica.com" target="_blank"><i class="icon-asterisk"></i> COPYRIGHT {{date("Y")}} </a></li>
-                         <li><a><i class="fa fa-certificate"></i> VERSION 1.0</a></li>
-                         <li><a><i class="fa fa-briefcase"></i> </a></li><!--//TODO:Licensed to-->
-                         <li><a><i class="fa fa-user"></i> USER ONLINE: {{Auth::user()->name}}</a></li>
-                         <li><a><i class="fa fa-map-marker"></i> STATION: {{Auth::user()->stations->office_name}}</a></li>
-                     </ul>
-                 </div>
-                 @endif
-                 </footer>
-                 </html>
+        @yield('scripts')
+
+    </body>
+    <br>
+    <footer>
+        @if (Auth::guest())
+        @else
+        <div class="container-fluid bg-info clearfix navbar-fixed-bottom" style="position: relative; bottom: 0px; z-index: 100">
+            <ul class="nav navbar-nav">
+                <li><a href="http://imediaafrica.com" target="_blank"><i class="icon-asterisk"></i> COPYRIGHT {{date("Y")}} </a></li>
+                <li><a><i class="fa fa-certificate"></i> VERSION 1.0</a></li>
+                <li><a><i class="fa fa-briefcase"></i> </a></li><!--//TODO:Licensed to-->
+                <li><a><i class="fa fa-user"></i> USER ONLINE: {{Auth::user()->name}}</a></li>
+                <li><a><i class="fa fa-map-marker"></i> STATION: {{Auth::user()->stations->office_name}}</a></li>
+            </ul>
+        </div>
+        @endif
+    </footer>
+</html>
