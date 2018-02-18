@@ -38,7 +38,7 @@
                 <td colspan="2" rowspan="2"><font size="1">Tax PIN:</font>      XXX
                     <br><font size="1">AMOUNT:</font>      {{$waybill->amount}}
                     <br><font size="1">VAT:</font>      {{$waybill->vat}}
-                    <br><font size="1">TOTAL:</font>      {{($waybill->vat/100 * $waybill->amount)+$waybill->amount}}
+                    <br><font size="1">TOTAL:</font>      {{$waybill->amount_per_item}}
                 </td>
     </tr>
     <tr>
