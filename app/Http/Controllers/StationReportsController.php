@@ -22,21 +22,23 @@ class StationReportsController extends Controller {
     }
 
     public function index(Request $request) {
+        $users_station_id = Auth::user()->station;
+                
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
-        $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->get();
+        $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->where('id','!=',$users_station_id)->get();
         $waybill_statuses = Waybill_status::select('id', 'waybill_status')->get();
         $payment_modes = Payment_mode::select('id', 'payment_mode')->get();
         $currencies = Currency::select('id', 'currency')->get();
-        
-        // get all users with all roles
-        $users = User::with('roles')->get();
 
-        // filter to list those without the "Member" role
+        // get all users with all roles
+        $users = User::with('roles')->where('station','=',$users_station_id)->get();
+
+        // filter to list those without the "admin" role
         $staff = $users->reject(function ($user, $key) {
             return $user->hasRole('admin');
         });
 
-        return view('reports.stations', compact('package_types', 'stations', 'waybill_statuses', 'payment_modes', 'currencies','staff'));
+        return view('reports.stations', compact('package_types', 'stations', 'waybill_statuses', 'payment_modes', 'currencies', 'staff'));
     }
 
     public function grid(Request $request) {
@@ -125,40 +127,103 @@ class StationReportsController extends Controller {
     }
 
     public function getReportData(Request $request) {
-        $stationId = $request["station_id"];
-        $userId = $request["user_id"];
-        $orientation = $request["orientation"];
-        $currencyId = $request["currency_id"];
-        $startDate = $request["start_date"];
-        $endDate = $request["end_date"];
+        $station_id = $request["station_id"];
+        $user_id = $request["user_id"];
+        $pdf_orientation = $request["orientation"];
+        $currency_id = $request["currency_id"];
+        $start_date = $request["start_date"];
+        $end_date = $request["end_date"];
 
-        $sql = DB::table('waybills')->select(['destination', 'office_name', 'payment_mode', 'amount', 'vat'])
+        $stationData = $this->getStationData($station_id, $user_id, $start_date, $end_date);
+
+        echo json_encode($stationData);
+    }
+
+    public function printWaybill(Request $request) {
+        $id = $request["id"];
+        $waybill = Waybill::find($id);
+
+        $pdf = \App::make('dompdf.wrapper');
+
+        $pdf->loadView('pdf.waybill', compact('waybill'))->setPaper('a5', 'landscape');
+        return $pdf->stream('waybill_' . $waybill->consignor . '.pdf');
+    }
+
+    /**
+     * Display stations report
+     * @param Request $request
+     * @return pdf
+     */
+    public function printStationsReport(Request $request) {
+        $station_id = $request->station_id;
+        $user_id = $request->user_id;
+        $currency_id = $request->currency_id;
+        $pdf_orientation_id = $request->pdf_orientation_id;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+
+        $station_data = $this->getStationData($station_id, $user_id, $start_date, $end_date);
+
+        $pdf = \App::make('dompdf.wrapper');
+
+        $pdf_orientation = ($pdf_orientation_id == PORTRAIT) ? "portrait" : "landscape";
+
+        $pdf->loadView('pdf.stations_report', compact('station_data', "end_date", "end_date"))->setPaper('a4', $pdf_orientation);
+        return $pdf->stream('stations_report_' . date("Y-m-d H:i:s") . '_' . Auth::user()->stations->office_name . '.pdf');
+    }
+
+    /**
+     * Print Cashiers' report
+     * @param Request $request
+     */
+    public function printCashierReport(Request $request) {
+        //TODO: Get all waybills and totals created
+        //$id = $request["id"];
+        $waybills = Waybill::where("created_by", Auth::user()->id)->get();
+        //dd($waybills);
+
+        $pdf = \App::make('dompdf.wrapper');
+
+        $pdf->loadView('pdf.cashiers_report', compact('waybills'))->setPaper('a4', 'landscape');
+        return $pdf->stream(Auth::user()->stations->office_name . '_' . '.pdf');
+    }
+
+    /**
+     * @param $station_id
+     * @param $user_id
+     * @param $start_date
+     * @param $end_date
+     * @return array
+     */
+    public function getStationData($station_id, $user_id, $start_date, $end_date) {
+        $sql = DB::table('waybills')
+                ->select(['destination', 'office_name', 'payment_mode', 'amount', 'vat'])
                 ->join('stations', 'waybills.destination', '=', 'stations.id')
                 ->groupBy(['waybills.id'])
-                //->where('payment_mode','=',CASH_ON_DELIVERY)
-                
-        ;
+        ->where('origin','=',Auth::user()->station);
 
-        if ($stationId != "0") {
-            $sql->where('destination', $stationId);
+        if ($station_id != "0") {
+            $sql->where('destination', $station_id);
         }
 
-        if ($userId != "0") {
-            $sql->where('waybills.created_by', $userId);
+        if ($user_id != "0") {
+            $sql->where('waybills.created_by', $user_id);
         }
 
-        if ($startDate != "0") {
-            $sql->whereDate('waybills.created_at', '>=', $startDate);
+        if (!empty($start_date)) {
+            $sql->whereDate(DB::raw('DATE(waybills.created_at)'), '>=', $start_date);
         }
 
-        if ($endDate != "0") {
-            $sql->whereDate('waybills.created_at', '<=', $endDate);
+        if (!empty($end_date)) {
+            $sql->whereDate(DB::raw('DATE(waybills.created_at)'), '<=', $end_date);
         }
+
         $cash = $sql->get()->toArray();
-        $cash = array_map(function($item) {
+        //dd($cash);
+        $cash = array_map(function ($item) {
             return (array) $item;
         }, $cash);
-                        
+
         $query = Station::select(['id', 'office_name', DB::raw('0 AS cod_amount'),
                     DB::raw('0 AS cod_vat'),
                     //DB::raw('0 AS cod_total'),
@@ -168,23 +233,20 @@ class StationReportsController extends Controller {
                     DB::raw('0 AS cash_amount'),
                     DB::raw('0 AS cash_vat'),
                         //DB::raw('0 AS cash_total')
-                ]);
-        
-        if ($stationId != "0") {
-            $query->where('id', $stationId);
+        ]);
+
+        if ($station_id != "0") {
+            $query->where('id', $station_id);
         }
-        
+
         $allStations = $query->get()->toArray();
 
-        $allStations = array_map(function($item) {
+        $allStations = array_map(function ($item) {
             return (array) $item;
         }, $allStations);
 
-
-
         for ($i = 0; $i < count($cash); $i++) {
             for ($j = 0; $j < count($allStations); $j++) {
-                //dd($data[$i]);
                 if ($cash[$i]["destination"] == $allStations[$j]["id"]) {
                     if ($cash[$i]["payment_mode"] == CASH_PAYMENT) {
                         $allStations[$j]["cash_amount"] += $cash[$i]["amount"];
@@ -199,18 +261,7 @@ class StationReportsController extends Controller {
                 }
             }
         }
-        //dd($allStations);
-        echo json_encode($allStations);
-    }
-
-    public function printWaybill(Request $request) {
-        $id = $request["id"];
-        $waybill = Waybill::find($id);
-
-        $pdf = \App::make('dompdf.wrapper');
-
-        $pdf->loadView('pdf.waybill', compact('waybill'))->setPaper('a5', 'landscape');
-        return $pdf->stream('waybill_' . $waybill->consignor . '.pdf');
+        return $allStations;
     }
 
 }

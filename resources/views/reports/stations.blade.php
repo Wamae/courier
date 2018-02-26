@@ -1,7 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    #thegrid {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
+    #thegrid > thead > tr >th, #thegrid > tbody >tr >td{
+        border: 1px solid black;
+    }
+</style>
 <div class="panel panel-default">
     <div class="panel-heading" align="center">
         <b>TAHMEED COURIER COURIER SALES REPORTS</b>
@@ -43,9 +52,9 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="orientation">PDF Orientation:</label>
                                 <div class="controls col-lg-6">
-                                    <select name="orientation" id="orientation" class="form-control">
-                                        <option value="0" selected="selected">Landscape</option>
-                                        <option value="1">Potrait</option>
+                                    <select name="orientation" id="pdf-orientation" class="form-control">
+                                        <option value="{{LANDSCAPE}}" selected="selected">Landscape</option>
+                                        <option value="{{PORTRAIT}}">Portrait</option>
                                     </select>		
                                 </div>
                             </div>
@@ -97,7 +106,7 @@
                             <div class="control-group form-group">
                                 <label class="col-lg-4 control-label" for="end_date_search"></label>
                                 <div class="controls col-lg-6">
-                                    <button class="btn btn-info">DOWNLOAD PDF</button>
+                                    <button id="download-pdf" class="btn btn-info">DOWNLOAD PDF</button>
                                 </div>
                             </div>
                         </td>
@@ -114,8 +123,8 @@
 
     <div class="panel-body">
         <div class="non-print search-panel ">
-            <div>
-                <table class="table table-striped table-responsive table-condensed" id="thegrid" style="border: 1px solid black;">
+            <div id="grid-content">
+                <table class="" id="thegrid">
                     <thead>
                         <tr>
                             <th>COLLECTION</th>
@@ -149,13 +158,17 @@
 @endsection
 
 @section('scripts')
-
+<script>
+    //TODO: Refactor variables
+    PRINT_STATION_REPORT_URL = "{{url('print_station_report')}}";
+    TABLE_GET_REPORT_DATA_URL = "{{ url('station_reports/get_report_data/extra/') }}";
+</script>
 <script type="text/javascript">
     var theGrid = null;
     $(document).ready(function () {
 
         var stationId = 0, userId = 0, orientation = 0, currencyId = 0,
-                startDate = moment(new Date()).subtract(90, "days").format('YYYY-MM-DD'),
+                startDate = moment(new Date()).format('YYYY-MM-DD'),
                 endDate = moment(new Date()).format('YYYY-MM-DD');
 
         $('#start-date-search').datetimepicker({
@@ -169,6 +182,8 @@
 
         $("#start-date-search").on("dp.change", function (e) {
             $('#end-date-search').data("DateTimePicker").minDate(e.date);
+            startDate = moment($('#start-date-search').data("date"), 'DD/MM/YYYY').format("YYYY-MM-DD");
+            getData(stationId, userId, orientation, currencyId, startDate, endDate);
         });
 
 
@@ -198,9 +213,8 @@
         });
 
         function getData(stationId, userId, orientation, currencyId, startDate, endDate) {
-            //TODO: ajax call
             $.ajax({
-                url: "{{ url('station_reports/get_report_data/extra/') }}",
+                url: TABLE_GET_REPORT_DATA_URL,
                 type: "GET",
                 dataType: "JSON",
                 data: {station_id: stationId, user_id: userId, currency_id: currencyId, start_date: startDate, end_date: endDate},
@@ -216,20 +230,46 @@
                 total = data[i].cod_amount + data[i].cash_amount + data[i].acc_amount + data[i].cod_vat + data[i].cash_vat + data[i].acc_vat;
                 content += `<tr>
     <td>${data[i].office_name}</td>
-        <td>${data[i].cod_amount}</td>
-            <td>${data[i].cod_vat}</td>
-                <td>${data[i].cod_amount + data[i].cod_vat}</td>
-                    <td>${data[i].acc_amount}</td>
-                        <td>${data[i].acc_vat}</td>
-                            <td>${data[i].acc_amount + data[i].acc_vat}</td>
-                            <td>${data[i].cash_amount}</td>
-                                <td>${data[i].cash_vat}</td>   
-                                    <td>${data[i].cash_amount + data[i].cash_vat}</td>
-                                        <td>${total}</td>
+        <td align='right'>${data[i].cod_amount.toLocaleString("en")}</td>
+            <td align='right'>${data[i].cod_vat.toLocaleString("en")}</td>
+                <td align='right'>${(data[i].cod_amount + data[i].cod_vat).toLocaleString("en")}</td>
+                    <td align='right'>${data[i].acc_amount.toLocaleString("en")}</td>
+                        <td align='right'>${data[i].acc_vat.toLocaleString("en")}</td>
+                            <td align='right'>${(data[i].acc_amount + data[i].acc_vat).toLocaleString("en")}</td>
+                            <td align='right'>${data[i].cash_amount.toLocaleString("en")}</td>
+                                <td align='right'>${data[i].cash_vat.toLocaleString("en")}</td>   
+                                    <td align='right'>${(data[i].cash_amount + data[i].cash_vat).toLocaleString("en")}</td>
+                                        <td align='right'>${total.toLocaleString("en")}</td>
 </tr>`;
             }
             return content;
         }
+
+        $("#download-pdf").click(function () {
+
+            let stationId = $("#station-search").val();
+
+            let userId = $("#user-search").val();
+
+            let currencyId = $("#currency-search").val();
+
+            let pdfOrientationId = $("#pdf-orientation").val();
+
+            let startDate = $("#start-date-search").val().trim();
+            let endDate = $("#end-date-search").val().trim();
+
+            if(startDate === ""){
+                startDate = moment(new Date()).format("YYYY-MM-DD");
+            }
+
+            if(endDate === ""){
+                endDate = moment(new Date()).format("YYYY-MM-DD");
+            }
+
+            let params = `?station_id=${stationId}&userId=${userId}&currency_id=${currencyId}&pdf_orientation_id=${pdfOrientationId}&start_date=${startDate}&end_date=${endDate}`;
+
+            window.open(PRINT_STATION_REPORT_URL + params, '_blank').focus();
+        });
 
     });
 
