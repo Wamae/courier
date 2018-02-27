@@ -215,12 +215,13 @@
 
     </body>
     <br>
-    <footer>
+	
+    <footer class="footer">
         @if (Auth::guest())
         @else
-        <div class="container-fluid bg-info clearfix navbar-fixed-bottom" style="position: relative; bottom: 0px; z-index: 100">
+        <div class="container-fluid clearfix navbar-fixed-bottom" style="position: relative; bottom: 0px; z-index: 100">
             <ul class="nav navbar-nav">
-                <li><a href="http://imediaafrica.com" target="_blank"><i class="icon-asterisk"></i> COPYRIGHT {{date("Y")}} </a></li>
+                <li><a href=""></i> COPYRIGHT {{date("Y")}} </a></li>
                 <li><a><i class="fa fa-certificate"></i> VERSION 1.0</a></li>
                 <li><a><i class="fa fa-briefcase"></i> </a></li><!--//TODO:Licensed to-->
                 <li><a><i class="fa fa-user"></i> USER ONLINE: {{Auth::user()->name}}</a></li>
