@@ -82,6 +82,7 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-large" role="menu">
+                                @role('admin')
                                 <li>
                                     <a href="{{url('station_reports')}}"><span class="glyphicon glyphicon-stats"></span> My Station Reports</a>
                                 </li>
@@ -94,6 +95,12 @@
                                 <li>
                                     <a href="{{url('invoices')}}"><span class="glyphicon glyphicon-calendar"></span> Account Invoices</a>
                                 </li>
+                                @endrole
+                                @role('staff')
+                                <li>
+                                    <a href="{{url('my_')}}"><span class="glyphicon glyphicon-calendar"></span> Account Invoices</a>
+                                </li>
+                                @endrole
                             </ul>
                         </li>
 
