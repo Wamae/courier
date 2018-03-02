@@ -125,7 +125,7 @@
     $(document).ready(function () {
         theGrid = $('#thegrid').DataTable({
             "processing": true,
-            "bFilter": false,
+            "bFilter": true,
             "serverSide": true,
             "ordering": true,
             "responsive": true,
@@ -159,7 +159,7 @@
         });
         $("#keywords").keyup(function () {
             var keywords = $(this).val().trim();
-            if (keywords == "") {
+            if (keywords === "") {
                 theGrid.search("").draw();
             } else {
                 console.log("Keywords: ", keywords);
