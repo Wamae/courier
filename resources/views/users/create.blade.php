@@ -14,7 +14,7 @@
 
     <div class="form-group">
         {{ Form::label('station', 'Station') }}<br>
-        {{Form::select('station', $stations,null, array('class' => 'form-control', 'required'))}}
+        {{Form::select('station_id', $stations,null, array('class' => 'form-control', 'required'))}}
 
     </div>
 
