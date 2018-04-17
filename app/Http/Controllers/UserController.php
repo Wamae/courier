@@ -38,7 +38,7 @@ class UserController extends Controller {
     public function create() {
         //Get all roles and pass it to the view
         $roles = Role::get();
-        //$stations = Station::where('status',ACTIVE)->pluck('office_name','id');
+        $stations = Station::where('status',ACTIVE)->pluck('office_name','id');
 
         return view('users.create', compact('roles', 'stations'));
     }

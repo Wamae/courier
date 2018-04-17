@@ -13,10 +13,11 @@
     {{ Form::open(array('url' => 'users')) }}
 
     <div class="form-group">
-        {{ Form::label('station', 'Station') }}<sup>*</sup><br>
-        {{ Form::text('station_name', Auth::user()->stations->office_name, array('class' => 'form-control', 'required','readonly')) }}
+        {{ Form::label('station', 'Station') }}<br>
+        {{Form::select('station', $stations,null, array('class' => 'form-control', 'required'))}}
 
     </div>
+
 
     <div class="form-group">
         {{ Form::label('name', 'Name') }}<sup>*</sup>
