@@ -215,8 +215,13 @@
 
     </body>
     <br>
-	
-    <footer class="footer">
+
+    <footer class="footer" style="position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;">
         @if (Auth::guest())
         @else
         <div class="container-fluid clearfix navbar-fixed-bottom" style="position: relative; bottom: 0px; z-index: 100">
@@ -224,10 +229,11 @@
                 <li><a href=""></i> COPYRIGHT {{date("Y")}} </a></li>
                 <li><a><i class="fa fa-certificate"></i> VERSION 1.0</a></li>
                 <li><a><i class="fa fa-briefcase"></i> </a></li><!--//TODO:Licensed to-->
-                <li><a><i class="fa fa-user"></i> USER ONLINE: {{Auth::user()->name}}</a></li>
-                <li><a><i class="fa fa-map-marker"></i> STATION: {{Auth::user()->stations->office_name}}</a></li>
+                {{--<li><a><i class="fa fa-user"></i> USER ONLINE: {{strtoupper(Auth::user()->name)}}</a></li>--}}
+                {{--<li><a><i class="fa fa-map-marker"></i> STATION: {{strtoupper(Auth::user()->stations->office_name)}}</a></li>--}}
             </ul>
         </div>
         @endif
     </footer>
+
 </html>

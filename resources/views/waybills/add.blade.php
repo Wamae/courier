@@ -142,8 +142,14 @@
                             <div class="form-group">
                                 <label class="col-lg-4 control-label" for="per_item">AMOUNT PER ITEM:<sup>*</sup></label>
                                 <div class="col-lg-4">
-                                    <select name="currency_perItem" id="currency_perItem" class="form-control selectpicker">
-                                        <option value="ksh" selected="selected">KSH</option>
+                                    <select name="currency_id" id="currency-id" class="form-control selectpicker">
+                                        @foreach($currencies as $currency)
+                                        @if($currency->id == KSH)
+                                        <option value="{{$currency->id}}" selected="selected">{{$currency->currency}}</option>
+                                        @else
+                                        <option value="{{$currency->id}}">{{$currency->currency}}</option>
+                                        @endif
+                                        @endforeach
                                     </select>   </div>
                                 <div class="col-lg-4">
                                     <input type="number" min="100" required id="amount_per_item" name="amount_per_item" class="form-control" value="{{$model['amount_per_item'] or ''}}">
@@ -154,9 +160,16 @@
                                 <input id="vat-per" value="16" hidden="true" type="number"/>
 
                                 <div class="col-lg-4">
-                                    <select name="currency_vat" id="currency_vat" class="form-control selectpicker">
-                                        <option value="ksh" selected="selected">KSH</option>
-                                    </select>   </div>
+                                    <select name="currency_vat" id="currency-vat" class="form-control selectpicker" disabled>
+                                        @foreach($currencies as $currency)
+                                        @if($currency->id == KSH)
+                                        <option value="{{$currency->id}}" selected="selected">{{$currency->currency}}</option>
+                                        @else
+                                        <option value="{{$currency->id}}">{{$currency->currency}}</option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="col-lg-4">
                                     <input type="text" id="vat" name="vat" readonly="readonly" class="form-control" value="">
@@ -166,9 +179,16 @@
                                 <label class="col-lg-4 control-label" for="amount"> AMOUNT:</label>
 
                                 <div class="col-lg-4">
-                                    <select name="currency" id="currency" class="form-control selectpicker">
-                                        <option value="ksh" selected="selected">KSH</option>
-                                    </select>   </div>
+                                    <select name="currency_amount" id="currency-amount" class="form-control selectpicker" disabled>
+                                        @foreach($currencies as $currency)
+                                        @if($currency->id == KSH)
+                                        <option value="{{$currency->id}}" selected="selected">{{$currency->currency}}</option>
+                                        @else
+                                        <option value="{{$currency->id}}">{{$currency->currency}}</option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="col-lg-4">
                                     <input type="text" id="amount" name="amount" readonly="readonly" class="form-control" value="{{$model['amount'] or ''}}">
@@ -185,7 +205,7 @@
                 <div class="btn-group">
                     <a class="btn btn-warning cancel-btn receiver-info" href="{{ url('/waybills') }}"><i class=""></i>BACK</a>
                     <button id="create-waybill" type="submit" class="btn btn-primary add-waybil-btn receiver-info">
-                        <i class="fa fa-plus"></i>{{(isset($model)?"UPDATE WAYBILL":"CREATE WAYBILL")}}
+                        <i class="fa fa-plus"></i> {{(isset($model)?"UPDATE WAYBILL":"CREATE WAYBILL")}}
                     </button> 
                 </div>
             </div>
@@ -291,6 +311,12 @@
         console.log(phone);
         $("#consignor-tel").val(phone);
     }
+
+    $("#currency-id").change(function(){
+        let currencyId = $(this).val();
+        $("#currency-vat").val(currencyId);
+        $("#currency-amount").val(currencyId);
+    });
 </script>
 @endsection
 

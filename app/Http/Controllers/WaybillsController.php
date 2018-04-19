@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Waybill;
+use App\Currency;
 use App\Station;
 use App\Package_type;
 use App\Payment_mode;
@@ -29,12 +30,12 @@ class WaybillsController extends Controller {
 
     public function create(Request $request) {
         $stations = Station::select('id', 'office_name')->where('status', ACTIVE)->whereNotIn('id',[Auth::user()->station])->get();
-		//dd($stations);
+		$currencies = Currency::select('id','currency')->get();
 		
         $package_types = Package_type::select('id', 'package_type')->where('status', ACTIVE)->get();
         $payment_modes = Payment_mode::select('id', 'payment_mode')->where('status', ACTIVE)->get();
 
-        return view('waybills.add', compact('stations', 'package_types', 'payment_modes'));
+        return view('waybills.add', compact('stations','currencies', 'package_types', 'payment_modes'));
     }
 
     public function edit(Request $request, $id) {
@@ -71,6 +72,7 @@ class WaybillsController extends Controller {
         //
         /* $this->validate($request, [
           'name' => 'required|max:255',
+          'currency_id' => 'required|integer',
           ]); */
         $waybill = null;
         $userId = Auth::user()->id;
@@ -83,35 +85,25 @@ class WaybillsController extends Controller {
             $waybill->created_by = $userId;
         }
 
-
-
         $waybill->id = $request->id ?: 0;
 
         $waybill->client_id = $request->client_id;
 
         $waybill->consignor = $request->consignor;
 
-
         $waybill->consignor_tel = $request->consignor_tel;
-
 
         $waybill->consignee = $request->consignee;
 
-
         $waybill->consignee_tel = $request->consignee_tel;
-
 
         $waybill->origin = $request->origin;
 
-
         $waybill->destination = $request->destination;
-
 
         $waybill->package_type = $request->package_type;
 
-
         $waybill->quantity = $request->quantity;
-
 
         $waybill->weight = $request->weight;
 
@@ -119,12 +111,9 @@ class WaybillsController extends Controller {
 
         $waybill->description = $request->description;
 
-
         $waybill->consignor_email = $request->consignor_email;
 
-
         $waybill->payment_mode = $request->payment_mode;
-
 
         $waybill->amount_per_item = $request->amount_per_item;
 
@@ -132,17 +121,22 @@ class WaybillsController extends Controller {
 
         $waybill->amount = $request->amount;
 
+        $waybill->currency_id = $request->currency_id;
 
         $waybill->status = ACTIVE;
 
         $waybill->save();
         
-        $this->sendCreateWaybillSMS($waybill);
+        $this->send_create_waybill_SMS($waybill);
         
         return redirect('/waybills');
     }
-    
-    function sendCreateWaybillSMS($waybill){
+
+    /**
+     * Send create waybill SMS
+     * @param $waybill
+     */
+    function send_create_waybill_SMS($waybill){
 		
 	$message = "Package: {$waybill->waybill_no} from {$waybill->consignor} received at {$waybill->origins->office_name}. We'll deliver it to {$waybill->destinations->office_name} in 24Hrs.Tahmeed Courier";
 		
