@@ -49,7 +49,7 @@
                 <div class="btn-group">
                     <a class="btn btn-warning cancel-btn receiver-info" href="{{ url('/package_types') }}"><i class=""></i>BACK</a>
                     <button type="submit" class="btn btn-primary add-waybil-btn receiver-info">
-                        <i class="fa fa-plus"></i>{{(isset($model)?"UPDATE ".$title:"CREATE ".$title)}}
+                        <i class="fa fa-plus"></i> {{(isset($model)?"UPDATE PACKAGE TYPE":"CREATE PACKAGE TYPE")}}
                     </button> 
                 </div>
             </div>

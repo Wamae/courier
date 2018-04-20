@@ -104,20 +104,12 @@ class PackageTypesController extends Controller {
 
         $package_type->id = $request->id ?: 0;
 
+        $package_type->package_type = ucwords(strtolower($request->package_type));
 
-
-
-        $package_type->package_type = $request->package_type;
-
-
-
-        $package_type->description = $request->description;
-
-
+        $package_type->description = ucfirst(strtolower($request->description));
 
         $package_type->status = $request->status;
 
-        //$package_type->user_id = $request->user()->id;
         $package_type->save();
 
         return redirect('/package_types');

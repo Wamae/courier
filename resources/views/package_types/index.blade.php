@@ -29,7 +29,7 @@
             </table>
         </div>
         
-        <a href="{{url('package_types/create')}}" class="btn btn-small btn-default add-new-form" role="button"><i class="icon-plus-sign"></i> Add {{$title}}</a>
+        <a href="{{url('package_types/create')}}" class="btn btn-small btn-primary add-new-form" role="button"><i class="icon-plus-sign"></i> ADD PACKAGE TYPE</a>
     </div>
 </div>
 
