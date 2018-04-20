@@ -4,7 +4,8 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        {{(isset($model)?"UPDATE WAYBILL":"CREATE WAYBILL")}}    </div>
+        {{(isset($model)?"UPDATE WAYBILL":"CREATE WAYBILL")}}
+    </div>
 
     <div class="panel-body">
 

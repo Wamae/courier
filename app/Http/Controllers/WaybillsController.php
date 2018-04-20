@@ -89,11 +89,11 @@ class WaybillsController extends Controller {
 
         $waybill->client_id = $request->client_id;
 
-        $waybill->consignor = $request->consignor;
+        $waybill->consignor = ucwords($request->consignor);
 
         $waybill->consignor_tel = $request->consignor_tel;
 
-        $waybill->consignee = $request->consignee;
+        $waybill->consignee = ucwords($request->consignee);
 
         $waybill->consignee_tel = $request->consignee_tel;
 
@@ -109,7 +109,7 @@ class WaybillsController extends Controller {
 
         $waybill->cbm = $request->cbm;
 
-        $waybill->description = $request->description;
+        $waybill->description = ucfirst($request->description);
 
         $waybill->consignor_email = $request->consignor_email;
 
