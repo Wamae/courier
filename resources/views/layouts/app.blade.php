@@ -115,7 +115,7 @@
                                     <a href="{{url('stations')}}"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Collection Stations</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('users')}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Courier System Users</a>
+                                    <a href="{{url('users')}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Courier System Users</a>
                                 </li>
                                 <li>
                                     <a href="{{url('package_types')}}"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Package Type Setup</a>
@@ -127,16 +127,16 @@
                                     <a href="{{url('manifests')}}"><i class="icon-truck"></i><span class="glyphicon glyphicon-compressed"></span> Loading Manifest</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('main_offices')}}">Main Offices</a>
+                                    <a href="{{url('main_offices')}}"><span class="fa fa-building"></span> Main Offices</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('payment_modes')}}">Payment Modes</a>
+                                    <a href="{{url('payment_modes')}}"><span class="fa fa-money-bill-alt"></span> Payment Modes</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('roles')}}">Roles</a>
+                                    <a href="{{url('roles')}}"><span class="fa fa-user-circle"></span> Roles</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('permissions')}}">Permissions</a>
+                                    <a href="{{url('permissions')}}"><span class="fa fa-key"></span> Permissions</a>
                                 </li>
 
                                 @endrole
