@@ -137,7 +137,7 @@
             "columns": [
                 {"data": "id", "name": "a.id", "targets": 0},
                 {"data": "waybill_no", "name": "a.waybill_no", "targets": 1,"render": function (data, type, row) {
-                        return "<a href='{{ url('waybills') }}/" + row['id'] + "'>" + data + "</a>";
+                        return "<a href='#'>" + data + "</a>";
                     }
                 },
                 {"data": "created_at", "name": "a.created_at", "targets": 2},
