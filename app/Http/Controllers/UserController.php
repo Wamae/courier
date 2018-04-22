@@ -13,9 +13,11 @@ use Spatie\Permission\Models\Permission;
 use Session;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         //$this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
 
@@ -24,7 +26,8 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         //Get all users and pass it to the view
         $users = User::all();
         return view('users.index')->with('users', $users);
@@ -35,10 +38,11 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //Get all roles and pass it to the view
         $roles = Role::get();
-        $stations = Station::where('status',ACTIVE)->pluck('office_name','id');
+        $stations = Station::where('status', ACTIVE)->pluck('office_name', 'id');
 
         return view('users.create', compact('roles', 'stations'));
     }
@@ -46,10 +50,11 @@ class UserController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //Validate name, email and password fields
         $this->validate($request, [
             'name' => 'required|max:120',
@@ -58,10 +63,11 @@ class UserController extends Controller {
         ]);
 
         $user = User::create([
-                    'name' => $request['name'],
-                    'email' => $request['email'],
-                    'station' => Auth::user()->station,
-                    'password' => bcrypt($request['password']),
+            'name' => $request['name'],
+            'email' => $request['email'],
+            //'station' => Auth::user()->station,
+            'station' => $request['station_id'],
+            'password' => bcrypt($request['password']),
         ]); //Retrieving only the email and password data
 
         $roles = $request['roles']; //Retrieving the roles field
@@ -75,85 +81,95 @@ class UserController extends Controller {
         }
         //Redirect to the users.index view and display message
         return redirect()->route('users.index')
-                        ->with('flash_message', 'User successfully added.');
+            ->with('flash_message', 'User successfully added.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         return redirect('users');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         $user = User::findOrFail($id); //Get user with specified id
         $roles = Role::get(); //Get all roles
+        $stations = Station::where('status', ACTIVE)->pluck('office_name', 'id');
 
-        return view('users.edit', compact('user', 'roles')); //pass user and roles data to view
+        return view('users.edit', compact('user', 'roles', 'stations')); //pass user and roles data to view
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        $user = User::findOrFail($id); //Get role specified by id
-        //Validate name, email and password fields  
+    public function update(Request $request, $id)
+    {
+
         $this->validate($request, [
+            'station' => 'required|integer',
             'name' => 'required|max:120',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'required|min:6|confirmed'
+            //'password' => 'required|min:6|confirmed'
         ]);
-        $input = [
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'station' => $request['station'],
-            'password' => bcrypt($request['password']),
-        ]; //Retreive the name, email and password fields
-        $roles = $request['roles']; //Retreive all roles
-        $user->fill($input)->save();
+
+        $user = User::findOrFail($id);
+
+        $user->station = $request['station'];
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        //$user->password = bcrypt($request['password']);
+
+        $user->save();
+
+        $roles = $request['roles'];
 
         if (isset($roles)) {
-            $user->roles()->sync($roles);  //If one or more role is selected associate user to roles          
+            $user->roles()->sync($roles);
         } else {
-            $user->roles()->detach(); //If no role is selected remove exisiting role associated to a user
+            $user->roles()->detach();
         }
         return redirect()->route('users.index')
-                        ->with('flash_message', 'User successfully edited.');
+            ->with('flash_message', 'User successfully edited.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //Find a user with a given id and delete
         $user = User::findOrFail($id);
         $user->delete();
 
         return redirect()->route('users.index')
-                        ->with('flash_message', 'User successfully deleted.');
+            ->with('flash_message', 'User successfully deleted.');
     }
 
-    public function updatePassword() {
+    public function updatePassword()
+    {
         return view('users.change_password');
     }
 
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         $user = Auth::user();
 
         $currentPassword = $request['current_password'];
@@ -175,11 +191,11 @@ class UserController extends Controller {
                 return redirect('login')->with(Auth::logout());
             } else {
                 return redirect('update_password')
-                 ->withErrors(['Failed to match passwords']);
+                    ->withErrors(['Failed to match passwords']);
             }
-        }else{
+        } else {
             return redirect('update_password')
-                 ->withErrors(['Incorrect current password']);
+                ->withErrors(['Incorrect current password']);
         }
     }
 
